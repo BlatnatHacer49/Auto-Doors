@@ -151,7 +151,7 @@ UICorner_5.Parent = Minimize
 
 Close.Name = "Close"
 Close.Parent = Header
-Close.BackgroundColor3 = Color3.fromRGB(255, 73, 84)
+Close.BackgroundColor3 = Color3.fromRGB(255, 39, 52)
 Close.BorderSizePixel = 0
 Close.Position = UDim2.new(0, 390, 0, 15)
 Close.Size = UDim2.new(0, 30, 0, 30)
