@@ -53,6 +53,15 @@ local UICorner_16 = Instance.new("UICorner")
 local CloseScript = Instance.new("TextButton")
 local UICorner_17 = Instance.new("UICorner")
 
+local C = {
+    Background = Color3.fromRGB(17, 19, 27),
+    Panel = Color3.fromRGB(22, 24, 33),
+    Surface = Color3.fromRGB(29, 32, 43),
+    SurfaceHover = Color3.fromRGB(39, 42, 55),
+    RedDark = Color3.fromRGB(132, 39, 49),
+    RedHover = Color3.fromRGB(255, 73, 84),
+}
+
 --Properties:
 
 DOORSEntityDetector.Name = "DOORSEntityDetector"
@@ -66,7 +75,7 @@ DOORSEntityDetector.ResetOnSpawn = false
 
 MainWindow.Name = "MainWindow"
 MainWindow.Parent = DOORSEntityDetector
-MainWindow.BackgroundColor3 = Color3.fromRGB(17, 19, 27)
+MainWindow.BackgroundColor3 = C.Background
 MainWindow.BorderSizePixel = 0
 MainWindow.ClipsDescendants = true
 MainWindow.Position = UDim2.new(0, 350, 0, 1)
@@ -81,7 +90,7 @@ UIStroke.Parent = MainWindow
 
 Header.Name = "Header"
 Header.Parent = MainWindow
-Header.BackgroundColor3 = Color3.fromRGB(22, 24, 33)
+Header.BackgroundColor3 = C.Panel
 Header.BorderSizePixel = 0
 Header.Size = UDim2.new(0, 430, 0, 60)
 
@@ -90,8 +99,8 @@ UICorner_2.Parent = Header
 
 TitleLine.Name = "TitleLine"
 TitleLine.Parent = Header
-TitleLine.BackgroundColor3 = Color3.fromRGB(255, 73, 84)
-TitleLine.BorderColor3 = Color3.fromRGB(255, 73, 84)
+TitleLine.BackgroundColor3 = C.RedHover
+TitleLine.BorderColor3 = C.RedHover
 TitleLine.BorderSizePixel = 0
 TitleLine.Position = UDim2.new(0, 0, 0, 8)
 TitleLine.Size = UDim2.new(0, 4, 0, 48)
@@ -123,7 +132,7 @@ Description.TextXAlignment = Enum.TextXAlignment.Left
 
 Resize.Name = "Resize"
 Resize.Parent = Header
-Resize.BackgroundColor3 = Color3.fromRGB(29, 32, 43)
+Resize.BackgroundColor3 = C.Surface
 Resize.BorderSizePixel = 0
 Resize.Position = UDim2.new(0, 355, 0, 15)
 Resize.Size = UDim2.new(0, 30, 0, 30)
@@ -137,7 +146,7 @@ UICorner_4.Parent = Resize
 
 Minimize.Name = "Minimize"
 Minimize.Parent = Header
-Minimize.BackgroundColor3 = Color3.fromRGB(29, 32, 43)
+Minimize.BackgroundColor3 = C.Surface
 Minimize.BorderSizePixel = 0
 Minimize.Position = UDim2.new(0, 320, 0, 15)
 Minimize.Size = UDim2.new(0, 30, 0, 30)
@@ -180,7 +189,7 @@ EntitiesPage.ScrollBarThickness = 4
 
 EntityOutlinesModule.Name = "EntityOutlinesModule"
 EntityOutlinesModule.Parent = EntitiesPage
-EntityOutlinesModule.BackgroundColor3 = Color3.fromRGB(22, 24, 33)
+EntityOutlinesModule.BackgroundColor3 = C.Panel
 EntityOutlinesModule.BorderSizePixel = 0
 EntityOutlinesModule.Position = UDim2.new(0, 1, 0, 135)
 EntityOutlinesModule.Size = UDim2.new(0, 398, 0, 50)
@@ -222,13 +231,13 @@ SectionEntityDetection.BackgroundTransparency = 1.000
 SectionEntityDetection.Size = UDim2.new(0, 400, 0, 15)
 SectionEntityDetection.Font = Enum.Font.GothamBold
 SectionEntityDetection.Text = "Entity Detection:"
-SectionEntityDetection.TextColor3 = Color3.fromRGB(255, 73, 84)
+SectionEntityDetection.TextColor3 = C.RedHover
 SectionEntityDetection.TextSize = 14.000
 SectionEntityDetection.TextXAlignment = Enum.TextXAlignment.Left
 
 EntityListModule.Name = "EntityListModule"
 EntityListModule.Parent = EntitiesPage
-EntityListModule.BackgroundColor3 = Color3.fromRGB(29, 32, 43)
+EntityListModule.BackgroundColor3 = C.Surface
 EntityListModule.BorderSizePixel = 0
 EntityListModule.Position = UDim2.new(0, 0, 0, 25)
 EntityListModule.Size = UDim2.new(0, 400, 0, 45)
@@ -257,7 +266,7 @@ Arrow.TextXAlignment = Enum.TextXAlignment.Left
 Dropdown.Name = "Dropdown"
 Dropdown.Parent = EntityListModule
 Dropdown.Active = true
-Dropdown.BackgroundColor3 = Color3.fromRGB(29, 32, 43)
+Dropdown.BackgroundColor3 = C.Surface
 Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Dropdown.BorderSizePixel = 0
 Dropdown.Position = UDim2.new(0, 0, 0, 39)
@@ -269,7 +278,7 @@ UICorner_10.Parent = Dropdown
 
 NameTagModule.Name = "NameTagModule"
 NameTagModule.Parent = EntitiesPage
-NameTagModule.BackgroundColor3 = Color3.fromRGB(29, 32, 43)
+NameTagModule.BackgroundColor3 = C.Surface
 NameTagModule.BorderSizePixel = 0
 NameTagModule.Position = UDim2.new(0, 0, 0, 80)
 NameTagModule.Size = UDim2.new(0, 400, 0, 45)
@@ -297,7 +306,7 @@ Arrow_2.TextXAlignment = Enum.TextXAlignment.Left
 Dropdown_2.Name = "Dropdown"
 Dropdown_2.Parent = NameTagModule
 Dropdown_2.Active = true
-Dropdown_2.BackgroundColor3 = Color3.fromRGB(29, 32, 43)
+Dropdown_2.BackgroundColor3 = C.Surface
 Dropdown_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
 Dropdown_2.BorderSizePixel = 0
 Dropdown_2.Position = UDim2.new(0, 0, 0, 39)
@@ -321,7 +330,7 @@ SectionAutomation.BackgroundTransparency = 1.000
 SectionAutomation.Size = UDim2.new(0, 400, 0, 15)
 SectionAutomation.Font = Enum.Font.GothamBold
 SectionAutomation.Text = "Automation:"
-SectionAutomation.TextColor3 = Color3.fromRGB(255, 73, 84)
+SectionAutomation.TextColor3 = C.RedHover
 SectionAutomation.TextSize = 14.000
 SectionAutomation.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -337,8 +346,8 @@ UIListLayout.Padding = UDim.new(0, 8)
 
 Entities.Name = "Entities"
 Entities.Parent = Tabs
-Entities.BackgroundColor3 = Color3.fromRGB(29, 32, 43)
-Entities.BorderColor3 = Color3.fromRGB(29, 32, 43)
+Entities.BackgroundColor3 = C.Surface
+Entities.BorderColor3 = C.Surface
 Entities.BorderSizePixel = 0
 Entities.Size = UDim2.new(0.5, -4, 1, 0)
 Entities.AutoButtonColor = false
@@ -351,8 +360,8 @@ UICorner_13.Parent = Entities
 
 Automation.Name = "Automation"
 Automation.Parent = Tabs
-Automation.BackgroundColor3 = Color3.fromRGB(29, 32, 43)
-Automation.BorderColor3 = Color3.fromRGB(29, 32, 43)
+Automation.BackgroundColor3 = C.Surface
+Automation.BorderColor3 = C.Surface
 Automation.BorderSizePixel = 0
 Automation.Size = UDim2.new(0.5, -4, 1, 0)
 Automation.AutoButtonColor = false
@@ -377,14 +386,14 @@ UIListLayout_2.Padding = UDim.new(0, 9)
 CloseConfirmation.Name = "CloseConfirmation"
 CloseConfirmation.Parent = DOORSEntityDetector
 CloseConfirmation.AnchorPoint = Vector2.new(0.5, 0.5)
-CloseConfirmation.BackgroundColor3 = Color3.fromRGB(22, 24, 33)
+CloseConfirmation.BackgroundColor3 = C.Panel
 CloseConfirmation.BorderSizePixel = 0
 CloseConfirmation.Position = UDim2.new(0.5, 0, 0.5, 0)
 CloseConfirmation.Size = UDim2.new(0, 310, 0, 145)
 CloseConfirmation.Visible = false
 CloseConfirmation.ZIndex = 20
 
-UIStroke_3.Color = Color3.fromRGB(255, 73, 84)
+UIStroke_3.Color = C.RedHover
 UIStroke_3.Thickness = 1
 UIStroke_3.Parent = CloseConfirmation
 
@@ -418,7 +427,7 @@ ConfirmationExplanation.TextXAlignment = Enum.TextXAlignment.Left
 
 Cancel.Name = "Cancel"
 Cancel.Parent = CloseConfirmation
-Cancel.BackgroundColor3 = Color3.fromRGB(29, 32, 43)
+Cancel.BackgroundColor3 = C.Surface
 Cancel.BorderSizePixel = 0
 Cancel.Position = UDim2.new(0, 14, 1, -45)
 Cancel.Size = UDim2.new(0.5, -21, 0, 32)
@@ -433,7 +442,7 @@ UICorner_16.Parent = Cancel
 
 CloseScript.Name = "CloseScript"
 CloseScript.Parent = CloseConfirmation
-CloseScript.BackgroundColor3 = Color3.fromRGB(132, 39, 49)
+CloseScript.BackgroundColor3 = C.RedDark
 CloseScript.BorderSizePixel = 0
 CloseScript.Position = UDim2.new(0.5, 7, 1, -45)
 CloseScript.Size = UDim2.new(0.5, -21, 0, 32)
@@ -454,16 +463,6 @@ local function guiConnect(signal, callback)
     return connection
 end
 
-local C = {
-    Background = Color3.fromRGB(17, 19, 27),
-    Panel = Color3.fromRGB(22, 24, 33),
-    Surface = Color3.fromRGB(29, 32, 43),
-    SurfaceHover = Color3.fromRGB(39, 42, 55),
-    Red = Color3.fromRGB(255, 73, 84),
-    RedDark = Color3.fromRGB(132, 39, 49),
-    RedHover = Color3.fromRGB(255, 73, 84),
-}
-
 local OutlineChanged = Instance.new("BindableEvent")
 local UnloadRequested = Instance.new("BindableEvent")
 local outlineEnabled = true
@@ -472,7 +471,7 @@ local function setOutlineEnabled(enabled)
     outlineEnabled = enabled and true or false
     ModuleCheckbox.Text = outlineEnabled and "✓" or ""
     if outlineEnabled then
-        ModuleCheckbox.BackgroundColor3 = outlineHovering and C.RedHover or Color3.fromRGB(255, 39, 52)
+        ModuleCheckbox.BackgroundColor3 = outlineHovering and C.RedHover or C.RedDark
     else
         ModuleCheckbox.BackgroundColor3 = outlineHovering and C.SurfaceHover or C.Background
     end
