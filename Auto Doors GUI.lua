@@ -60,6 +60,10 @@ local C = {
     SurfaceHover = Color3.fromRGB(39, 42, 55),
     RedDark = Color3.fromRGB(255, 39, 52),
     RedHover = Color3.fromRGB(255, 73, 84),
+    White = Color3.fromRGB(255, 255, 255),
+    UIStroke1 = Color3.fromRGB(67, 73, 91),
+    SecondaryText = Color3.fromRGB(157, 163, 180),
+    Black = Color3.fromRGB(0, 0, 0),
 }
 
 --Properties:
@@ -84,7 +88,7 @@ MainWindow.Size = UDim2.new(0, 430, 0, 600)
 UICorner.CornerRadius = UDim.new(0, 10)
 UICorner.Parent = MainWindow
 
-UIStroke.Color = Color3.fromRGB(67, 73, 91)
+UIStroke.Color = C.UIStroke1
 UIStroke.Thickness = 1
 UIStroke.Parent = MainWindow
 
@@ -115,7 +119,7 @@ Title.Position = UDim2.new(0, 17, 0, 7)
 Title.Size = UDim2.new(1, -150, 0, 27)
 Title.Font = Enum.Font.GothamBold
 Title.Text = "AUTO DOORS"
-Title.TextColor3 = Color3.fromRGB(255, 255, 255)
+Title.TextColor3 = C.White
 Title.TextSize = 19.000
 Title.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -126,7 +130,7 @@ Description.Position = UDim2.new(0, 18, 0, 34)
 Description.Size = UDim2.new(1, -150, 0, 16)
 Description.Font = Enum.Font.GothamMedium
 Description.Text = "ENTITY DETECTION  /  AUTOMATION"
-Description.TextColor3 = Color3.fromRGB(157, 163, 180)
+Description.TextColor3 = C.SecondaryText
 Description.TextSize = 9.000
 Description.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -139,7 +143,7 @@ Resize.Size = UDim2.new(0, 30, 0, 30)
 Resize.AutoButtonColor = false
 Resize.Font = Enum.Font.GothamBold
 Resize.Text = "▢"
-Resize.TextColor3 = Color3.fromRGB(255, 255, 255)
+Resize.TextColor3 = C.White
 Resize.TextSize = 15.000
 
 UICorner_4.Parent = Resize
@@ -153,21 +157,21 @@ Minimize.Size = UDim2.new(0, 30, 0, 30)
 Minimize.AutoButtonColor = false
 Minimize.Font = Enum.Font.GothamMedium
 Minimize.Text = "—"
-Minimize.TextColor3 = Color3.fromRGB(255, 255, 255)
+Minimize.TextColor3 = C.White
 Minimize.TextSize = 15.000
 
 UICorner_5.Parent = Minimize
 
 Close.Name = "Close"
 Close.Parent = Header
-Close.BackgroundColor3 = Color3.fromRGB(255, 39, 52)
+Close.BackgroundColor3 = C.RedDark
 Close.BorderSizePixel = 0
 Close.Position = UDim2.new(0, 390, 0, 15)
 Close.Size = UDim2.new(0, 30, 0, 30)
 Close.AutoButtonColor = false
 Close.Font = Enum.Font.Gotham
 Close.Text = "×"
-Close.TextColor3 = Color3.fromRGB(255, 255, 255)
+Close.TextColor3 = C.White
 Close.TextSize = 40.000
 
 UICorner_6.Parent = Close
@@ -201,7 +205,7 @@ ModuleText.Position = UDim2.new(0, 12, 0, 0)
 ModuleText.Size = UDim2.new(1, -70, 1, 0)
 ModuleText.Font = Enum.Font.GothamMedium
 ModuleText.Text = "Entity Outlines"
-ModuleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+ModuleText.TextColor3 = C.White
 ModuleText.TextSize = 15.000
 ModuleText.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -214,14 +218,14 @@ ModuleCheckbox.Size = UDim2.new(0, 26, 0, 26)
 ModuleCheckbox.AutoButtonColor = false
 ModuleCheckbox.Font = Enum.Font.GothamMedium
 ModuleCheckbox.Text = "✓"
-ModuleCheckbox.TextColor3 = Color3.fromRGB(255, 255, 255)
+ModuleCheckbox.TextColor3 = C.White
 ModuleCheckbox.TextSize = 15.000
 
 UICorner_7.Parent = ModuleCheckbox
 
 UICorner_8.Parent = EntityOutlinesModule
 
-UIStroke_2.Color = Color3.fromRGB(67, 73, 91)
+UIStroke_2.Color = C.UIStroke1
 UIStroke_2.Thickness = 1
 UIStroke_2.Parent = EntityOutlinesModule
 
@@ -245,7 +249,7 @@ EntityListModule.ZIndex = 2
 EntityListModule.AutoButtonColor = false
 EntityListModule.Font = Enum.Font.GothamMedium
 EntityListModule.Text = "  Entities Detected:"
-EntityListModule.TextColor3 = Color3.fromRGB(255, 255, 255)
+EntityListModule.TextColor3 = C.White
 EntityListModule.TextSize = 15.000
 EntityListModule.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -259,7 +263,7 @@ Arrow.Position = UDim2.new(1, -3, 0.75, 0)
 Arrow.Size = UDim2.new(0, 25, 0, 30)
 Arrow.Font = Enum.Font.GothamBold
 Arrow.Text = "ꜜ"
-Arrow.TextColor3 = Color3.fromRGB(255, 255, 255)
+Arrow.TextColor3 = C.White
 Arrow.TextSize = 30.000
 Arrow.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -267,7 +271,7 @@ Dropdown.Name = "Dropdown"
 Dropdown.Parent = EntityListModule
 Dropdown.Active = true
 Dropdown.BackgroundColor3 = C.Surface
-Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Dropdown.BorderColor3 = C.Black
 Dropdown.BorderSizePixel = 0
 Dropdown.Position = UDim2.new(0, 0, 0, 39)
 Dropdown.Size = UDim2.new(0, 400, 0, 250)
@@ -285,7 +289,7 @@ NameTagModule.Size = UDim2.new(0, 400, 0, 45)
 NameTagModule.AutoButtonColor = false
 NameTagModule.Font = Enum.Font.GothamMedium
 NameTagModule.Text = "  Name Tags: Recommended"
-NameTagModule.TextColor3 = Color3.fromRGB(255, 255, 255)
+NameTagModule.TextColor3 = C.White
 NameTagModule.TextSize = 15.000
 NameTagModule.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -299,7 +303,7 @@ Arrow_2.Position = UDim2.new(1, -3, 0.75, 0)
 Arrow_2.Size = UDim2.new(0, 25, 0, 30)
 Arrow_2.Font = Enum.Font.GothamBold
 Arrow_2.Text = "ꜜ"
-Arrow_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+Arrow_2.TextColor3 = C.White
 Arrow_2.TextSize = 30.000
 Arrow_2.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -307,7 +311,7 @@ Dropdown_2.Name = "Dropdown"
 Dropdown_2.Parent = NameTagModule
 Dropdown_2.Active = true
 Dropdown_2.BackgroundColor3 = C.Surface
-Dropdown_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Dropdown_2.BorderColor3 = C.Black
 Dropdown_2.BorderSizePixel = 0
 Dropdown_2.Position = UDim2.new(0, 0, 0, 39)
 Dropdown_2.Size = UDim2.new(0, 400, 0, 250)
@@ -353,7 +357,7 @@ Entities.Size = UDim2.new(0.5, -4, 1, 0)
 Entities.AutoButtonColor = false
 Entities.Font = Enum.Font.GothamMedium
 Entities.Text = "Entities"
-Entities.TextColor3 = Color3.fromRGB(255, 255, 255)
+Entities.TextColor3 = C.White
 Entities.TextSize = 15.000
 
 UICorner_13.Parent = Entities
@@ -367,7 +371,7 @@ Automation.Size = UDim2.new(0.5, -4, 1, 0)
 Automation.AutoButtonColor = false
 Automation.Font = Enum.Font.GothamMedium
 Automation.Text = "Automation"
-Automation.TextColor3 = Color3.fromRGB(255, 255, 255)
+Automation.TextColor3 = C.White
 Automation.TextSize = 15.000
 
 UICorner_14.Parent = Automation
@@ -408,7 +412,7 @@ ConfirmationText.Size = UDim2.new(1, -28, 0, 25)
 ConfirmationText.ZIndex = 21
 ConfirmationText.Font = Enum.Font.GothamBold
 ConfirmationText.Text = "Close Auto Doors?"
-ConfirmationText.TextColor3 = Color3.fromRGB(255, 255, 255)
+ConfirmationText.TextColor3 = C.White
 ConfirmationText.TextSize = 15.000
 ConfirmationText.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -420,7 +424,7 @@ ConfirmationExplanation.Size = UDim2.new(1, -28, 0, 32)
 ConfirmationExplanation.ZIndex = 21
 ConfirmationExplanation.Font = Enum.Font.Gotham
 ConfirmationExplanation.Text = "This will stop detection and remove all script visuals."
-ConfirmationExplanation.TextColor3 = Color3.fromRGB(157, 163, 180)
+ConfirmationExplanation.TextColor3 = C.SecondaryText
 ConfirmationExplanation.TextSize = 11.000
 ConfirmationExplanation.TextWrapped = true
 ConfirmationExplanation.TextXAlignment = Enum.TextXAlignment.Left
@@ -435,7 +439,7 @@ Cancel.ZIndex = 21
 Cancel.AutoButtonColor = false
 Cancel.Font = Enum.Font.GothamMedium
 Cancel.Text = "Cancel"
-Cancel.TextColor3 = Color3.fromRGB(255, 255, 255)
+Cancel.TextColor3 = C.White
 Cancel.TextSize = 15.000
 
 UICorner_16.Parent = Cancel
@@ -450,7 +454,7 @@ CloseScript.ZIndex = 21
 CloseScript.AutoButtonColor = false
 CloseScript.Font = Enum.Font.GothamMedium
 CloseScript.Text = "Close Script"
-CloseScript.TextColor3 = Color3.fromRGB(255, 255, 255)
+CloseScript.TextColor3 = C.White
 CloseScript.TextSize = 15.000
 
 UICorner_17.Parent = CloseScript
@@ -529,8 +533,8 @@ local function switchTab(which)
     local showEntities = which == "Entities"
     EntitiesPage.Visible = showEntities
     AutomationPage.Visible = not showEntities
-    Entities.BackgroundColor3 = showEntities and Color3.fromRGB(255, 39, 52) or C.Surface
-    Automation.BackgroundColor3 = (not showEntities) and Color3.fromRGB(255, 39, 52) or C.Surface
+    Entities.BackgroundColor3 = showEntities and C.RedDark or C.Surface
+    Automation.BackgroundColor3 = (not showEntities) and C.RedDark or C.Surface
 end
 guiConnect(Entities.MouseButton1Click, function() switchTab("Entities") end)
 guiConnect(Automation.MouseButton1Click, function() switchTab("Automation") end)
@@ -556,9 +560,9 @@ local function wireHover(buttonObject, baseColor, hoverColor)
     end)
     guiConnect(buttonObject.MouseLeave, function()
         if buttonObject == Entities then
-            buttonObject.BackgroundColor3 = selectedTab == "Entities" and Color3.fromRGB(255, 39, 52) or C.Surface
+            buttonObject.BackgroundColor3 = selectedTab == "Entities" and C.RedDark or C.Surface
         elseif buttonObject == Automation then
-            buttonObject.BackgroundColor3 = selectedTab == "Automation" and Color3.fromRGB(255, 39, 52) or C.Surface
+            buttonObject.BackgroundColor3 = selectedTab == "Automation" and C.RedDark or C.Surface
         elseif buttonObject == ModuleCheckbox then
             outlineHovering = false
             setOutlineEnabled(outlineEnabled)
