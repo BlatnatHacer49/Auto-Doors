@@ -599,11 +599,17 @@ guiConnect(Cancel.MouseButton1Click, function()
     CloseConfirmation.Visible = false
 end)
 guiConnect(CloseScript.MouseButton1Click, function()
+    -- Fire cleanup first, then defer GUI destruction so the main script can
+    -- finish removing Highlights and name tags before the GUI disappears.
     UnloadRequested:Fire()
     for _, connection in ipairs(guiConnections) do
         pcall(function() connection:Disconnect() end)
     end
-    DOORSEntityDetector:Destroy()
+    task.defer(function()
+        if DOORSEntityDetector and DOORSEntityDetector.Parent then
+            DOORSEntityDetector:Destroy()
+        end
+    end)
 end)
 
 return {
