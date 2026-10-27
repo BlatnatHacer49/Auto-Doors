@@ -461,7 +461,7 @@ local C = {
     SurfaceHover = Color3.fromRGB(39, 42, 55),
     Red = Color3.fromRGB(255, 73, 84),
     RedDark = Color3.fromRGB(132, 39, 49),
-    RedHover = Color3.fromRGB(166, 48, 60),
+    RedHover = Color3.fromRGB(255, 73, 84),
 }
 
 local OutlineChanged = Instance.new("BindableEvent")
@@ -530,8 +530,8 @@ local function switchTab(which)
     local showEntities = which == "Entities"
     EntitiesPage.Visible = showEntities
     AutomationPage.Visible = not showEntities
-    Entities.BackgroundColor3 = showEntities and C.RedDark or C.Surface
-    Automation.BackgroundColor3 = (not showEntities) and C.RedDark or C.Surface
+    Entities.BackgroundColor3 = showEntities and Color3.fromRGB(170, 38, 38) or C.Surface
+    Automation.BackgroundColor3 = (not showEntities) and Color3.fromRGB(170, 38, 38) or C.Surface
 end
 guiConnect(Entities.MouseButton1Click, function() switchTab("Entities") end)
 guiConnect(Automation.MouseButton1Click, function() switchTab("Automation") end)
@@ -557,9 +557,9 @@ local function wireHover(buttonObject, baseColor, hoverColor)
     end)
     guiConnect(buttonObject.MouseLeave, function()
         if buttonObject == Entities then
-            buttonObject.BackgroundColor3 = selectedTab == "Entities" and C.RedDark or C.Surface
+            buttonObject.BackgroundColor3 = selectedTab == "Entities" and Color3.fromRGB(170, 38, 38) or C.Surface
         elseif buttonObject == Automation then
-            buttonObject.BackgroundColor3 = selectedTab == "Automation" and C.RedDark or C.Surface
+            buttonObject.BackgroundColor3 = selectedTab == "Automation" and Color3.fromRGB(170, 38, 38) or C.Surface
         elseif buttonObject == ModuleCheckbox then
             outlineHovering = false
             setOutlineEnabled(outlineEnabled)
