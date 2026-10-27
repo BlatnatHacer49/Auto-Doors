@@ -191,7 +191,7 @@ ModuleText.Position = UDim2.new(0, 12, 0, 0)
 ModuleText.Size = UDim2.new(1, -70, 1, 0)
 ModuleText.Font = Enum.Font.GothamMedium
 ModuleText.Text = "Entity Outlines"
-ModuleText.TextColor3 = Color3.fromRGB(245, 246, 250)
+ModuleText.TextColor3 = Color3.fromRGB(255, 255, 255)
 ModuleText.TextSize = 15.000
 ModuleText.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -204,7 +204,7 @@ ModuleCheckbox.Size = UDim2.new(0, 26, 0, 26)
 ModuleCheckbox.AutoButtonColor = false
 ModuleCheckbox.Font = Enum.Font.GothamMedium
 ModuleCheckbox.Text = "✓"
-ModuleCheckbox.TextColor3 = Color3.fromRGB(245, 246, 250)
+ModuleCheckbox.TextColor3 = Color3.fromRGB(255, 255, 255)
 ModuleCheckbox.TextSize = 15.000
 
 UICorner_7.Parent = ModuleCheckbox
@@ -249,7 +249,7 @@ Arrow.Position = UDim2.new(1, -3, 0.75, 0)
 Arrow.Size = UDim2.new(0, 25, 0, 30)
 Arrow.Font = Enum.Font.GothamBold
 Arrow.Text = "ꜜ"
-Arrow.TextColor3 = Color3.fromRGB(245, 246, 250)
+Arrow.TextColor3 = Color3.fromRGB(255, 255, 255)
 Arrow.TextSize = 30.000
 Arrow.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -289,7 +289,7 @@ Arrow_2.Position = UDim2.new(1, -3, 0.75, 0)
 Arrow_2.Size = UDim2.new(0, 25, 0, 30)
 Arrow_2.Font = Enum.Font.GothamBold
 Arrow_2.Text = "ꜜ"
-Arrow_2.TextColor3 = Color3.fromRGB(245, 246, 250)
+Arrow_2.TextColor3 = Color3.fromRGB(255, 255, 255)
 Arrow_2.TextSize = 30.000
 Arrow_2.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -350,8 +350,8 @@ UICorner_13.Parent = Entities
 
 Automation.Name = "Automation"
 Automation.Parent = Tabs
-Automation.BackgroundColor3 = Color3.fromRGB(29, 32, 43)
-Automation.BorderColor3 = Color3.fromRGB(29, 32, 43)
+Automation.BackgroundColor3 = Color3.fromRGB(170, 38, 38)
+Automation.BorderColor3 = Color3.fromRGB(170, 38, 38)
 Automation.BorderSizePixel = 0
 Automation.Size = UDim2.new(0.5, -4, 1, 0)
 Automation.AutoButtonColor = false
