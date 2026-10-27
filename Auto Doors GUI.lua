@@ -453,8 +453,8 @@ return {
     Minimize = Minimize,
     Close = Close,
     CloseConfirmation = CloseConfirmation,
-    CancelClose = TextButton_2,
-    ConfirmClose = TextButton_3,
+    CancelClose = Cancel,
+    ConfirmClose = CloseScript,
 
     -- Tabs
     EntitiesTab = Entities,
