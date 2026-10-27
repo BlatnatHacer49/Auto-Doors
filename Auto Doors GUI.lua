@@ -59,7 +59,8 @@ DOORSEntityDetector.Name = "DOORSEntityDetector"
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
 
-DOORSEntityDetector.Parent = LocalPlayer:WaitForChild("PlayerGui")DOORSEntityDetector.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+DOORSEntityDetector.Parent = LocalPlayer:WaitForChild("PlayerGui")
+DOORSEntityDetector.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 DOORSEntityDetector.DisplayOrder = 9999
 DOORSEntityDetector.ResetOnSpawn = false
 
@@ -191,7 +192,7 @@ ModuleText.Position = UDim2.new(0, 12, 0, 0)
 ModuleText.Size = UDim2.new(1, -70, 1, 0)
 ModuleText.Font = Enum.Font.GothamMedium
 ModuleText.Text = "Entity Outlines"
-ModuleText.TextColor3 = Color3.fromRGB(255, 255, 255)
+ModuleText.TextColor3 = Color3.fromRGB(245, 246, 250)
 ModuleText.TextSize = 15.000
 ModuleText.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -204,7 +205,7 @@ ModuleCheckbox.Size = UDim2.new(0, 26, 0, 26)
 ModuleCheckbox.AutoButtonColor = false
 ModuleCheckbox.Font = Enum.Font.GothamMedium
 ModuleCheckbox.Text = "✓"
-ModuleCheckbox.TextColor3 = Color3.fromRGB(255, 255, 255)
+ModuleCheckbox.TextColor3 = Color3.fromRGB(245, 246, 250)
 ModuleCheckbox.TextSize = 15.000
 
 UICorner_7.Parent = ModuleCheckbox
@@ -249,7 +250,7 @@ Arrow.Position = UDim2.new(1, -3, 0.75, 0)
 Arrow.Size = UDim2.new(0, 25, 0, 30)
 Arrow.Font = Enum.Font.GothamBold
 Arrow.Text = "ꜜ"
-Arrow.TextColor3 = Color3.fromRGB(255, 255, 255)
+Arrow.TextColor3 = Color3.fromRGB(245, 246, 250)
 Arrow.TextSize = 30.000
 Arrow.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -289,7 +290,7 @@ Arrow_2.Position = UDim2.new(1, -3, 0.75, 0)
 Arrow_2.Size = UDim2.new(0, 25, 0, 30)
 Arrow_2.Font = Enum.Font.GothamBold
 Arrow_2.Text = "ꜜ"
-Arrow_2.TextColor3 = Color3.fromRGB(255, 255, 255)
+Arrow_2.TextColor3 = Color3.fromRGB(245, 246, 250)
 Arrow_2.TextSize = 30.000
 Arrow_2.TextXAlignment = Enum.TextXAlignment.Left
 
@@ -350,8 +351,8 @@ UICorner_13.Parent = Entities
 
 Automation.Name = "Automation"
 Automation.Parent = Tabs
-Automation.BackgroundColor3 = Color3.fromRGB(170, 38, 38)
-Automation.BorderColor3 = Color3.fromRGB(170, 38, 38)
+Automation.BackgroundColor3 = Color3.fromRGB(29, 32, 43)
+Automation.BorderColor3 = Color3.fromRGB(29, 32, 43)
 Automation.BorderSizePixel = 0
 Automation.Size = UDim2.new(0.5, -4, 1, 0)
 Automation.AutoButtonColor = false
@@ -444,6 +445,164 @@ CloseScript.TextColor3 = Color3.fromRGB(255, 255, 255)
 CloseScript.TextSize = 15.000
 
 UICorner_17.Parent = CloseScript
+-- Standalone GUI behavior. Entity detection stays in the separate main script.
+local UserInputService = game:GetService("UserInputService")
+local guiConnections = {}
+local function guiConnect(signal, callback)
+    local connection = signal:Connect(callback)
+    table.insert(guiConnections, connection)
+    return connection
+end
+
+local C = {
+    Background = Color3.fromRGB(17, 19, 27),
+    Panel = Color3.fromRGB(22, 24, 33),
+    Surface = Color3.fromRGB(29, 32, 43),
+    SurfaceHover = Color3.fromRGB(39, 42, 55),
+    Red = Color3.fromRGB(255, 73, 84),
+    RedDark = Color3.fromRGB(132, 39, 49),
+    RedHover = Color3.fromRGB(166, 48, 60),
+}
+
+local OutlineChanged = Instance.new("BindableEvent")
+local UnloadRequested = Instance.new("BindableEvent")
+local outlineEnabled = true
+local outlineHovering = false
+local function setOutlineEnabled(enabled)
+    outlineEnabled = enabled and true or false
+    ModuleCheckbox.Text = outlineEnabled and "✓" or ""
+    if outlineEnabled then
+        ModuleCheckbox.BackgroundColor3 = outlineHovering and C.RedHover or Color3.fromRGB(170, 38, 38)
+    else
+        ModuleCheckbox.BackgroundColor3 = outlineHovering and C.SurfaceHover or C.Background
+    end
+end
+
+-- Window sizing and minimize controls.
+local fullSize = MainWindow.Size
+local smallSize = UDim2.new(fullSize.X.Scale, fullSize.X.Offset, 0, Header.Size.Y.Offset)
+local shrunk = false
+guiConnect(Resize.MouseButton1Click, function()
+    shrunk = not shrunk
+    MainWindow.Size = shrunk and smallSize or fullSize
+    Resize.Text = shrunk and "□" or "▢"
+end)
+guiConnect(Minimize.MouseButton1Click, function()
+    MainWindow.Visible = false
+end)
+guiConnect(UserInputService.InputBegan, function(input, processed)
+    if not processed and input.KeyCode == Enum.KeyCode.F1 then
+        MainWindow.Visible = not MainWindow.Visible
+    end
+end)
+
+-- Dragging is owned by the GUI, not the entity module.
+do
+    local dragging, dragStart, startPosition = false, nil, nil
+    guiConnect(Header.InputBegan, function(input)
+        if input.UserInputType ~= Enum.UserInputType.MouseButton1 then return end
+        local p = input.Position
+        local function inside(buttonObject)
+            local pos, size = buttonObject.AbsolutePosition, buttonObject.AbsoluteSize
+            return p.X >= pos.X and p.X <= pos.X + size.X and p.Y >= pos.Y and p.Y <= pos.Y + size.Y
+        end
+        if inside(Resize) or inside(Minimize) or inside(Close) then return end
+        dragging = true
+        dragStart = p
+        startPosition = MainWindow.Position
+    end)
+    guiConnect(UserInputService.InputChanged, function(input)
+        if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
+            local delta = input.Position - dragStart
+            MainWindow.Position = UDim2.new(startPosition.X.Scale, startPosition.X.Offset + delta.X,
+                startPosition.Y.Scale, startPosition.Y.Offset + delta.Y)
+        end
+    end)
+    guiConnect(UserInputService.InputEnded, function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end
+    end)
+end
+
+-- Tab navigation.
+local selectedTab = "Entities"
+local function switchTab(which)
+    selectedTab = which
+    local showEntities = which == "Entities"
+    EntitiesPage.Visible = showEntities
+    AutomationPage.Visible = not showEntities
+    Entities.BackgroundColor3 = showEntities and C.RedDark or C.Surface
+    Automation.BackgroundColor3 = (not showEntities) and C.RedDark or C.Surface
+end
+guiConnect(Entities.MouseButton1Click, function() switchTab("Entities") end)
+guiConnect(Automation.MouseButton1Click, function() switchTab("Automation") end)
+switchTab("Entities")
+
+-- All button hover styling lives here. The two dropdown headers are hover-only;
+-- their dropdown behavior is intentionally not implemented.
+local function wireHover(buttonObject, baseColor, hoverColor)
+    if not buttonObject or not buttonObject:IsA("TextButton") then return end
+    local base = baseColor or buttonObject.BackgroundColor3
+    local hover = hoverColor or C.SurfaceHover
+    guiConnect(buttonObject.MouseEnter, function()
+        if buttonObject == Entities then
+            buttonObject.BackgroundColor3 = selectedTab == "Entities" and C.RedHover or hover
+        elseif buttonObject == Automation then
+            buttonObject.BackgroundColor3 = selectedTab == "Automation" and C.RedHover or hover
+        elseif buttonObject == ModuleCheckbox then
+            outlineHovering = true
+            setOutlineEnabled(outlineEnabled)
+        else
+            buttonObject.BackgroundColor3 = hover
+        end
+    end)
+    guiConnect(buttonObject.MouseLeave, function()
+        if buttonObject == Entities then
+            buttonObject.BackgroundColor3 = selectedTab == "Entities" and C.RedDark or C.Surface
+        elseif buttonObject == Automation then
+            buttonObject.BackgroundColor3 = selectedTab == "Automation" and C.RedDark or C.Surface
+        elseif buttonObject == ModuleCheckbox then
+            outlineHovering = false
+            setOutlineEnabled(outlineEnabled)
+        else
+            buttonObject.BackgroundColor3 = base
+        end
+    end)
+end
+
+for _, object in ipairs(DOORSEntityDetector:GetDescendants()) do
+    if object:IsA("TextButton") and object ~= ModuleCheckbox then
+        if object == Close or object == CloseScript then
+            wireHover(object, object.BackgroundColor3, C.RedHover)
+        else
+            wireHover(object)
+        end
+    end
+end
+wireHover(ModuleCheckbox)
+
+-- The checkbox updates its own appearance and notifies the optional entity module.
+setOutlineEnabled(true)
+guiConnect(ModuleCheckbox.MouseButton1Click, function()
+    setOutlineEnabled(not outlineEnabled)
+    OutlineChanged:Fire(outlineEnabled)
+end)
+
+-- Closing the GUI is independent. If the main entity module is listening, it can
+-- remove highlights/tags first; otherwise this still closes as a standalone GUI.
+guiConnect(Close.MouseButton1Click, function()
+    CloseConfirmation.Visible = true
+end)
+guiConnect(Cancel.MouseButton1Click, function()
+    CloseConfirmation.Visible = false
+end)
+guiConnect(CloseScript.MouseButton1Click, function()
+    UnloadRequested:Fire()
+    for _, connection in ipairs(guiConnections) do
+        pcall(function() connection:Disconnect() end)
+    end
+    DOORSEntityDetector:Destroy()
+end)
+
 return {
     ScreenGui = DOORSEntityDetector,
     MainWindow = MainWindow,
@@ -462,11 +621,14 @@ return {
     EntitiesPage = EntitiesPage,
     AutomationPage = AutomationPage,
 
-    -- Entity settings
+    -- Entity settings and integration events
     EntityListModule = EntityListModule,
     NameTagModule = NameTagModule,
     EntityOutlinesModule = EntityOutlinesModule,
-    OutlineToggle = TextButton,
+    OutlineToggle = ModuleCheckbox,
+    OutlineChanged = OutlineChanged,
+    UnloadRequested = UnloadRequested,
+    SetOutlineEnabled = setOutlineEnabled,
 
     -- Notifications
     Notifications = Notifications,
