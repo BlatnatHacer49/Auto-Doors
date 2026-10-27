@@ -58,8 +58,8 @@ local C = {
     Panel = Color3.fromRGB(22, 24, 33),
     Surface = Color3.fromRGB(29, 32, 43),
     SurfaceHover = Color3.fromRGB(39, 42, 55),
-    RedDark = Color3.fromRGB(255, 73, 84),
-    RedHover = Color3.fromRGB(255, 73, 84),
+    Red = Color3.fromRGB(255, 73, 84),
+    RedHover = Color3.fromRGB(255, 102, 111),
     White = Color3.fromRGB(255, 255, 255),
     UIStroke1 = Color3.fromRGB(67, 73, 91),
     SecondaryText = Color3.fromRGB(157, 163, 180),
@@ -164,7 +164,7 @@ UICorner_5.Parent = Minimize
 
 Close.Name = "Close"
 Close.Parent = Header
-Close.BackgroundColor3 = C.RedDark
+Close.BackgroundColor3 = C.Red
 Close.BorderSizePixel = 0
 Close.Position = UDim2.new(0, 390, 0, 15)
 Close.Size = UDim2.new(0, 30, 0, 30)
@@ -211,7 +211,7 @@ ModuleText.TextXAlignment = Enum.TextXAlignment.Left
 
 ModuleCheckbox.Name = "ModuleCheckbox"
 ModuleCheckbox.Parent = EntityOutlinesModule
-ModuleCheckbox.BackgroundColor3 = C.RedDark
+ModuleCheckbox.BackgroundColor3 = C.Red
 ModuleCheckbox.BorderSizePixel = 0
 ModuleCheckbox.Position = UDim2.new(1, -38, 0.5, -13)
 ModuleCheckbox.Size = UDim2.new(0, 26, 0, 26)
@@ -446,7 +446,7 @@ UICorner_16.Parent = Cancel
 
 CloseScript.Name = "CloseScript"
 CloseScript.Parent = CloseConfirmation
-CloseScript.BackgroundColor3 = C.RedDark
+CloseScript.BackgroundColor3 = C.Red
 CloseScript.BorderSizePixel = 0
 CloseScript.Position = UDim2.new(0.5, 7, 1, -45)
 CloseScript.Size = UDim2.new(0.5, -21, 0, 32)
@@ -475,7 +475,7 @@ local function setOutlineEnabled(enabled)
     outlineEnabled = enabled and true or false
     ModuleCheckbox.Text = outlineEnabled and "✓" or ""
     if outlineEnabled then
-        ModuleCheckbox.BackgroundColor3 = outlineHovering and C.RedHover or C.RedDark
+        ModuleCheckbox.BackgroundColor3 = outlineHovering and C.RedHover or C.Red
     else
         ModuleCheckbox.BackgroundColor3 = outlineHovering and C.SurfaceHover or C.Background
     end
@@ -533,8 +533,8 @@ local function switchTab(which)
     local showEntities = which == "Entities"
     EntitiesPage.Visible = showEntities
     AutomationPage.Visible = not showEntities
-    Entities.BackgroundColor3 = showEntities and C.RedDark or C.Surface
-    Automation.BackgroundColor3 = (not showEntities) and C.RedDark or C.Surface
+    Entities.BackgroundColor3 = showEntities and C.Red or C.Surface
+    Automation.BackgroundColor3 = (not showEntities) and C.Red or C.Surface
 end
 guiConnect(Entities.MouseButton1Click, function() switchTab("Entities") end)
 guiConnect(Automation.MouseButton1Click, function() switchTab("Automation") end)
@@ -560,9 +560,9 @@ local function wireHover(buttonObject, baseColor, hoverColor)
     end)
     guiConnect(buttonObject.MouseLeave, function()
         if buttonObject == Entities then
-            buttonObject.BackgroundColor3 = selectedTab == "Entities" and C.RedDark or C.Surface
+            buttonObject.BackgroundColor3 = selectedTab == "Entities" and C.Red or C.Surface
         elseif buttonObject == Automation then
-            buttonObject.BackgroundColor3 = selectedTab == "Automation" and C.RedDark or C.Surface
+            buttonObject.BackgroundColor3 = selectedTab == "Automation" and C.Red or C.Surface
         elseif buttonObject == ModuleCheckbox then
             outlineHovering = false
             setOutlineEnabled(outlineEnabled)
