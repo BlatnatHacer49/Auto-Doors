@@ -129,8 +129,8 @@ MainWindow.ClipsDescendants = true
 MainWindow.Position = UDim2.new(0, 350, 0, 1)
 MainWindow.Size = UDim2.new(0, 430, 0, 600)
 
-UICorner.BottomLeftRadius = UDim.new(0, 10)
-UICorner.BottomRightRadius = UDim.new(0, 10)
+UICorner.BottomLeftRadius = UDim.new(0, 0)
+UICorner.BottomRightRadius = UDim.new(0, 0)
 UICorner.TopLeftRadius = UDim.new(0, 10)
 UICorner.TopRightRadius = UDim.new(0, 10)
 UICorner.Parent = MainWindow
@@ -345,14 +345,25 @@ Arrow.TextSize = 30.000
 Arrow.TextXAlignment = Enum.TextXAlignment.Left
 
 Dropdown.Name = "Dropdown"
-Dropdown.Parent = EntityListModule
+local DropdownClip = Instance.new("Frame")
+DropdownClip.Name = "DropdownClip"
+DropdownClip.Parent = EntityListModule
+DropdownClip.BackgroundTransparency = 1
+DropdownClip.BorderSizePixel = 0
+DropdownClip.ClipsDescendants = true
+DropdownClip.Position = UDim2.new(0, 0, 0, 45)
+DropdownClip.Size = UDim2.new(0, 400, 0, 0)
+DropdownClip.Visible = false
+DropdownClip.ZIndex = 3
+
+Dropdown.Parent = DropdownClip
 Dropdown.Active = true
 Dropdown.BackgroundColor3 = C.Surface
 Dropdown.BorderColor3 = C.Black
 Dropdown.BorderSizePixel = 0
-Dropdown.Position = UDim2.new(0, 0, 0, 45)
+Dropdown.Position = UDim2.new(0, 0, 0, 0)
 Dropdown.Size = UDim2.new(0, 400, 0, 0)
-Dropdown.Visible = false
+Dropdown.Visible = true
 
 UICorner_10.BottomLeftRadius = UDim.new(0, 8)
 UICorner_10.BottomRightRadius = UDim.new(0, 8)
@@ -392,14 +403,25 @@ Arrow_2.TextSize = 30.000
 Arrow_2.TextXAlignment = Enum.TextXAlignment.Left
 
 Dropdown_2.Name = "Dropdown"
-Dropdown_2.Parent = NameTagModule
+local DropdownClip_2 = Instance.new("Frame")
+DropdownClip_2.Name = "DropdownClip"
+DropdownClip_2.Parent = NameTagModule
+DropdownClip_2.BackgroundTransparency = 1
+DropdownClip_2.BorderSizePixel = 0
+DropdownClip_2.ClipsDescendants = true
+DropdownClip_2.Position = UDim2.new(0, 0, 0, 45)
+DropdownClip_2.Size = UDim2.new(0, 400, 0, 0)
+DropdownClip_2.Visible = false
+DropdownClip_2.ZIndex = 3
+
+Dropdown_2.Parent = DropdownClip_2
 Dropdown_2.Active = true
 Dropdown_2.BackgroundColor3 = C.Surface
 Dropdown_2.BorderColor3 = C.Black
 Dropdown_2.BorderSizePixel = 0
-Dropdown_2.Position = UDim2.new(0, 0, 0, 45)
+Dropdown_2.Position = UDim2.new(0, 0, 0, 0)
 Dropdown_2.Size = UDim2.new(0, 400, 0, 0)
-Dropdown_2.Visible = false
+Dropdown_2.Visible = true
 
 UICorner_12.BottomLeftRadius = UDim.new(0, 8)
 UICorner_12.BottomRightRadius = UDim.new(0, 8)
@@ -710,7 +732,6 @@ local entityListLayout, nameTagChoices
 local DROPDOWN_MAX_HEIGHT = 250
 local DROPDOWN_TWEEN_INFO = TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
 local dropdownTweens = {}
-
 local originalParentCornerRadii = {}
 
 local function setParentDropdownCorners(parent, isOpen)
@@ -736,31 +757,36 @@ end
 
 local function updateDropdownHeight(dropdown, layout)
     local contentHeight = layout.AbsoluteContentSize.Y + 4
-    return math.clamp(contentHeight, 0, DROPDOWN_MAX_HEIGHT)
+    return math.clamp(contentHeight, 0, DROPDOWN_MAX_HEIGHT), contentHeight > DROPDOWN_MAX_HEIGHT
 end
 
-local function animateDropdown(dropdown, layout, open)
-    if dropdownTweens[dropdown] then
-        pcall(function() dropdownTweens[dropdown]:Cancel() end)
-        dropdownTweens[dropdown] = nil
+local function animateDropdown(dropdown, layout, clip, open, onClosed)
+    if dropdownTweens[clip] then
+        pcall(function() dropdownTweens[clip]:Cancel() end)
+        dropdownTweens[clip] = nil
     end
     if open then
-        dropdown.Visible = true
-        local targetHeight = updateDropdownHeight(dropdown, layout)
-        dropdownTweens[dropdown] = TweenService:Create(dropdown, DROPDOWN_TWEEN_INFO, {
+        local targetHeight, needsScrolling = updateDropdownHeight(dropdown, layout)
+        dropdown.ScrollBarThickness = needsScrolling and 4 or 0
+        dropdown.Size = UDim2.new(0, 400, 0, targetHeight)
+        clip.Visible = true
+        dropdownTweens[clip] = TweenService:Create(clip, DROPDOWN_TWEEN_INFO, {
             Size = UDim2.new(0, 400, 0, targetHeight)
         })
-        dropdownTweens[dropdown]:Play()
+        dropdownTweens[clip]:Play()
     else
-        local closingTween = TweenService:Create(dropdown, DROPDOWN_TWEEN_INFO, {
+        local closingTween = TweenService:Create(clip, DROPDOWN_TWEEN_INFO, {
             Size = UDim2.new(0, 400, 0, 0)
         })
-        dropdownTweens[dropdown] = closingTween
+        dropdownTweens[clip] = closingTween
         local thisTween = closingTween
-        thisTween.Completed:Connect(function()
-            if dropdownTweens[dropdown] == thisTween then
-                dropdown.Visible = false
-                dropdownTweens[dropdown] = nil
+        thisTween.Completed:Connect(function(playbackState)
+            if dropdownTweens[clip] == thisTween then
+                if playbackState == Enum.PlaybackState.Completed then
+                    clip.Visible = false
+                    dropdownTweens[clip] = nil
+                    if onClosed then onClosed() end
+                end
             end
         end)
         closingTween:Play()
@@ -771,26 +797,32 @@ local function setEntityDropdownOpen(open)
     entityDropdownOpen = open == true
     if entityDropdownOpen then
         nameTagDropdownOpen = false
-        animateDropdown(Dropdown_2, nameTagChoices, false)
+        animateDropdown(Dropdown_2, nameTagChoices, DropdownClip_2, false, function()
+            setParentDropdownCorners(NameTagModule, false)
+        end)
         Arrow_2.Text = "ꜜ"
-        setParentDropdownCorners(NameTagModule, false)
+        setParentDropdownCorners(EntityListModule, true)
     end
-    animateDropdown(Dropdown, entityListLayout, entityDropdownOpen)
+    animateDropdown(Dropdown, entityListLayout, DropdownClip, entityDropdownOpen, function()
+        setParentDropdownCorners(EntityListModule, false)
+    end)
     Arrow.Text = entityDropdownOpen and "ꜛ" or "ꜜ"
-    setParentDropdownCorners(EntityListModule, entityDropdownOpen)
 end
 
 local function setNameTagDropdownOpen(open)
     nameTagDropdownOpen = open == true
     if nameTagDropdownOpen then
         entityDropdownOpen = false
-        animateDropdown(Dropdown, entityListLayout, false)
+        animateDropdown(Dropdown, entityListLayout, DropdownClip, false, function()
+            setParentDropdownCorners(EntityListModule, false)
+        end)
         Arrow.Text = "ꜜ"
-        setParentDropdownCorners(EntityListModule, false)
+        setParentDropdownCorners(NameTagModule, true)
     end
-    animateDropdown(Dropdown_2, nameTagChoices, nameTagDropdownOpen)
+    animateDropdown(Dropdown_2, nameTagChoices, DropdownClip_2, nameTagDropdownOpen, function()
+        setParentDropdownCorners(NameTagModule, false)
+    end)
     Arrow_2.Text = nameTagDropdownOpen and "ꜛ" or "ꜜ"
-    setParentDropdownCorners(NameTagModule, nameTagDropdownOpen)
 end
 
 local function updateEntityRow(rowInfo)
@@ -809,6 +841,9 @@ local function createEntityRow(entity, order)
     row.LayoutOrder = order
     row.ZIndex = 4
     row.Parent = Dropdown
+    local rowCorner = Instance.new("UICorner")
+    rowCorner.CornerRadius = UDim.new(0, 5)
+    rowCorner.Parent = row
 
     local optionLabel = Instance.new("TextLabel")
     optionLabel.Name = "EntityName"
@@ -840,13 +875,28 @@ local function createEntityRow(entity, order)
     checkboxCorner.CornerRadius = UDim.new(0, 6)
     checkboxCorner.Parent = checkbox
 
+    local mainHovering = false
+    local checkboxHovering = false
     local rowInfo = {key = entity.name, Label = optionLabel, Checkbox = checkbox}
     entityRows[entity.name] = rowInfo
+
+    local function updateEntityRowHover()
+        local hovering = mainHovering or checkboxHovering
+        row.BackgroundColor3 = C.SurfaceHover
+        row.BackgroundTransparency = hovering and 0 or 1
+        if checkboxHovering then
+            checkbox.BackgroundColor3 = (entityEnabledState[entity.name] ~= false) and C.RedHover or C.SurfaceHover
+        else
+            checkbox.BackgroundColor3 = (entityEnabledState[entity.name] ~= false) and C.Red or C.Background
+        end
+    end
+
     updateEntityRow(rowInfo)
 
     local function flip()
         entityEnabledState[entity.name] = not (entityEnabledState[entity.name] ~= false)
         updateEntityRow(rowInfo)
+        updateEntityRowHover()
         EntityEnabledChanged:Fire(entity.name, entityEnabledState[entity.name])
     end
     local rowClickArea = Instance.new("TextButton")
@@ -860,10 +910,22 @@ local function createEntityRow(entity, order)
     optionLabel.ZIndex = 6
     guiConnect(rowClickArea.MouseButton1Click, flip)
     guiConnect(checkbox.MouseButton1Click, flip)
-    guiConnect(checkbox.MouseEnter, function()
-        checkbox.BackgroundColor3 = (entityEnabledState[entity.name] ~= false) and C.RedHover or C.SurfaceHover
+    guiConnect(rowClickArea.MouseEnter, function()
+        mainHovering = true
+        updateEntityRowHover()
     end)
-    guiConnect(checkbox.MouseLeave, function() updateEntityRow(rowInfo) end)
+    guiConnect(rowClickArea.MouseLeave, function()
+        mainHovering = false
+        updateEntityRowHover()
+    end)
+    guiConnect(checkbox.MouseEnter, function()
+        checkboxHovering = true
+        updateEntityRowHover()
+    end)
+    guiConnect(checkbox.MouseLeave, function()
+        checkboxHovering = false
+        updateEntityRowHover()
+    end)
 end
 
 entityListLayout = Instance.new("UIListLayout")
