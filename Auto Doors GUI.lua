@@ -1,4 +1,47 @@
-local function buildGUI(Entities, enabledEntities, initialNameTagMode)
+local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
+    local standaloneEntities = {
+        {name = "RushMoving", display = "Rush"},
+        {name = "AmbushMoving", display = "Ambush"},
+        {name = "FigureRig", display = "Figure"},
+        {name = "Eyes", display = "Eyes"},
+        {name = "Mobble", display = "Jack"},
+        {name = "Dread", display = "Dread"},
+        {name = "GiggleCeiling", display = "Giggle"},
+        {name = "GloombatSwarm", display = "Gloombats"},
+        {name = "BackdoorRush", display = "Blitz"},
+        {name = "BackdoorLookman", display = "Lookman"},
+        {name = "JeffTheKiller", display = "Jeff the Killer"},
+        {name = "SallyLingering", display = "Sally"},
+        {name = "SurgeSpawn", display = "Surge"},
+        {name = "LiveEntityBramble", display = "Bramble"},
+        {name = "Groundskeeper", display = "Groundskeeper"},
+        {name = "MonumentEntity", display = "Monument"},
+        {name = "Alma", display = "Alma"},
+        {name = "Drones", display = "Drone"},
+        {name = "DronesStampede", display = "Drone Stampede"},
+        {name = "TellerEntity", display = "Teller"},
+        {name = "BashMoving", display = "Bash"},
+        {name = "Scribbles", display = "Scribbles"},
+        {name = "Creak", display = "Creak"},
+        {name = "StemsEntity", display = "Stems"},
+        {name = "A60", display = "A-60"},
+        {name = "A120", display = "A-120"},
+        {name = "Screech", display = "Screech"},
+        {name = "LiveVoidReaction", display = "Void"},
+        {name = "Glitch", display = "Glitch"},
+        {name = "Ransom", display = "Ransom"},
+        {name = "EntityModel", display = "Haste"},
+        {name = "Spider", display = "Timothy"},
+        {name = "SideroomDupe", display = "Dupe"},
+        {name = "SeekMovingNewClone", display = "Seek"},
+        {name = "Shade", display = "Halt"},
+        {name = "Snare", display = "Snare"},
+        {name = "MandrakeLive", display = "Mandrake"},
+        {name = "EyestalkMoving", display = "Eyestalk"},
+        {name = "Louie", display = "Louie"},
+        {name = "GrumbleRig", display = "Grumble"},
+    }
+    entityDefinitions = type(entityDefinitions) == "table" and entityDefinitions or standaloneEntities
 local DOORSEntityDetector = Instance.new("ScreenGui")
 local MainWindow = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
@@ -589,6 +632,13 @@ local NameTagModeChanged = Instance.new("BindableEvent")
 local entityDropdownOpen = false
 local nameTagDropdownOpen = false
 local entityEnabledState = enabledEntities or {}
+for _, entity in ipairs(entityDefinitions) do
+    if entityEnabledState[entity.name] == nil then
+        entityEnabledState[entity.name] = true
+    end
+end
+if entityEnabledState.__Portrait == nil then entityEnabledState.__Portrait = true end
+if entityEnabledState.HitByA90 == nil then entityEnabledState.HitByA90 = true end
 local nameTagMode = (initialNameTagMode == "All" or initialNameTagMode == "None") and initialNameTagMode or "Recommended"
 local entityRows = {}
 
@@ -697,11 +747,11 @@ Dropdown.ScrollBarThickness = 4
 Dropdown.ScrollBarImageColor3 = C.Red
 Dropdown.ZIndex = 3
 
-for order, entity in ipairs(Entities or {}) do
+for order, entity in ipairs(entityDefinitions) do
     createEntityRow(entity, order)
 end
-createEntityRow({name = "__Portrait", display = "Portrait"}, #(Entities or {}) + 1)
-createEntityRow({name = "HitByA90", display = "A-90 Signal"}, #(Entities or {}) + 2)
+createEntityRow({name = "__Portrait", display = "Portrait"}, #entityDefinitions + 1)
+createEntityRow({name = "HitByA90", display = "A-90"}, #entityDefinitions + 2)
 
 local nameTagChoices = Instance.new("UIListLayout")
 nameTagChoices.Padding = UDim.new(0, 2)
@@ -795,4 +845,8 @@ return {
 }
 end
 
-return buildGUI
+local mainEntities, mainEnabledEntities, mainNameTagMode = ...
+if mainEntities ~= nil then
+    return buildGUI(mainEntities, mainEnabledEntities, mainNameTagMode)
+end
+return buildGUI()
