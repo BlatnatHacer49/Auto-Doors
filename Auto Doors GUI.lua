@@ -66,8 +66,6 @@ local C = {
     Black = Color3.fromRGB(0, 0, 0),
 }
 
---Properties:
-
 DOORSEntityDetector.Name = "DOORSEntityDetector"
 local Players = game:GetService("Players")
 local LocalPlayer = Players.LocalPlayer
@@ -458,7 +456,6 @@ CloseScript.TextColor3 = C.White
 CloseScript.TextSize = 15.000
 
 UICorner_17.Parent = CloseScript
--- Standalone GUI behavior. Entity detection stays in the separate main script.
 local UserInputService = game:GetService("UserInputService")
 local guiConnections = {}
 local function guiConnect(signal, callback)
@@ -481,7 +478,6 @@ local function setOutlineEnabled(enabled)
     end
 end
 
--- Window sizing and minimize controls.
 local fullSize = MainWindow.Size
 local smallSize = UDim2.new(fullSize.X.Scale, fullSize.X.Offset, 0, Header.Size.Y.Offset)
 local shrunk = false
@@ -499,7 +495,6 @@ guiConnect(UserInputService.InputBegan, function(input, processed)
     end
 end)
 
--- Dragging is owned by the GUI, not the entity module.
 do
     local dragging, dragStart, startPosition = false, nil, nil
     guiConnect(Header.InputBegan, function(input)
@@ -526,7 +521,6 @@ do
     end)
 end
 
--- Tab navigation.
 local selectedTab = "Entities"
 local function switchTab(which)
     selectedTab = which
@@ -540,8 +534,6 @@ guiConnect(Entities.MouseButton1Click, function() switchTab("Entities") end)
 guiConnect(Automation.MouseButton1Click, function() switchTab("Automation") end)
 switchTab("Entities")
 
--- All button hover styling lives here. The two dropdown headers are hover-only;
--- their dropdown behavior is intentionally not implemented.
 local function wireHover(buttonObject, baseColor, hoverColor)
     if not buttonObject or not buttonObject:IsA("TextButton") then return end
     local base = baseColor or buttonObject.BackgroundColor3
@@ -583,15 +575,12 @@ for _, object in ipairs(DOORSEntityDetector:GetDescendants()) do
 end
 wireHover(ModuleCheckbox)
 
--- The checkbox updates its own appearance and notifies the optional entity module.
 setOutlineEnabled(true)
 guiConnect(ModuleCheckbox.MouseButton1Click, function()
     setOutlineEnabled(not outlineEnabled)
     OutlineChanged:Fire(outlineEnabled)
 end)
 
--- Closing the GUI is independent. If the main entity module is listening, it can
--- remove highlights/tags first; otherwise this still closes as a standalone GUI.
 guiConnect(Close.MouseButton1Click, function()
     CloseConfirmation.Visible = true
 end)
@@ -599,8 +588,6 @@ guiConnect(Cancel.MouseButton1Click, function()
     CloseConfirmation.Visible = false
 end)
 guiConnect(CloseScript.MouseButton1Click, function()
-    -- Fire cleanup first, then defer GUI destruction so the main script can
-    -- finish removing Highlights and name tags before the GUI disappears.
     UnloadRequested:Fire()
     for _, connection in ipairs(guiConnections) do
         pcall(function() connection:Disconnect() end)
@@ -615,22 +602,16 @@ end)
 return {
     ScreenGui = DOORSEntityDetector,
     MainWindow = MainWindow,
-
-    -- Window controls
     Resize = Resize,
     Minimize = Minimize,
     Close = Close,
     CloseConfirmation = CloseConfirmation,
     CancelClose = Cancel,
     ConfirmClose = CloseScript,
-
-    -- Tabs
     EntitiesTab = Entities,
     AutomationTab = Automation,
     EntitiesPage = EntitiesPage,
     AutomationPage = AutomationPage,
-
-    -- Entity settings and integration events
     EntityListModule = EntityListModule,
     NameTagModule = NameTagModule,
     EntityOutlinesModule = EntityOutlinesModule,
@@ -638,7 +619,5 @@ return {
     OutlineChanged = OutlineChanged,
     UnloadRequested = UnloadRequested,
     SetOutlineEnabled = setOutlineEnabled,
-
-    -- Notifications
     Notifications = Notifications,
 }
