@@ -1,3 +1,4 @@
+local function buildGUI(Entities, enabledEntities, initialNameTagMode)
 local DOORSEntityDetector = Instance.new("ScreenGui")
 local MainWindow = Instance.new("Frame")
 local UICorner = Instance.new("UICorner")
@@ -65,6 +66,8 @@ local C = {
     SecondaryText = Color3.fromRGB(157, 163, 180),
     Black = Color3.fromRGB(0, 0, 0),
 }
+
+--Properties:
 
 DOORSEntityDetector.Name = "DOORSEntityDetector"
 local Players = game:GetService("Players")
@@ -581,6 +584,173 @@ guiConnect(ModuleCheckbox.MouseButton1Click, function()
     OutlineChanged:Fire(outlineEnabled)
 end)
 
+local EntityEnabledChanged = Instance.new("BindableEvent")
+local NameTagModeChanged = Instance.new("BindableEvent")
+local entityDropdownOpen = false
+local nameTagDropdownOpen = false
+local entityEnabledState = enabledEntities or {}
+local nameTagMode = (initialNameTagMode == "All" or initialNameTagMode == "None") and initialNameTagMode or "Recommended"
+local entityRows = {}
+
+local function setEntityDropdownOpen(open)
+    entityDropdownOpen = open == true
+    if entityDropdownOpen then
+        nameTagDropdownOpen = false
+        Dropdown_2.Visible = false
+        Arrow_2.Text = "ꜜ"
+    end
+    Dropdown.Visible = entityDropdownOpen
+    Arrow.Text = entityDropdownOpen and "ꜛ" or "ꜜ"
+end
+
+local function setNameTagDropdownOpen(open)
+    nameTagDropdownOpen = open == true
+    if nameTagDropdownOpen then
+        entityDropdownOpen = false
+        Dropdown.Visible = false
+        Arrow.Text = "ꜜ"
+    end
+    Dropdown_2.Visible = nameTagDropdownOpen
+    Arrow_2.Text = nameTagDropdownOpen and "ꜛ" or "ꜜ"
+end
+
+local function updateEntityRow(rowInfo)
+    local enabled = entityEnabledState[rowInfo.key] ~= false
+    rowInfo.Checkbox.Text = enabled and "✓" or ""
+    rowInfo.Checkbox.BackgroundColor3 = enabled and C.Red or C.Background
+    rowInfo.Label.TextColor3 = enabled and C.White or C.SecondaryText
+end
+
+local function createEntityRow(entity, order)
+    local row = Instance.new("Frame")
+    row.Name = "EntityOption_" .. tostring(entity.name)
+    row.BackgroundTransparency = 1
+    row.BorderSizePixel = 0
+    row.Size = UDim2.new(1, -8, 0, 34)
+    row.LayoutOrder = order
+    row.ZIndex = 4
+    row.Parent = Dropdown
+
+    local optionLabel = Instance.new("TextLabel")
+    optionLabel.Name = "EntityName"
+    optionLabel.BackgroundTransparency = 1
+    optionLabel.Position = UDim2.new(0, 10, 0, 0)
+    optionLabel.Size = UDim2.new(1, -52, 1, 0)
+    optionLabel.Font = Enum.Font.GothamMedium
+    optionLabel.Text = tostring(entity.display or entity.name)
+    optionLabel.TextColor3 = C.White
+    optionLabel.TextSize = 14
+    optionLabel.TextXAlignment = Enum.TextXAlignment.Left
+    optionLabel.ZIndex = 5
+    optionLabel.Parent = row
+
+    local checkbox = Instance.new("TextButton")
+    checkbox.Name = "EntityCheckbox"
+    checkbox.BackgroundColor3 = C.Red
+    checkbox.BorderSizePixel = 0
+    checkbox.Position = UDim2.new(1, -36, 0.5, -13)
+    checkbox.Size = UDim2.new(0, 26, 0, 26)
+    checkbox.AutoButtonColor = false
+    checkbox.Font = Enum.Font.GothamMedium
+    checkbox.Text = "✓"
+    checkbox.TextColor3 = C.White
+    checkbox.TextSize = 15
+    checkbox.ZIndex = 5
+    checkbox.Parent = row
+    local checkboxCorner = Instance.new("UICorner")
+    checkboxCorner.CornerRadius = UDim.new(0, 6)
+    checkboxCorner.Parent = checkbox
+
+    local rowInfo = {key = entity.name, Label = optionLabel, Checkbox = checkbox}
+    entityRows[entity.name] = rowInfo
+    updateEntityRow(rowInfo)
+
+    local function flip()
+        entityEnabledState[entity.name] = not (entityEnabledState[entity.name] ~= false)
+        updateEntityRow(rowInfo)
+        EntityEnabledChanged:Fire(entity.name, entityEnabledState[entity.name])
+    end
+    local rowClickArea = Instance.new("TextButton")
+    rowClickArea.Name = "RowClickArea"
+    rowClickArea.BackgroundTransparency = 1
+    rowClickArea.BorderSizePixel = 0
+    rowClickArea.Text = ""
+    rowClickArea.Size = UDim2.new(1, -42, 1, 0)
+    rowClickArea.ZIndex = 5
+    rowClickArea.Parent = row
+    optionLabel.ZIndex = 6
+    guiConnect(rowClickArea.MouseButton1Click, flip)
+    guiConnect(checkbox.MouseButton1Click, flip)
+    guiConnect(checkbox.MouseEnter, function()
+        checkbox.BackgroundColor3 = (entityEnabledState[entity.name] ~= false) and C.RedHover or C.SurfaceHover
+    end)
+    guiConnect(checkbox.MouseLeave, function() updateEntityRow(rowInfo) end)
+end
+
+local entityListLayout = Instance.new("UIListLayout")
+entityListLayout.Padding = UDim.new(0, 2)
+entityListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+entityListLayout.Parent = Dropdown
+Dropdown.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Dropdown.CanvasSize = UDim2.new(0, 0, 0, 0)
+Dropdown.ScrollBarThickness = 4
+Dropdown.ScrollBarImageColor3 = C.Red
+Dropdown.ZIndex = 3
+
+for order, entity in ipairs(Entities or {}) do
+    createEntityRow(entity, order)
+end
+createEntityRow({name = "__Portrait", display = "Portrait"}, #(Entities or {}) + 1)
+createEntityRow({name = "HitByA90", display = "A-90 Signal"}, #(Entities or {}) + 2)
+
+local nameTagChoices = Instance.new("UIListLayout")
+nameTagChoices.Padding = UDim.new(0, 2)
+nameTagChoices.SortOrder = Enum.SortOrder.LayoutOrder
+nameTagChoices.Parent = Dropdown_2
+Dropdown_2.AutomaticCanvasSize = Enum.AutomaticSize.Y
+Dropdown_2.CanvasSize = UDim2.new(0, 0, 0, 0)
+Dropdown_2.ScrollBarThickness = 4
+Dropdown_2.ScrollBarImageColor3 = C.Red
+Dropdown_2.ZIndex = 3
+
+local function setNameTagMode(mode)
+    nameTagMode = mode
+    NameTagModule.Text = "  Name Tags: " .. mode
+    NameTagModeChanged:Fire(mode)
+end
+NameTagModule.Text = "  Name Tags: " .. nameTagMode
+for order, mode in ipairs({"All", "Recommended", "None"}) do
+    local option = Instance.new("TextButton")
+    option.Name = "NameTagOption_" .. mode
+    option.BackgroundColor3 = C.Surface
+    option.BorderSizePixel = 0
+    option.Size = UDim2.new(1, -8, 0, 32)
+    option.LayoutOrder = order
+    option.AutoButtonColor = false
+    option.Font = Enum.Font.GothamMedium
+    option.Text = "  " .. mode
+    option.TextColor3 = C.White
+    option.TextSize = 14
+    option.TextXAlignment = Enum.TextXAlignment.Left
+    option.ZIndex = 4
+    option.Parent = Dropdown_2
+    local optionCorner = Instance.new("UICorner")
+    optionCorner.CornerRadius = UDim.new(0, 5)
+    optionCorner.Parent = option
+    wireHover(option)
+    guiConnect(option.MouseButton1Click, function()
+        setNameTagMode(mode)
+        setNameTagDropdownOpen(false)
+    end)
+end
+
+guiConnect(EntityListModule.MouseButton1Click, function()
+    setEntityDropdownOpen(not entityDropdownOpen)
+end)
+guiConnect(NameTagModule.MouseButton1Click, function()
+    setNameTagDropdownOpen(not nameTagDropdownOpen)
+end)
+
 guiConnect(Close.MouseButton1Click, function()
     CloseConfirmation.Visible = true
 end)
@@ -617,7 +787,12 @@ return {
     EntityOutlinesModule = EntityOutlinesModule,
     OutlineToggle = ModuleCheckbox,
     OutlineChanged = OutlineChanged,
+    EntityEnabledChanged = EntityEnabledChanged,
+    NameTagModeChanged = NameTagModeChanged,
     UnloadRequested = UnloadRequested,
     SetOutlineEnabled = setOutlineEnabled,
     Notifications = Notifications,
 }
+end
+
+return buildGUI
