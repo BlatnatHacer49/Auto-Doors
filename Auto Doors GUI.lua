@@ -129,7 +129,10 @@ MainWindow.ClipsDescendants = true
 MainWindow.Position = UDim2.new(0, 350, 0, 1)
 MainWindow.Size = UDim2.new(0, 430, 0, 600)
 
-UICorner.CornerRadius = UDim.new(0, 10)
+UICorner.BottomLeftRadius = UDim.new(0, 10)
+UICorner.BottomRightRadius = UDim.new(0, 10)
+UICorner.TopLeftRadius = UDim.new(0, 10)
+UICorner.TopRightRadius = UDim.new(0, 10)
 UICorner.Parent = MainWindow
 
 UIStroke.Color = C.UIStroke1
@@ -142,7 +145,10 @@ Header.BackgroundColor3 = C.Panel
 Header.BorderSizePixel = 0
 Header.Size = UDim2.new(0, 430, 0, 60)
 
-UICorner_2.CornerRadius = UDim.new(0, 10)
+UICorner_2.BottomLeftRadius = UDim.new(0, 0)
+UICorner_2.BottomRightRadius = UDim.new(0, 0)
+UICorner_2.TopLeftRadius = UDim.new(0, 10)
+UICorner_2.TopRightRadius = UDim.new(0, 10)
 UICorner_2.Parent = Header
 
 TitleLine.Name = "TitleLine"
@@ -153,7 +159,10 @@ TitleLine.BorderSizePixel = 0
 TitleLine.Position = UDim2.new(0, 0, 0, 8)
 TitleLine.Size = UDim2.new(0, 4, 0, 48)
 
-UICorner_3.CornerRadius = UDim.new(0, 2)
+UICorner_3.BottomLeftRadius = UDim.new(0, 2)
+UICorner_3.BottomRightRadius = UDim.new(0, 2)
+UICorner_3.TopLeftRadius = UDim.new(0, 2)
+UICorner_3.TopRightRadius = UDim.new(0, 2)
 UICorner_3.Parent = TitleLine
 
 Title.Name = "Title"
@@ -190,6 +199,10 @@ Resize.Text = "▢"
 Resize.TextColor3 = C.White
 Resize.TextSize = 15.000
 
+UICorner_4.BottomLeftRadius = UDim.new(0, 8)
+UICorner_4.BottomRightRadius = UDim.new(0, 8)
+UICorner_4.TopLeftRadius = UDim.new(0, 8)
+UICorner_4.TopRightRadius = UDim.new(0, 8)
 UICorner_4.Parent = Resize
 
 Minimize.Name = "Minimize"
@@ -204,6 +217,10 @@ Minimize.Text = "—"
 Minimize.TextColor3 = C.White
 Minimize.TextSize = 15.000
 
+UICorner_5.BottomLeftRadius = UDim.new(0, 8)
+UICorner_5.BottomRightRadius = UDim.new(0, 8)
+UICorner_5.TopLeftRadius = UDim.new(0, 8)
+UICorner_5.TopRightRadius = UDim.new(0, 8)
 UICorner_5.Parent = Minimize
 
 Close.Name = "Close"
@@ -218,6 +235,10 @@ Close.Text = "×"
 Close.TextColor3 = C.White
 Close.TextSize = 40.000
 
+UICorner_6.BottomLeftRadius = UDim.new(0, 8)
+UICorner_6.BottomRightRadius = UDim.new(0, 8)
+UICorner_6.TopLeftRadius = UDim.new(0, 8)
+UICorner_6.TopRightRadius = UDim.new(0, 8)
 UICorner_6.Parent = Close
 
 SelectedTab.Name = "SelectedTab"
@@ -265,8 +286,16 @@ ModuleCheckbox.Text = "✓"
 ModuleCheckbox.TextColor3 = C.White
 ModuleCheckbox.TextSize = 15.000
 
+UICorner_7.BottomLeftRadius = UDim.new(0, 8)
+UICorner_7.BottomRightRadius = UDim.new(0, 8)
+UICorner_7.TopLeftRadius = UDim.new(0, 8)
+UICorner_7.TopRightRadius = UDim.new(0, 8)
 UICorner_7.Parent = ModuleCheckbox
 
+UICorner_8.BottomLeftRadius = UDim.new(0, 8)
+UICorner_8.BottomRightRadius = UDim.new(0, 8)
+UICorner_8.TopLeftRadius = UDim.new(0, 8)
+UICorner_8.TopRightRadius = UDim.new(0, 8)
 UICorner_8.Parent = EntityOutlinesModule
 
 UIStroke_2.Color = C.UIStroke1
@@ -297,6 +326,10 @@ EntityListModule.TextColor3 = C.White
 EntityListModule.TextSize = 15.000
 EntityListModule.TextXAlignment = Enum.TextXAlignment.Left
 
+UICorner_9.BottomLeftRadius = UDim.new(0, 8)
+UICorner_9.BottomRightRadius = UDim.new(0, 8)
+UICorner_9.TopLeftRadius = UDim.new(0, 8)
+UICorner_9.TopRightRadius = UDim.new(0, 8)
 UICorner_9.Parent = EntityListModule
 
 Arrow.Name = "Arrow"
@@ -317,11 +350,14 @@ Dropdown.Active = true
 Dropdown.BackgroundColor3 = C.Surface
 Dropdown.BorderColor3 = C.Black
 Dropdown.BorderSizePixel = 0
-Dropdown.Position = UDim2.new(0, 0, 0, 39)
-Dropdown.Size = UDim2.new(0, 400, 0, 250)
+Dropdown.Position = UDim2.new(0, 0, 0, 45)
+Dropdown.Size = UDim2.new(0, 400, 0, 0)
 Dropdown.Visible = false
 
-UICorner_10.CornerRadius = UDim.new(0, 0)
+UICorner_10.BottomLeftRadius = UDim.new(0, 8)
+UICorner_10.BottomRightRadius = UDim.new(0, 8)
+UICorner_10.TopLeftRadius = UDim.new(0, 0)
+UICorner_10.TopRightRadius = UDim.new(0, 0)
 UICorner_10.Parent = Dropdown
 
 NameTagModule.Name = "NameTagModule"
@@ -337,6 +373,10 @@ NameTagModule.TextColor3 = C.White
 NameTagModule.TextSize = 15.000
 NameTagModule.TextXAlignment = Enum.TextXAlignment.Left
 
+UICorner_11.BottomLeftRadius = UDim.new(0, 8)
+UICorner_11.BottomRightRadius = UDim.new(0, 8)
+UICorner_11.TopLeftRadius = UDim.new(0, 8)
+UICorner_11.TopRightRadius = UDim.new(0, 8)
 UICorner_11.Parent = NameTagModule
 
 Arrow_2.Name = "Arrow"
@@ -357,11 +397,14 @@ Dropdown_2.Active = true
 Dropdown_2.BackgroundColor3 = C.Surface
 Dropdown_2.BorderColor3 = C.Black
 Dropdown_2.BorderSizePixel = 0
-Dropdown_2.Position = UDim2.new(0, 0, 0, 39)
-Dropdown_2.Size = UDim2.new(0, 400, 0, 250)
+Dropdown_2.Position = UDim2.new(0, 0, 0, 45)
+Dropdown_2.Size = UDim2.new(0, 400, 0, 0)
 Dropdown_2.Visible = false
 
-UICorner_12.CornerRadius = UDim.new(0, 0)
+UICorner_12.BottomLeftRadius = UDim.new(0, 8)
+UICorner_12.BottomRightRadius = UDim.new(0, 8)
+UICorner_12.TopLeftRadius = UDim.new(0, 0)
+UICorner_12.TopRightRadius = UDim.new(0, 0)
 UICorner_12.Parent = Dropdown_2
 
 AutomationPage.Name = "AutomationPage"
@@ -404,6 +447,10 @@ Entities.Text = "Entities"
 Entities.TextColor3 = C.White
 Entities.TextSize = 15.000
 
+UICorner_13.BottomLeftRadius = UDim.new(0, 8)
+UICorner_13.BottomRightRadius = UDim.new(0, 8)
+UICorner_13.TopLeftRadius = UDim.new(0, 8)
+UICorner_13.TopRightRadius = UDim.new(0, 8)
 UICorner_13.Parent = Entities
 
 Automation.Name = "Automation"
@@ -418,6 +465,10 @@ Automation.Text = "Automation"
 Automation.TextColor3 = C.White
 Automation.TextSize = 15.000
 
+UICorner_14.BottomLeftRadius = UDim.new(0, 8)
+UICorner_14.BottomRightRadius = UDim.new(0, 8)
+UICorner_14.TopLeftRadius = UDim.new(0, 8)
+UICorner_14.TopRightRadius = UDim.new(0, 8)
 UICorner_14.Parent = Automation
 
 Notifications.Name = "Notifications"
@@ -445,7 +496,10 @@ UIStroke_3.Color = C.RedHover
 UIStroke_3.Thickness = 1
 UIStroke_3.Parent = CloseConfirmation
 
-UICorner_15.CornerRadius = UDim.new(0, 10)
+UICorner_15.BottomLeftRadius = UDim.new(0, 10)
+UICorner_15.BottomRightRadius = UDim.new(0, 10)
+UICorner_15.TopLeftRadius = UDim.new(0, 10)
+UICorner_15.TopRightRadius = UDim.new(0, 10)
 UICorner_15.Parent = CloseConfirmation
 
 ConfirmationText.Name = "ConfirmationText"
@@ -486,6 +540,10 @@ Cancel.Text = "Cancel"
 Cancel.TextColor3 = C.White
 Cancel.TextSize = 15.000
 
+UICorner_16.BottomLeftRadius = UDim.new(0, 8)
+UICorner_16.BottomRightRadius = UDim.new(0, 8)
+UICorner_16.TopLeftRadius = UDim.new(0, 8)
+UICorner_16.TopRightRadius = UDim.new(0, 8)
 UICorner_16.Parent = Cancel
 
 CloseScript.Name = "CloseScript"
@@ -501,8 +559,14 @@ CloseScript.Text = "Close Script"
 CloseScript.TextColor3 = C.White
 CloseScript.TextSize = 15.000
 
+UICorner_17.BottomLeftRadius = UDim.new(0, 8)
+UICorner_17.BottomRightRadius = UDim.new(0, 8)
+UICorner_17.TopLeftRadius = UDim.new(0, 8)
+UICorner_17.TopRightRadius = UDim.new(0, 8)
 UICorner_17.Parent = CloseScript
+
 local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
 local guiConnections = {}
 local function guiConnect(signal, callback)
     local connection = signal:Connect(callback)
@@ -641,27 +705,92 @@ if entityEnabledState.__Portrait == nil then entityEnabledState.__Portrait = tru
 if entityEnabledState.HitByA90 == nil then entityEnabledState.HitByA90 = true end
 local nameTagMode = (initialNameTagMode == "All" or initialNameTagMode == "None") and initialNameTagMode or "Recommended"
 local entityRows = {}
+local entityListLayout, nameTagChoices
+
+local DROPDOWN_MAX_HEIGHT = 250
+local DROPDOWN_TWEEN_INFO = TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+local dropdownTweens = {}
+
+local originalParentCornerRadii = {}
+
+local function setParentDropdownCorners(parent, isOpen)
+    local corner = parent:FindFirstChildOfClass("UICorner")
+    if not corner then return end
+
+    if originalParentCornerRadii[corner] == nil then
+        originalParentCornerRadii[corner] = {
+            BottomLeftRadius = corner.BottomLeftRadius,
+            BottomRightRadius = corner.BottomRightRadius,
+        }
+    end
+
+    if isOpen then
+        corner.BottomLeftRadius = UDim.new(0, 0)
+        corner.BottomRightRadius = UDim.new(0, 0)
+    else
+        local original = originalParentCornerRadii[corner]
+        corner.BottomLeftRadius = original.BottomLeftRadius
+        corner.BottomRightRadius = original.BottomRightRadius
+    end
+end
+
+local function updateDropdownHeight(dropdown, layout)
+    local contentHeight = layout.AbsoluteContentSize.Y + 4
+    return math.clamp(contentHeight, 0, DROPDOWN_MAX_HEIGHT)
+end
+
+local function animateDropdown(dropdown, layout, open)
+    if dropdownTweens[dropdown] then
+        pcall(function() dropdownTweens[dropdown]:Cancel() end)
+        dropdownTweens[dropdown] = nil
+    end
+    if open then
+        dropdown.Visible = true
+        local targetHeight = updateDropdownHeight(dropdown, layout)
+        dropdownTweens[dropdown] = TweenService:Create(dropdown, DROPDOWN_TWEEN_INFO, {
+            Size = UDim2.new(0, 400, 0, targetHeight)
+        })
+        dropdownTweens[dropdown]:Play()
+    else
+        local closingTween = TweenService:Create(dropdown, DROPDOWN_TWEEN_INFO, {
+            Size = UDim2.new(0, 400, 0, 0)
+        })
+        dropdownTweens[dropdown] = closingTween
+        local thisTween = closingTween
+        thisTween.Completed:Connect(function()
+            if dropdownTweens[dropdown] == thisTween then
+                dropdown.Visible = false
+                dropdownTweens[dropdown] = nil
+            end
+        end)
+        closingTween:Play()
+    end
+end
 
 local function setEntityDropdownOpen(open)
     entityDropdownOpen = open == true
     if entityDropdownOpen then
         nameTagDropdownOpen = false
-        Dropdown_2.Visible = false
+        animateDropdown(Dropdown_2, nameTagChoices, false)
         Arrow_2.Text = "ꜜ"
+        setParentDropdownCorners(NameTagModule, false)
     end
-    Dropdown.Visible = entityDropdownOpen
+    animateDropdown(Dropdown, entityListLayout, entityDropdownOpen)
     Arrow.Text = entityDropdownOpen and "ꜛ" or "ꜜ"
+    setParentDropdownCorners(EntityListModule, entityDropdownOpen)
 end
 
 local function setNameTagDropdownOpen(open)
     nameTagDropdownOpen = open == true
     if nameTagDropdownOpen then
         entityDropdownOpen = false
-        Dropdown.Visible = false
+        animateDropdown(Dropdown, entityListLayout, false)
         Arrow.Text = "ꜜ"
+        setParentDropdownCorners(EntityListModule, false)
     end
-    Dropdown_2.Visible = nameTagDropdownOpen
+    animateDropdown(Dropdown_2, nameTagChoices, nameTagDropdownOpen)
     Arrow_2.Text = nameTagDropdownOpen and "ꜛ" or "ꜜ"
+    setParentDropdownCorners(NameTagModule, nameTagDropdownOpen)
 end
 
 local function updateEntityRow(rowInfo)
@@ -737,10 +866,15 @@ local function createEntityRow(entity, order)
     guiConnect(checkbox.MouseLeave, function() updateEntityRow(rowInfo) end)
 end
 
-local entityListLayout = Instance.new("UIListLayout")
+entityListLayout = Instance.new("UIListLayout")
 entityListLayout.Padding = UDim.new(0, 2)
 entityListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 entityListLayout.Parent = Dropdown
+local entityDropdownPadding = Instance.new("UIPadding")
+entityDropdownPadding.PaddingTop = UDim.new(0, 0)
+entityDropdownPadding.PaddingLeft = UDim.new(0, 2)
+entityDropdownPadding.PaddingRight = UDim.new(0, 2)
+entityDropdownPadding.Parent = Dropdown
 Dropdown.AutomaticCanvasSize = Enum.AutomaticSize.Y
 Dropdown.CanvasSize = UDim2.new(0, 0, 0, 0)
 Dropdown.ScrollBarThickness = 4
@@ -753,10 +887,15 @@ end
 createEntityRow({name = "__Portrait", display = "Portrait"}, #entityDefinitions + 1)
 createEntityRow({name = "HitByA90", display = "A-90"}, #entityDefinitions + 2)
 
-local nameTagChoices = Instance.new("UIListLayout")
+nameTagChoices = Instance.new("UIListLayout")
 nameTagChoices.Padding = UDim.new(0, 2)
 nameTagChoices.SortOrder = Enum.SortOrder.LayoutOrder
 nameTagChoices.Parent = Dropdown_2
+local nameTagDropdownPadding = Instance.new("UIPadding")
+nameTagDropdownPadding.PaddingTop = UDim.new(0, 0)
+nameTagDropdownPadding.PaddingLeft = UDim.new(0, 2)
+nameTagDropdownPadding.PaddingRight = UDim.new(0, 2)
+nameTagDropdownPadding.Parent = Dropdown_2
 Dropdown_2.AutomaticCanvasSize = Enum.AutomaticSize.Y
 Dropdown_2.CanvasSize = UDim2.new(0, 0, 0, 0)
 Dropdown_2.ScrollBarThickness = 4
@@ -793,6 +932,9 @@ for order, mode in ipairs({"All", "Recommended", "None"}) do
         setNameTagDropdownOpen(false)
     end)
 end
+
+setParentDropdownCorners(EntityListModule, false)
+setParentDropdownCorners(NameTagModule, false)
 
 guiConnect(EntityListModule.MouseButton1Click, function()
     setEntityDropdownOpen(not entityDropdownOpen)
