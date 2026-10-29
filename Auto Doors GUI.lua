@@ -607,11 +607,9 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     local function setOutlineEnabled(enabled)
         outlineEnabled = enabled and true or false
         ModuleCheckbox.Text = outlineEnabled and "✓" or ""
-        if outlineEnabled then
-            ModuleCheckbox.BackgroundColor3 = outlineHovering and C.RedHover or C.Red
-        else
-            ModuleCheckbox.BackgroundColor3 = outlineHovering and C.SurfaceHover or C.Background
-        end
+        ModuleCheckbox.BackgroundColor3 = outlineEnabled
+            and (outlineHovering and C.RedHover or C.Red)
+            or (outlineHovering and C.SurfaceHover or C.Background)
     end
 
     local fullSize = MainWindow.Size
@@ -664,13 +662,18 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     end
 
     local selectedTab = "Entities"
+    local tabControls = {
+        Entities = {button = Entities, page = EntitiesPage},
+        Automation = {button = Automation, page = AutomationPage},
+    }
+
     local function switchTab(which)
         selectedTab = which
-        local showEntities = which == "Entities"
-        EntitiesPage.Visible = showEntities
-        AutomationPage.Visible = not showEntities
-        Entities.BackgroundColor3 = showEntities and C.Red or C.Surface
-        Automation.BackgroundColor3 = (not showEntities) and C.Red or C.Surface
+        for name, control in pairs(tabControls) do
+            local active = name == which
+            control.page.Visible = active
+            control.button.BackgroundColor3 = active and C.Red or C.Surface
+        end
     end
     guiConnect(Entities.MouseButton1Click, function()
         switchTab("Entities")
@@ -686,11 +689,12 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         end
         local base = baseColor or buttonObject.BackgroundColor3
         local hover = hoverColor or C.SurfaceHover
+        local tabName = buttonObject == Entities and "Entities"
+            or buttonObject == Automation and "Automation"
+
         guiConnect(buttonObject.MouseEnter, function()
-            if buttonObject == Entities then
-                buttonObject.BackgroundColor3 = selectedTab == "Entities" and C.RedHover or hover
-            elseif buttonObject == Automation then
-                buttonObject.BackgroundColor3 = selectedTab == "Automation" and C.RedHover or hover
+            if tabName then
+                buttonObject.BackgroundColor3 = selectedTab == tabName and C.RedHover or hover
             elseif buttonObject == ModuleCheckbox then
                 outlineHovering = true
                 setOutlineEnabled(outlineEnabled)
@@ -699,10 +703,8 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
             end
         end)
         guiConnect(buttonObject.MouseLeave, function()
-            if buttonObject == Entities then
-                buttonObject.BackgroundColor3 = selectedTab == "Entities" and C.Red or C.Surface
-            elseif buttonObject == Automation then
-                buttonObject.BackgroundColor3 = selectedTab == "Automation" and C.Red or C.Surface
+            if tabName then
+                buttonObject.BackgroundColor3 = selectedTab == tabName and C.Red or C.Surface
             elseif buttonObject == ModuleCheckbox then
                 outlineHovering = false
                 setOutlineEnabled(outlineEnabled)
@@ -731,8 +733,10 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
 
     local EntityEnabledChanged = Instance.new("BindableEvent")
     local NameTagModeChanged = Instance.new("BindableEvent")
-    local entityDropdownOpen = false
-    local nameTagDropdownOpen = false
+    local dropdownOpen = {
+        Entities = false,
+        NameTags = false,
+    }
     local entityEnabledState = enabledEntities or {}
     for _, entity in ipairs(entityDefinitions) do
         if entityEnabledState[entity.name] == nil then
@@ -748,7 +752,6 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     local nameTagMode = (initialNameTagMode == "All" or initialNameTagMode == "None")
         and initialNameTagMode
         or "Recommended"
-    local entityRows = {}
     local entityListLayout, nameTagChoices
 
     local DROPDOWN_MAX_HEIGHT = 250
@@ -820,43 +823,48 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         end
     end
 
-    local function setEntityDropdownOpen(open)
-        entityDropdownOpen = open == true
-        if entityDropdownOpen then
-            nameTagDropdownOpen = false
-            animateDropdown(Dropdown_2, nameTagChoices, DropdownClip_2, false, function()
-                setParentDropdownCorners(NameTagModule, false)
-            end)
-            Arrow_2.Text = "ꜜ"
-            setParentDropdownCorners(EntityListModule, true)
-        end
-        animateDropdown(Dropdown, entityListLayout, DropdownClip, entityDropdownOpen, function()
-            setParentDropdownCorners(EntityListModule, false)
-        end)
-        Arrow.Text = entityDropdownOpen and "ꜛ" or "ꜜ"
-    end
+    local dropdownControls = {
+        Entities = {
+            module = EntityListModule,
+            arrow = Arrow,
+            dropdown = Dropdown,
+            clip = DropdownClip,
+            getLayout = function()
+                return entityListLayout
+            end,
+            other = "NameTags",
+        },
+        NameTags = {
+            module = NameTagModule,
+            arrow = Arrow_2,
+            dropdown = Dropdown_2,
+            clip = DropdownClip_2,
+            getLayout = function()
+                return nameTagChoices
+            end,
+            other = "Entities",
+        },
+    }
 
-    local function setNameTagDropdownOpen(open)
-        nameTagDropdownOpen = open == true
-        if nameTagDropdownOpen then
-            entityDropdownOpen = false
-            animateDropdown(Dropdown, entityListLayout, DropdownClip, false, function()
-                setParentDropdownCorners(EntityListModule, false)
-            end)
-            Arrow.Text = "ꜜ"
-            setParentDropdownCorners(NameTagModule, true)
-        end
-        animateDropdown(Dropdown_2, nameTagChoices, DropdownClip_2, nameTagDropdownOpen, function()
-            setParentDropdownCorners(NameTagModule, false)
-        end)
-        Arrow_2.Text = nameTagDropdownOpen and "ꜛ" or "ꜜ"
-    end
+    local function setDropdownOpen(name, open)
+        local control = dropdownControls[name]
+        local isOpen = open == true
+        dropdownOpen[name] = isOpen
 
-    local function updateEntityRow(rowInfo)
-        local enabled = entityEnabledState[rowInfo.key] ~= false
-        rowInfo.Checkbox.Text = enabled and "✓" or ""
-        rowInfo.Checkbox.BackgroundColor3 = enabled and C.Red or C.Background
-        rowInfo.Label.TextColor3 = enabled and C.White or C.SecondaryText
+        if isOpen then
+            local other = dropdownControls[control.other]
+            dropdownOpen[control.other] = false
+            animateDropdown(other.dropdown, other.getLayout(), other.clip, false, function()
+                setParentDropdownCorners(other.module, false)
+            end)
+            other.arrow.Text = "ꜜ"
+            setParentDropdownCorners(control.module, true)
+        end
+
+        animateDropdown(control.dropdown, control.getLayout(), control.clip, isOpen, function()
+            setParentDropdownCorners(control.module, false)
+        end)
+        control.arrow.Text = isOpen and "ꜛ" or "ꜜ"
     end
 
     local function createEntityRow(entity, order)
@@ -904,27 +912,22 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
 
         local mainHovering = false
         local checkboxHovering = false
-        local rowInfo = {key = entity.name, Label = optionLabel, Checkbox = checkbox}
-        entityRows[entity.name] = rowInfo
 
-        local function updateEntityRowHover()
+        local function updateEntityRow()
+            local enabled = entityEnabledState[entity.name] ~= false
             local hovering = mainHovering or checkboxHovering
+            optionLabel.TextColor3 = enabled and C.White or C.SecondaryText
+            checkbox.Text = enabled and "✓" or ""
             row.BackgroundColor3 = C.SurfaceHover
             row.BackgroundTransparency = hovering and 0 or 1
-            if checkboxHovering then
-                checkbox.BackgroundColor3 =
-                    (entityEnabledState[entity.name] ~= false) and C.RedHover or C.SurfaceHover
-            else
-                checkbox.BackgroundColor3 = (entityEnabledState[entity.name] ~= false) and C.Red or C.Background
-            end
+            checkbox.BackgroundColor3 = checkboxHovering
+                and (enabled and C.RedHover or C.SurfaceHover)
+                or (enabled and C.Red or C.Background)
         end
-
-        updateEntityRow(rowInfo)
 
         local function flip()
             entityEnabledState[entity.name] = not (entityEnabledState[entity.name] ~= false)
-            updateEntityRow(rowInfo)
-            updateEntityRowHover()
+            updateEntityRow()
             EntityEnabledChanged:Fire(entity.name, entityEnabledState[entity.name])
         end
         local rowClickArea = Instance.new("TextButton")
@@ -938,38 +941,52 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         optionLabel.ZIndex = 6
         guiConnect(rowClickArea.MouseButton1Click, flip)
         guiConnect(checkbox.MouseButton1Click, flip)
-        guiConnect(rowClickArea.MouseEnter, function()
-            mainHovering = true
-            updateEntityRowHover()
-        end)
-        guiConnect(rowClickArea.MouseLeave, function()
-            mainHovering = false
-            updateEntityRowHover()
-        end)
-        guiConnect(checkbox.MouseEnter, function()
-            checkboxHovering = true
-            updateEntityRowHover()
-        end)
-        guiConnect(checkbox.MouseLeave, function()
-            checkboxHovering = false
-            updateEntityRowHover()
-        end)
+
+        local function bindHoverState(target, stateName)
+            guiConnect(target.MouseEnter, function()
+                if stateName == "main" then
+                    mainHovering = true
+                else
+                    checkboxHovering = true
+                end
+                updateEntityRow()
+            end)
+            guiConnect(target.MouseLeave, function()
+                if stateName == "main" then
+                    mainHovering = false
+                else
+                    checkboxHovering = false
+                end
+                updateEntityRow()
+            end)
+        end
+
+        updateEntityRow()
+        bindHoverState(rowClickArea, "main")
+        bindHoverState(checkbox, "checkbox")
     end
 
-    entityListLayout = Instance.new("UIListLayout")
-    entityListLayout.Padding = UDim.new(0, 2)
-    entityListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    entityListLayout.Parent = Dropdown
-    local entityDropdownPadding = Instance.new("UIPadding")
-    entityDropdownPadding.PaddingTop = UDim.new(0, 0)
-    entityDropdownPadding.PaddingLeft = UDim.new(0, 2)
-    entityDropdownPadding.PaddingRight = UDim.new(0, 2)
-    entityDropdownPadding.Parent = Dropdown
-    Dropdown.AutomaticCanvasSize = Enum.AutomaticSize.Y
-    Dropdown.CanvasSize = UDim2.new(0, 0, 0, 0)
-    Dropdown.ScrollBarThickness = 4
-    Dropdown.ScrollBarImageColor3 = C.Red
-    Dropdown.ZIndex = 3
+    local function configureDropdownContent(dropdown)
+        local layout = Instance.new("UIListLayout")
+        layout.Padding = UDim.new(0, 2)
+        layout.SortOrder = Enum.SortOrder.LayoutOrder
+        layout.Parent = dropdown
+
+        local padding = Instance.new("UIPadding")
+        padding.PaddingTop = UDim.new(0, 0)
+        padding.PaddingLeft = UDim.new(0, 2)
+        padding.PaddingRight = UDim.new(0, 2)
+        padding.Parent = dropdown
+
+        dropdown.AutomaticCanvasSize = Enum.AutomaticSize.Y
+        dropdown.CanvasSize = UDim2.new(0, 0, 0, 0)
+        dropdown.ScrollBarThickness = 4
+        dropdown.ScrollBarImageColor3 = C.Red
+        dropdown.ZIndex = 3
+        return layout
+    end
+
+    entityListLayout = configureDropdownContent(Dropdown)
 
     for order, entity in ipairs(entityDefinitions) do
         createEntityRow(entity, order)
@@ -977,20 +994,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     createEntityRow({name = "__Portrait", display = "Portrait"}, #entityDefinitions + 1)
     createEntityRow({name = "HitByA90", display = "A-90"}, #entityDefinitions + 2)
 
-    nameTagChoices = Instance.new("UIListLayout")
-    nameTagChoices.Padding = UDim.new(0, 2)
-    nameTagChoices.SortOrder = Enum.SortOrder.LayoutOrder
-    nameTagChoices.Parent = Dropdown_2
-    local nameTagDropdownPadding = Instance.new("UIPadding")
-    nameTagDropdownPadding.PaddingTop = UDim.new(0, 0)
-    nameTagDropdownPadding.PaddingLeft = UDim.new(0, 2)
-    nameTagDropdownPadding.PaddingRight = UDim.new(0, 2)
-    nameTagDropdownPadding.Parent = Dropdown_2
-    Dropdown_2.AutomaticCanvasSize = Enum.AutomaticSize.Y
-    Dropdown_2.CanvasSize = UDim2.new(0, 0, 0, 0)
-    Dropdown_2.ScrollBarThickness = 4
-    Dropdown_2.ScrollBarImageColor3 = C.Red
-    Dropdown_2.ZIndex = 3
+    nameTagChoices = configureDropdownContent(Dropdown_2)
 
     local function setNameTagMode(mode)
         nameTagMode = mode
@@ -1019,7 +1023,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         wireHover(option)
         guiConnect(option.MouseButton1Click, function()
             setNameTagMode(mode)
-            setNameTagDropdownOpen(false)
+            setDropdownOpen("NameTags", false)
         end)
     end
 
@@ -1027,10 +1031,10 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     setParentDropdownCorners(NameTagModule, false)
 
     guiConnect(EntityListModule.MouseButton1Click, function()
-        setEntityDropdownOpen(not entityDropdownOpen)
+        setDropdownOpen("Entities", not dropdownOpen.Entities)
     end)
     guiConnect(NameTagModule.MouseButton1Click, function()
-        setNameTagDropdownOpen(not nameTagDropdownOpen)
+        setDropdownOpen("NameTags", not dropdownOpen.NameTags)
     end)
 
     guiConnect(Close.MouseButton1Click, function()
