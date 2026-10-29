@@ -103,8 +103,8 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     MainWindow.Position = UDim2.new(0, 350, 0, 1)
     MainWindow.Size = UDim2.new(0, 430, 0, 600)
 
-    UICorner.BottomLeftRadius = UDim.new(0, 0)
-    UICorner.BottomRightRadius = UDim.new(0, 0)
+    UICorner.BottomLeftRadius = UDim.new(0, 10)
+    UICorner.BottomRightRadius = UDim.new(0, 10)
     UICorner.TopLeftRadius = UDim.new(0, 10)
     UICorner.TopRightRadius = UDim.new(0, 10)
     UICorner.Parent = MainWindow
