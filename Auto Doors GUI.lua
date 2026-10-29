@@ -1,45 +1,15 @@
 local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     local standaloneEntities = {
-        {name = "RushMoving", display = "Rush"},
-        {name = "AmbushMoving", display = "Ambush"},
-        {name = "FigureRig", display = "Figure"},
-        {name = "Eyes", display = "Eyes"},
-        {name = "Mobble", display = "Jack"},
-        {name = "Dread", display = "Dread"},
-        {name = "GiggleCeiling", display = "Giggle"},
-        {name = "GloombatSwarm", display = "Gloombats"},
-        {name = "BackdoorRush", display = "Blitz"},
-        {name = "BackdoorLookman", display = "Lookman"},
-        {name = "JeffTheKiller", display = "Jeff the Killer"},
-        {name = "SallyLingering", display = "Sally"},
-        {name = "SurgeSpawn", display = "Surge"},
-        {name = "LiveEntityBramble", display = "Bramble"},
-        {name = "Groundskeeper", display = "Groundskeeper"},
-        {name = "MonumentEntity", display = "Monument"},
-        {name = "Alma", display = "Alma"},
-        {name = "Drones", display = "Drone"},
-        {name = "DronesStampede", display = "Drone Stampede"},
-        {name = "TellerEntity", display = "Teller"},
-        {name = "BashMoving", display = "Bash"},
-        {name = "Scribbles", display = "Scribbles"},
-        {name = "Creak", display = "Creak"},
-        {name = "StemsEntity", display = "Stems"},
-        {name = "A60", display = "A-60"},
-        {name = "A120", display = "A-120"},
-        {name = "Screech", display = "Screech"},
-        {name = "LiveVoidReaction", display = "Void"},
-        {name = "Glitch", display = "Glitch"},
-        {name = "Ransom", display = "Ransom"},
-        {name = "EntityModel", display = "Haste"},
-        {name = "Spider", display = "Timothy"},
-        {name = "SideroomDupe", display = "Dupe"},
-        {name = "SeekMovingNewClone", display = "Seek"},
-        {name = "Shade", display = "Halt"},
-        {name = "Snare", display = "Snare"},
-        {name = "MandrakeLive", display = "Mandrake"},
-        {name = "EyestalkMoving", display = "Eyestalk"},
-        {name = "Louie", display = "Louie"},
-        {name = "GrumbleRig", display = "Grumble"},
+        {name = "Test1",  display = "Test 1"},
+        {name = "Test2",  display = "Test 2"},
+        {name = "Test3",  display = "Test 3"},
+        {name = "Test4",  display = "Test 4"},
+        {name = "Test5",  display = "Test 5"},
+        {name = "Test6",  display = "Test 6"},
+        {name = "Test7",  display = "Test 7"},
+        {name = "Test8",  display = "Test 8"},
+        {name = "Test9",  display = "Test 9"},
+        {name = "Test10", display = "Test 10"},
     }
     entityDefinitions = type(entityDefinitions) == "table" and entityDefinitions or standaloneEntities
     local DOORSEntityDetector = Instance.new("ScreenGui")
@@ -991,8 +961,6 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     for order, entity in ipairs(entityDefinitions) do
         createEntityRow(entity, order)
     end
-    createEntityRow({name = "__Portrait", display = "Portrait"}, #entityDefinitions + 1)
-    createEntityRow({name = "HitByA90", display = "A-90"}, #entityDefinitions + 2)
 
     nameTagChoices = configureDropdownContent(Dropdown_2)
 
