@@ -1,3 +1,4 @@
+-- UI construction
 local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     local standaloneEntities = {
         {name = "Test1",  display = "Test 1"},
@@ -14,41 +15,27 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     entityDefinitions = type(entityDefinitions) == "table" and entityDefinitions or standaloneEntities
     local DOORSEntityDetector = Instance.new("ScreenGui")
     local MainWindow = Instance.new("Frame")
-    local UICorner = Instance.new("UICorner")
-    local UIStroke = Instance.new("UIStroke")
 
     local Header = Instance.new("Frame")
-    local UICorner_2 = Instance.new("UICorner")
     local TitleLine = Instance.new("Frame")
-    local UICorner_3 = Instance.new("UICorner")
     local Title = Instance.new("TextLabel")
     local Description = Instance.new("TextLabel")
     local Resize = Instance.new("TextButton")
-    local UICorner_4 = Instance.new("UICorner")
     local Minimize = Instance.new("TextButton")
-    local UICorner_5 = Instance.new("UICorner")
     local Close = Instance.new("TextButton")
-    local UICorner_6 = Instance.new("UICorner")
 
     local SelectedTab = Instance.new("Frame")
     local EntitiesPage = Instance.new("ScrollingFrame")
     local EntityOutlinesModule = Instance.new("Frame")
     local ModuleText = Instance.new("TextLabel")
     local ModuleCheckbox = Instance.new("TextButton")
-    local UICorner_7 = Instance.new("UICorner")
-    local UICorner_8 = Instance.new("UICorner")
-    local UIStroke_2 = Instance.new("UIStroke")
     local SectionEntityDetection = Instance.new("TextLabel")
     local EntityListModule = Instance.new("TextButton")
-    local UICorner_9 = Instance.new("UICorner")
     local Arrow = Instance.new("TextLabel")
     local Dropdown = Instance.new("ScrollingFrame")
-    local UICorner_10 = Instance.new("UICorner")
     local NameTagModule = Instance.new("TextButton")
-    local UICorner_11 = Instance.new("UICorner")
     local Arrow_2 = Instance.new("TextLabel")
     local Dropdown_2 = Instance.new("ScrollingFrame")
-    local UICorner_12 = Instance.new("UICorner")
 
     local AutomationPage = Instance.new("ScrollingFrame")
     local SectionAutomation = Instance.new("TextLabel")
@@ -56,22 +43,16 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     local Tabs = Instance.new("Frame")
     local UIListLayout = Instance.new("UIListLayout")
     local Entities = Instance.new("TextButton")
-    local UICorner_13 = Instance.new("UICorner")
     local Automation = Instance.new("TextButton")
-    local UICorner_14 = Instance.new("UICorner")
 
     local Notifications = Instance.new("Frame")
     local UIListLayout_2 = Instance.new("UIListLayout")
 
     local CloseConfirmation = Instance.new("Frame")
-    local UIStroke_3 = Instance.new("UIStroke")
-    local UICorner_15 = Instance.new("UICorner")
     local ConfirmationText = Instance.new("TextLabel")
     local ConfirmationExplanation = Instance.new("TextLabel")
     local Cancel = Instance.new("TextButton")
-    local UICorner_16 = Instance.new("UICorner")
     local CloseScript = Instance.new("TextButton")
-    local UICorner_17 = Instance.new("UICorner")
 
     local C = {
         Background = Color3.fromRGB(17, 19, 27),
@@ -86,11 +67,37 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         Black = Color3.fromRGB(0, 0, 0),
     }
 
-    DOORSEntityDetector.Name = "DOORSEntityDetector"
-    local Players = game:GetService("Players")
-    local LocalPlayer = Players.LocalPlayer
+    local CoreGui = game:GetService("CoreGui")
+    local LocalPlayer = game:GetService("Players").LocalPlayer
+    local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
-    DOORSEntityDetector.Parent = LocalPlayer:WaitForChild("PlayerGui")
+    for _, root in ipairs({CoreGui, PlayerGui}) do
+        local previousGui = root:FindFirstChild("DOORSEntityDetector")
+        if previousGui then
+            previousGui:Destroy()
+        end
+    end
+
+    local function addCorner(parent, topLeft, topRight, bottomLeft, bottomRight)
+        local corner = Instance.new("UICorner")
+        corner.BottomLeftRadius = UDim.new(0, bottomLeft)
+        corner.BottomRightRadius = UDim.new(0, bottomRight)
+        corner.TopLeftRadius = UDim.new(0, topLeft)
+        corner.TopRightRadius = UDim.new(0, topRight)
+        corner.Parent = parent
+        return corner
+    end
+
+    local function addStroke(parent, color, thickness)
+        local stroke = Instance.new("UIStroke")
+        stroke.Color = color
+        stroke.Thickness = thickness
+        stroke.Parent = parent
+        return stroke
+    end
+
+    DOORSEntityDetector.Name = "DOORSEntityDetector"
+    DOORSEntityDetector.Parent = CoreGui
     DOORSEntityDetector.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     DOORSEntityDetector.DisplayOrder = 9999
     DOORSEntityDetector.ResetOnSpawn = false
@@ -103,15 +110,9 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     MainWindow.Position = UDim2.new(0, 350, 0, 1)
     MainWindow.Size = UDim2.new(0, 430, 0, 600)
 
-    UICorner.BottomLeftRadius = UDim.new(0, 10)
-    UICorner.BottomRightRadius = UDim.new(0, 10)
-    UICorner.TopLeftRadius = UDim.new(0, 10)
-    UICorner.TopRightRadius = UDim.new(0, 10)
-    UICorner.Parent = MainWindow
+    addCorner(MainWindow, 10, 10, 10, 10)
 
-    UIStroke.Color = C.UIStroke1
-    UIStroke.Thickness = 1
-    UIStroke.Parent = MainWindow
+    addStroke(MainWindow, C.UIStroke1, 1)
 
     Header.Name = "Header"
     Header.Parent = MainWindow
@@ -119,11 +120,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Header.BorderSizePixel = 0
     Header.Size = UDim2.new(0, 430, 0, 60)
 
-    UICorner_2.BottomLeftRadius = UDim.new(0, 0)
-    UICorner_2.BottomRightRadius = UDim.new(0, 0)
-    UICorner_2.TopLeftRadius = UDim.new(0, 10)
-    UICorner_2.TopRightRadius = UDim.new(0, 10)
-    UICorner_2.Parent = Header
+    addCorner(Header, 10, 10, 0, 0)
 
     TitleLine.Name = "TitleLine"
     TitleLine.Parent = Header
@@ -133,11 +130,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     TitleLine.Position = UDim2.new(0, 0, 0, 8)
     TitleLine.Size = UDim2.new(0, 4, 0, 48)
 
-    UICorner_3.BottomLeftRadius = UDim.new(0, 2)
-    UICorner_3.BottomRightRadius = UDim.new(0, 2)
-    UICorner_3.TopLeftRadius = UDim.new(0, 2)
-    UICorner_3.TopRightRadius = UDim.new(0, 2)
-    UICorner_3.Parent = TitleLine
+    addCorner(TitleLine, 2, 2, 2, 2)
 
     Title.Name = "Title"
     Title.Parent = Header
@@ -173,11 +166,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Resize.TextColor3 = C.White
     Resize.TextSize = 15.000
 
-    UICorner_4.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_4.BottomRightRadius = UDim.new(0, 8)
-    UICorner_4.TopLeftRadius = UDim.new(0, 8)
-    UICorner_4.TopRightRadius = UDim.new(0, 8)
-    UICorner_4.Parent = Resize
+    addCorner(Resize, 8, 8, 8, 8)
 
     Minimize.Name = "Minimize"
     Minimize.Parent = Header
@@ -191,11 +180,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Minimize.TextColor3 = C.White
     Minimize.TextSize = 15.000
 
-    UICorner_5.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_5.BottomRightRadius = UDim.new(0, 8)
-    UICorner_5.TopLeftRadius = UDim.new(0, 8)
-    UICorner_5.TopRightRadius = UDim.new(0, 8)
-    UICorner_5.Parent = Minimize
+    addCorner(Minimize, 8, 8, 8, 8)
 
     Close.Name = "Close"
     Close.Parent = Header
@@ -209,11 +194,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Close.TextColor3 = C.White
     Close.TextSize = 40.000
 
-    UICorner_6.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_6.BottomRightRadius = UDim.new(0, 8)
-    UICorner_6.TopLeftRadius = UDim.new(0, 8)
-    UICorner_6.TopRightRadius = UDim.new(0, 8)
-    UICorner_6.Parent = Close
+    addCorner(Close, 8, 8, 8, 8)
 
     SelectedTab.Name = "SelectedTab"
     SelectedTab.Parent = MainWindow
@@ -260,21 +241,11 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     ModuleCheckbox.TextColor3 = C.White
     ModuleCheckbox.TextSize = 15.000
 
-    UICorner_7.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_7.BottomRightRadius = UDim.new(0, 8)
-    UICorner_7.TopLeftRadius = UDim.new(0, 8)
-    UICorner_7.TopRightRadius = UDim.new(0, 8)
-    UICorner_7.Parent = ModuleCheckbox
+    addCorner(ModuleCheckbox, 8, 8, 8, 8)
 
-    UICorner_8.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_8.BottomRightRadius = UDim.new(0, 8)
-    UICorner_8.TopLeftRadius = UDim.new(0, 8)
-    UICorner_8.TopRightRadius = UDim.new(0, 8)
-    UICorner_8.Parent = EntityOutlinesModule
+    addCorner(EntityOutlinesModule, 8, 8, 8, 8)
 
-    UIStroke_2.Color = C.UIStroke1
-    UIStroke_2.Thickness = 1
-    UIStroke_2.Parent = EntityOutlinesModule
+    addStroke(EntityOutlinesModule, C.UIStroke1, 1)
 
     SectionEntityDetection.Name = "SectionEntityDetection"
     SectionEntityDetection.Parent = EntitiesPage
@@ -300,11 +271,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     EntityListModule.TextSize = 15.000
     EntityListModule.TextXAlignment = Enum.TextXAlignment.Left
 
-    UICorner_9.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_9.BottomRightRadius = UDim.new(0, 8)
-    UICorner_9.TopLeftRadius = UDim.new(0, 8)
-    UICorner_9.TopRightRadius = UDim.new(0, 8)
-    UICorner_9.Parent = EntityListModule
+    addCorner(EntityListModule, 8, 8, 8, 8)
 
     Arrow.Name = "Arrow"
     Arrow.Parent = EntityListModule
@@ -339,11 +306,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Dropdown.Size = UDim2.new(0, 400, 0, 0)
     Dropdown.Visible = true
 
-    UICorner_10.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_10.BottomRightRadius = UDim.new(0, 8)
-    UICorner_10.TopLeftRadius = UDim.new(0, 0)
-    UICorner_10.TopRightRadius = UDim.new(0, 0)
-    UICorner_10.Parent = Dropdown
+    addCorner(Dropdown, 0, 0, 8, 8)
 
     NameTagModule.Name = "NameTagModule"
     NameTagModule.Parent = EntitiesPage
@@ -358,11 +321,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     NameTagModule.TextSize = 15.000
     NameTagModule.TextXAlignment = Enum.TextXAlignment.Left
 
-    UICorner_11.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_11.BottomRightRadius = UDim.new(0, 8)
-    UICorner_11.TopLeftRadius = UDim.new(0, 8)
-    UICorner_11.TopRightRadius = UDim.new(0, 8)
-    UICorner_11.Parent = NameTagModule
+    addCorner(NameTagModule, 8, 8, 8, 8)
 
     Arrow_2.Name = "Arrow"
     Arrow_2.Parent = NameTagModule
@@ -397,11 +356,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Dropdown_2.Size = UDim2.new(0, 400, 0, 0)
     Dropdown_2.Visible = true
 
-    UICorner_12.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_12.BottomRightRadius = UDim.new(0, 8)
-    UICorner_12.TopLeftRadius = UDim.new(0, 0)
-    UICorner_12.TopRightRadius = UDim.new(0, 0)
-    UICorner_12.Parent = Dropdown_2
+    addCorner(Dropdown_2, 0, 0, 8, 8)
 
     AutomationPage.Name = "AutomationPage"
     AutomationPage.Parent = SelectedTab
@@ -443,11 +398,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Entities.TextColor3 = C.White
     Entities.TextSize = 15.000
 
-    UICorner_13.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_13.BottomRightRadius = UDim.new(0, 8)
-    UICorner_13.TopLeftRadius = UDim.new(0, 8)
-    UICorner_13.TopRightRadius = UDim.new(0, 8)
-    UICorner_13.Parent = Entities
+    addCorner(Entities, 8, 8, 8, 8)
 
     Automation.Name = "Automation"
     Automation.Parent = Tabs
@@ -461,11 +412,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Automation.TextColor3 = C.White
     Automation.TextSize = 15.000
 
-    UICorner_14.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_14.BottomRightRadius = UDim.new(0, 8)
-    UICorner_14.TopLeftRadius = UDim.new(0, 8)
-    UICorner_14.TopRightRadius = UDim.new(0, 8)
-    UICorner_14.Parent = Automation
+    addCorner(Automation, 8, 8, 8, 8)
 
     Notifications.Name = "Notifications"
     Notifications.Parent = DOORSEntityDetector
@@ -488,15 +435,9 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     CloseConfirmation.Visible = false
     CloseConfirmation.ZIndex = 20
 
-    UIStroke_3.Color = C.RedHover
-    UIStroke_3.Thickness = 1
-    UIStroke_3.Parent = CloseConfirmation
+    addStroke(CloseConfirmation, C.RedHover, 1)
 
-    UICorner_15.BottomLeftRadius = UDim.new(0, 10)
-    UICorner_15.BottomRightRadius = UDim.new(0, 10)
-    UICorner_15.TopLeftRadius = UDim.new(0, 10)
-    UICorner_15.TopRightRadius = UDim.new(0, 10)
-    UICorner_15.Parent = CloseConfirmation
+    addCorner(CloseConfirmation, 10, 10, 10, 10)
 
     ConfirmationText.Name = "ConfirmationText"
     ConfirmationText.Parent = CloseConfirmation
@@ -536,11 +477,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Cancel.TextColor3 = C.White
     Cancel.TextSize = 15.000
 
-    UICorner_16.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_16.BottomRightRadius = UDim.new(0, 8)
-    UICorner_16.TopLeftRadius = UDim.new(0, 8)
-    UICorner_16.TopRightRadius = UDim.new(0, 8)
-    UICorner_16.Parent = Cancel
+    addCorner(Cancel, 8, 8, 8, 8)
 
     CloseScript.Name = "CloseScript"
     CloseScript.Parent = CloseConfirmation
@@ -555,12 +492,9 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     CloseScript.TextColor3 = C.White
     CloseScript.TextSize = 15.000
 
-    UICorner_17.BottomLeftRadius = UDim.new(0, 8)
-    UICorner_17.BottomRightRadius = UDim.new(0, 8)
-    UICorner_17.TopLeftRadius = UDim.new(0, 8)
-    UICorner_17.TopRightRadius = UDim.new(0, 8)
-    UICorner_17.Parent = CloseScript
+    addCorner(CloseScript, 8, 8, 8, 8)
 
+    -- Window controls and navigation
     local UserInputService = game:GetService("UserInputService")
     local TweenService = game:GetService("TweenService")
     local guiConnections = {}
@@ -701,6 +635,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         OutlineChanged:Fire(outlineEnabled)
     end)
 
+    -- Entity controls and dropdowns
     local EntityEnabledChanged = Instance.new("BindableEvent")
     local NameTagModeChanged = Instance.new("BindableEvent")
     local dropdownOpen = {
@@ -729,10 +664,15 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     local dropdownTweens = {}
 
     local originalParentCornerRadii = {}
+    local parentCornerCache = {}
 
     local function setParentDropdownCorners(parent, isOpen)
-        local corner = parent:FindFirstChildOfClass("UICorner")
-        if not corner then
+        local corner = parentCornerCache[parent]
+        if corner == nil then
+            corner = parent:FindFirstChildOfClass("UICorner") or false
+            parentCornerCache[parent] = corner
+        end
+        if corner == false then
             return
         end
 
@@ -760,7 +700,9 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
 
     local function animateDropdown(dropdown, layout, clip, open, onClosed)
         if dropdownTweens[clip] then
-            pcall(function() dropdownTweens[clip]:Cancel() end)
+            pcall(function()
+                dropdownTweens[clip]:Cancel()
+            end)
             dropdownTweens[clip] = nil
         end
         if open then
@@ -793,50 +735,8 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         end
     end
 
-    local dropdownControls = {
-        Entities = {
-            module = EntityListModule,
-            arrow = Arrow,
-            dropdown = Dropdown,
-            clip = DropdownClip,
-            getLayout = function()
-                return entityListLayout
-            end,
-            other = "NameTags",
-        },
-        NameTags = {
-            module = NameTagModule,
-            arrow = Arrow_2,
-            dropdown = Dropdown_2,
-            clip = DropdownClip_2,
-            getLayout = function()
-                return nameTagChoices
-            end,
-            other = "Entities",
-        },
-    }
 
-    local function setDropdownOpen(name, open)
-        local control = dropdownControls[name]
-        local isOpen = open == true
-        dropdownOpen[name] = isOpen
-
-        if isOpen then
-            local other = dropdownControls[control.other]
-            dropdownOpen[control.other] = false
-            animateDropdown(other.dropdown, other.getLayout(), other.clip, false, function()
-                setParentDropdownCorners(other.module, false)
-            end)
-            other.arrow.Text = "ꜜ"
-            setParentDropdownCorners(control.module, true)
-        end
-
-        animateDropdown(control.dropdown, control.getLayout(), control.clip, isOpen, function()
-            setParentDropdownCorners(control.module, false)
-        end)
-        control.arrow.Text = isOpen and "ꜛ" or "ꜜ"
-    end
-
+    -- Entity dropdown rows
     local function createEntityRow(entity, order)
         local row = Instance.new("Frame")
         row.Name = "EntityOption_" .. tostring(entity.name)
@@ -964,6 +864,46 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
 
     nameTagChoices = configureDropdownContent(Dropdown_2)
 
+    local dropdownControls = {
+        Entities = {
+            module = EntityListModule,
+            arrow = Arrow,
+            dropdown = Dropdown,
+            clip = DropdownClip,
+            layout = entityListLayout,
+            other = "NameTags",
+        },
+        NameTags = {
+            module = NameTagModule,
+            arrow = Arrow_2,
+            dropdown = Dropdown_2,
+            clip = DropdownClip_2,
+            layout = nameTagChoices,
+            other = "Entities",
+        },
+    }
+
+    local function setDropdownOpen(name, open)
+        local control = dropdownControls[name]
+        local isOpen = open == true
+        dropdownOpen[name] = isOpen
+
+        if isOpen then
+            local other = dropdownControls[control.other]
+            dropdownOpen[control.other] = false
+            animateDropdown(other.dropdown, other.layout, other.clip, false, function()
+                setParentDropdownCorners(other.module, false)
+            end)
+            other.arrow.Text = "ꜜ"
+            setParentDropdownCorners(control.module, true)
+        end
+
+        animateDropdown(control.dropdown, control.layout, control.clip, isOpen, function()
+            setParentDropdownCorners(control.module, false)
+        end)
+        control.arrow.Text = isOpen and "ꜛ" or "ꜜ"
+    end
+
     local function setNameTagMode(mode)
         nameTagMode = mode
         NameTagModule.Text = "  Name Tags: " .. mode
@@ -1011,11 +951,19 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     guiConnect(Cancel.MouseButton1Click, function()
         CloseConfirmation.Visible = false
     end)
+    -- Unload and exported interface
+    local function disconnectGuiConnections()
+        for _, connection in ipairs(guiConnections) do
+            pcall(function()
+                connection:Disconnect()
+            end)
+        end
+        table.clear(guiConnections)
+    end
+
     guiConnect(CloseScript.MouseButton1Click, function()
         UnloadRequested:Fire()
-        for _, connection in ipairs(guiConnections) do
-            pcall(function() connection:Disconnect() end)
-        end
+        disconnectGuiConnections()
         task.defer(function()
             if DOORSEntityDetector and DOORSEntityDetector.Parent then
                 DOORSEntityDetector:Destroy()
