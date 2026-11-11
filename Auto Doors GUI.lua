@@ -858,7 +858,19 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
 
     entityListLayout = configureDropdownContent(Dropdown)
 
-    for order, entity in ipairs(entityDefinitions) do
+    local entityRows = table.clone(entityDefinitions)
+    local hasA90Toggle = false
+    for _, entity in ipairs(entityRows) do
+        if entity.name == "HitByA90" then
+            hasA90Toggle = true
+            break
+        end
+    end
+    if not hasA90Toggle then
+        table.insert(entityRows, 2, {name = "HitByA90", display = "A-90"})
+    end
+
+    for order, entity in ipairs(entityRows) do
         createEntityRow(entity, order)
     end
 
