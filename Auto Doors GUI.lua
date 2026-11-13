@@ -68,6 +68,9 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     }
 
     local CoreGui = game:GetService("CoreGui")
+    local ContentProvider = game:GetService("ContentProvider")
+    local fontsReady = false
+    local fontsReadyEvent = Instance.new("BindableEvent")
     local LocalPlayer = game:GetService("Players").LocalPlayer
     local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
@@ -97,6 +100,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     end
 
     DOORSEntityDetector.Name = "DOORSEntityDetector"
+    DOORSEntityDetector.Enabled = false
     DOORSEntityDetector.Parent = CoreGui
     DOORSEntityDetector.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
     DOORSEntityDetector.DisplayOrder = 9999
@@ -137,7 +141,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Title.BackgroundTransparency = 1.000
     Title.Position = UDim2.new(0, 17, 0, 7)
     Title.Size = UDim2.new(1, -150, 0, 27)
-    Title.Font = Enum.Font.GothamBold
+    Title.FontFace = Font.fromEnum(Enum.Font.GothamBold)
     Title.Text = "AUTO DOORS"
     Title.TextColor3 = C.White
     Title.TextSize = 19.000
@@ -148,7 +152,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Description.BackgroundTransparency = 1.000
     Description.Position = UDim2.new(0, 18, 0, 34)
     Description.Size = UDim2.new(1, -150, 0, 16)
-    Description.Font = Enum.Font.GothamMedium
+    Description.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
     Description.Text = "ENTITY DETECTION  /  AUTOMATION"
     Description.TextColor3 = C.SecondaryText
     Description.TextSize = 9.000
@@ -161,7 +165,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Resize.Position = UDim2.new(0, 355, 0, 15)
     Resize.Size = UDim2.new(0, 30, 0, 30)
     Resize.AutoButtonColor = false
-    Resize.Font = Enum.Font.GothamBold
+    Resize.FontFace = Font.fromEnum(Enum.Font.GothamBold)
     Resize.Text = "▢"
     Resize.TextColor3 = C.White
     Resize.TextSize = 15.000
@@ -175,7 +179,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Minimize.Position = UDim2.new(0, 320, 0, 15)
     Minimize.Size = UDim2.new(0, 30, 0, 30)
     Minimize.AutoButtonColor = false
-    Minimize.Font = Enum.Font.GothamMedium
+    Minimize.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
     Minimize.Text = "—"
     Minimize.TextColor3 = C.White
     Minimize.TextSize = 15.000
@@ -189,7 +193,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Close.Position = UDim2.new(0, 390, 0, 15)
     Close.Size = UDim2.new(0, 30, 0, 30)
     Close.AutoButtonColor = false
-    Close.Font = Enum.Font.Gotham
+    Close.FontFace = Font.fromEnum(Enum.Font.Gotham)
     Close.Text = "×"
     Close.TextColor3 = C.White
     Close.TextSize = 40.000
@@ -223,7 +227,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     ModuleText.BackgroundTransparency = 1.000
     ModuleText.Position = UDim2.new(0, 12, 0, 0)
     ModuleText.Size = UDim2.new(1, -70, 1, 0)
-    ModuleText.Font = Enum.Font.GothamMedium
+    ModuleText.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
     ModuleText.Text = "Entity Outlines"
     ModuleText.TextColor3 = C.White
     ModuleText.TextSize = 15.000
@@ -236,7 +240,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     ModuleCheckbox.Position = UDim2.new(1, -38, 0.5, -13)
     ModuleCheckbox.Size = UDim2.new(0, 26, 0, 26)
     ModuleCheckbox.AutoButtonColor = false
-    ModuleCheckbox.Font = Enum.Font.GothamMedium
+    ModuleCheckbox.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
     ModuleCheckbox.Text = "✓"
     ModuleCheckbox.TextColor3 = C.White
     ModuleCheckbox.TextSize = 15.000
@@ -251,7 +255,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     SectionEntityDetection.Parent = EntitiesPage
     SectionEntityDetection.BackgroundTransparency = 1.000
     SectionEntityDetection.Size = UDim2.new(0, 400, 0, 15)
-    SectionEntityDetection.Font = Enum.Font.GothamBold
+    SectionEntityDetection.FontFace = Font.fromEnum(Enum.Font.GothamBold)
     SectionEntityDetection.Text = "Entity Detection:"
     SectionEntityDetection.TextColor3 = C.RedHover
     SectionEntityDetection.TextSize = 14.000
@@ -265,7 +269,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     EntityListModule.Size = UDim2.new(0, 400, 0, 45)
     EntityListModule.ZIndex = 2
     EntityListModule.AutoButtonColor = false
-    EntityListModule.Font = Enum.Font.GothamMedium
+    EntityListModule.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
     EntityListModule.Text = "  Entities Detected:"
     EntityListModule.TextColor3 = C.White
     EntityListModule.TextSize = 15.000
@@ -279,7 +283,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Arrow.BackgroundTransparency = 1.000
     Arrow.Position = UDim2.new(1, -3, 0.75, 0)
     Arrow.Size = UDim2.new(0, 25, 0, 30)
-    Arrow.Font = Enum.Font.GothamBold
+    Arrow.FontFace = Font.fromEnum(Enum.Font.GothamBold)
     Arrow.Text = "ꜜ"
     Arrow.TextColor3 = C.White
     Arrow.TextSize = 30.000
@@ -315,7 +319,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     NameTagModule.Position = UDim2.new(0, 0, 0, 80)
     NameTagModule.Size = UDim2.new(0, 400, 0, 45)
     NameTagModule.AutoButtonColor = false
-    NameTagModule.Font = Enum.Font.GothamMedium
+    NameTagModule.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
     NameTagModule.Text = "  Name Tags: Recommended"
     NameTagModule.TextColor3 = C.White
     NameTagModule.TextSize = 15.000
@@ -329,7 +333,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Arrow_2.BackgroundTransparency = 1.000
     Arrow_2.Position = UDim2.new(1, -3, 0.75, 0)
     Arrow_2.Size = UDim2.new(0, 25, 0, 30)
-    Arrow_2.Font = Enum.Font.GothamBold
+    Arrow_2.FontFace = Font.fromEnum(Enum.Font.GothamBold)
     Arrow_2.Text = "ꜜ"
     Arrow_2.TextColor3 = C.White
     Arrow_2.TextSize = 30.000
@@ -370,7 +374,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     SectionAutomation.Parent = AutomationPage
     SectionAutomation.BackgroundTransparency = 1.000
     SectionAutomation.Size = UDim2.new(0, 400, 0, 15)
-    SectionAutomation.Font = Enum.Font.GothamBold
+    SectionAutomation.FontFace = Font.fromEnum(Enum.Font.GothamBold)
     SectionAutomation.Text = "Automation:"
     SectionAutomation.TextColor3 = C.RedHover
     SectionAutomation.TextSize = 14.000
@@ -393,7 +397,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Entities.BorderSizePixel = 0
     Entities.Size = UDim2.new(0.5, -4, 1, 0)
     Entities.AutoButtonColor = false
-    Entities.Font = Enum.Font.GothamMedium
+    Entities.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
     Entities.Text = "Entities"
     Entities.TextColor3 = C.White
     Entities.TextSize = 15.000
@@ -407,7 +411,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Automation.BorderSizePixel = 0
     Automation.Size = UDim2.new(0.5, -4, 1, 0)
     Automation.AutoButtonColor = false
-    Automation.Font = Enum.Font.GothamMedium
+    Automation.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
     Automation.Text = "Automation"
     Automation.TextColor3 = C.White
     Automation.TextSize = 15.000
@@ -445,7 +449,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     ConfirmationText.Position = UDim2.new(0, 14, 0, 12)
     ConfirmationText.Size = UDim2.new(1, -28, 0, 25)
     ConfirmationText.ZIndex = 21
-    ConfirmationText.Font = Enum.Font.GothamBold
+    ConfirmationText.FontFace = Font.fromEnum(Enum.Font.GothamBold)
     ConfirmationText.Text = "Close Auto Doors?"
     ConfirmationText.TextColor3 = C.White
     ConfirmationText.TextSize = 15.000
@@ -457,7 +461,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     ConfirmationExplanation.Position = UDim2.new(0, 14, 0, 40)
     ConfirmationExplanation.Size = UDim2.new(1, -28, 0, 32)
     ConfirmationExplanation.ZIndex = 21
-    ConfirmationExplanation.Font = Enum.Font.Gotham
+    ConfirmationExplanation.FontFace = Font.fromEnum(Enum.Font.Gotham)
     ConfirmationExplanation.Text = "This will stop detection and remove all script visuals."
     ConfirmationExplanation.TextColor3 = C.SecondaryText
     ConfirmationExplanation.TextSize = 11.000
@@ -472,7 +476,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     Cancel.Size = UDim2.new(0.5, -21, 0, 32)
     Cancel.ZIndex = 21
     Cancel.AutoButtonColor = false
-    Cancel.Font = Enum.Font.GothamMedium
+    Cancel.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
     Cancel.Text = "Cancel"
     Cancel.TextColor3 = C.White
     Cancel.TextSize = 15.000
@@ -487,7 +491,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     CloseScript.Size = UDim2.new(0.5, -21, 0, 32)
     CloseScript.ZIndex = 21
     CloseScript.AutoButtonColor = false
-    CloseScript.Font = Enum.Font.GothamMedium
+    CloseScript.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
     CloseScript.Text = "Close Script"
     CloseScript.TextColor3 = C.White
     CloseScript.TextSize = 15.000
@@ -755,7 +759,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         optionLabel.BackgroundTransparency = 1
         optionLabel.Position = UDim2.new(0, 10, 0, 0)
         optionLabel.Size = UDim2.new(1, -52, 1, 0)
-        optionLabel.Font = Enum.Font.GothamMedium
+        optionLabel.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
         optionLabel.Text = tostring(entity.display or entity.name)
         optionLabel.TextColor3 = C.White
         optionLabel.TextSize = 14
@@ -770,7 +774,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         checkbox.Position = UDim2.new(1, -36, 0.5, -13)
         checkbox.Size = UDim2.new(0, 26, 0, 26)
         checkbox.AutoButtonColor = false
-        checkbox.Font = Enum.Font.GothamMedium
+        checkbox.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
         checkbox.Text = "✓"
         checkbox.TextColor3 = C.White
         checkbox.TextSize = 15
@@ -930,7 +934,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         option.Size = UDim2.new(1, -8, 0, 32)
         option.LayoutOrder = order
         option.AutoButtonColor = false
-        option.Font = Enum.Font.GothamMedium
+        option.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
         option.Text = "  " .. mode
         option.TextColor3 = C.White
         option.TextSize = 14
@@ -983,7 +987,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         end)
     end)
 
-    return {
+    local guiReferences = {
         ScreenGui = DOORSEntityDetector,
         MainWindow = MainWindow,
 
@@ -1010,7 +1014,53 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         SetOutlineEnabled = setOutlineEnabled,
 
         Notifications = Notifications,
+        WaitForFonts = function()
+            if not fontsReady then
+                fontsReadyEvent.Event:Wait()
+            end
+        end,
     }
+
+    local function preloadFonts()
+        local textObjects = {}
+        for _, object in ipairs(DOORSEntityDetector:GetDescendants()) do
+            if object:IsA("TextLabel") or object:IsA("TextButton") or object:IsA("TextBox") then
+                textObjects[#textObjects + 1] = object
+            end
+        end
+
+        local function tryPreload()
+            local failedAsset = false
+            local callSucceeded = pcall(function()
+                ContentProvider:PreloadAsync(textObjects, function(_, status)
+                    if status ~= Enum.AssetFetchStatus.Success then
+                        failedAsset = true
+                    end
+                end)
+            end)
+            return callSucceeded and not failedAsset
+        end
+
+        local loaded = tryPreload()
+        if not loaded then
+            task.wait(0.25)
+            loaded = tryPreload()
+        end
+
+        if not loaded then
+            warn("[Auto Doors] One or more GUI fonts could not be preloaded.")
+        end
+
+        if DOORSEntityDetector.Parent then
+            DOORSEntityDetector.Enabled = true
+        end
+
+        fontsReady = true
+        fontsReadyEvent:Fire()
+    end
+
+    task.spawn(preloadFonts)
+    return guiReferences
 end
 
 local mainEntities, mainEnabledEntities, mainNameTagMode = ...
