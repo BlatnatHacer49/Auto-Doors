@@ -69,7 +69,10 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
 
     local CoreGui = game:GetService("CoreGui")
     local ContentProvider = game:GetService("ContentProvider")
+    local TextService = game:GetService("TextService")
+    local RunService = game:GetService("RunService")
     local fontsReady = false
+    local fontLoadSucceeded = false
     local fontsReadyEvent = Instance.new("BindableEvent")
     local LocalPlayer = game:GetService("Players").LocalPlayer
     local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
@@ -655,9 +658,6 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     if entityEnabledState.__Portrait == nil then
         entityEnabledState.__Portrait = true
     end
-    if entityEnabledState.HitByA90 == nil then
-        entityEnabledState.HitByA90 = true
-    end
     local nameTagMode = (initialNameTagMode == "All" or initialNameTagMode == "None")
         and initialNameTagMode
         or "Recommended"
@@ -863,17 +863,6 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
     entityListLayout = configureDropdownContent(Dropdown)
 
     local entityRows = table.clone(entityDefinitions)
-    local hasA90Toggle = false
-    for _, entity in ipairs(entityRows) do
-        if entity.name == "HitByA90" then
-            hasA90Toggle = true
-            break
-        end
-    end
-    if not hasA90Toggle then
-        table.insert(entityRows, 2, {name = "HitByA90", display = "A-90"})
-    end
-
     for order, entity in ipairs(entityRows) do
         createEntityRow(entity, order)
     end
@@ -1018,45 +1007,88 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
             if not fontsReady then
                 fontsReadyEvent.Event:Wait()
             end
+            return fontLoadSucceeded
         end,
     }
 
-    local function preloadFonts()
+    local function signalFontsReady(success)
+        if fontsReady then
+            return
+        end
+        fontsReady = true
+        fontLoadSucceeded = success == true
+        fontsReadyEvent:Fire(fontLoadSucceeded)
+    end
+
+    guiConnect(DOORSEntityDetector.Destroying, function()
+        signalFontsReady(false)
+    end)
+
+    local function collectFontAssets()
         local textObjects = {}
+        local fontFamilies = {}
+
         for _, object in ipairs(DOORSEntityDetector:GetDescendants()) do
             if object:IsA("TextLabel") or object:IsA("TextButton") or object:IsA("TextBox") then
                 textObjects[#textObjects + 1] = object
+                local family = object.FontFace.Family
+                if type(family) == "string" and family ~= "" then
+                    fontFamilies[family] = true
+                end
             end
         end
 
-        local function tryPreload()
-            local failedAsset = false
-            local callSucceeded = pcall(function()
-                ContentProvider:PreloadAsync(textObjects, function(_, status)
-                    if status ~= Enum.AssetFetchStatus.Success then
-                        failedAsset = true
-                    end
-                end)
+        return textObjects, fontFamilies
+    end
+
+    local function tryPreload(textObjects, fontFamilies)
+        for family in pairs(fontFamilies) do
+            local familyLoaded, familyInfo = pcall(function()
+                return TextService:GetFamilyInfoAsync(family)
             end)
-            return callSucceeded and not failedAsset
+            if not familyLoaded or type(familyInfo) ~= "table" then
+                return false
+            end
         end
 
-        local loaded = tryPreload()
-        if not loaded then
-            task.wait(0.25)
-            loaded = tryPreload()
+        local failedAsset = false
+        local callSucceeded = pcall(function()
+            ContentProvider:PreloadAsync(textObjects, function(_, status)
+                if status ~= Enum.AssetFetchStatus.Success then
+                    failedAsset = true
+                end
+            end)
+        end)
+
+        return callSucceeded and not failedAsset
+    end
+
+    local function preloadFonts()
+        local textObjects, fontFamilies = collectFontAssets()
+        local attempt = 0
+
+        while DOORSEntityDetector.Parent do
+            attempt += 1
+            if tryPreload(textObjects, fontFamilies) then
+                local renderSucceeded = pcall(function()
+                    RunService.RenderStepped:Wait()
+                end)
+
+                if renderSucceeded and DOORSEntityDetector.Parent then
+                    DOORSEntityDetector.Enabled = true
+                    signalFontsReady(true)
+                    return
+                end
+            end
+
+            if attempt == 1 or attempt % 5 == 0 then
+                warn("[Auto Doors] GUI fonts are not ready; retrying font preload (attempt " .. attempt .. ").")
+            end
+
+            task.wait(math.min(0.5 * (2 ^ math.min(attempt - 1, 4)), 8))
         end
 
-        if not loaded then
-            warn("[Auto Doors] One or more GUI fonts could not be preloaded.")
-        end
-
-        if DOORSEntityDetector.Parent then
-            DOORSEntityDetector.Enabled = true
-        end
-
-        fontsReady = true
-        fontsReadyEvent:Fire()
+        signalFontsReady(false)
     end
 
     task.spawn(preloadFonts)
