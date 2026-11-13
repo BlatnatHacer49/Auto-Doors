@@ -966,15 +966,28 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         table.clear(guiConnections)
     end
 
-    guiConnect(CloseScript.MouseButton1Click, function()
+    local signalFontsReady
+    local guiClosing = false
+    local function closeScriptNow()
+        if guiClosing then
+            return
+        end
+        guiClosing = true
+
         UnloadRequested:Fire()
+        if signalFontsReady then
+            signalFontsReady(false)
+        end
         disconnectGuiConnections()
+
         task.defer(function()
             if DOORSEntityDetector and DOORSEntityDetector.Parent then
                 DOORSEntityDetector:Destroy()
             end
         end)
-    end)
+    end
+
+    guiConnect(CloseScript.MouseButton1Click, closeScriptNow)
 
     local guiReferences = {
         ScreenGui = DOORSEntityDetector,
@@ -1000,6 +1013,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         EntityEnabledChanged = EntityEnabledChanged,
         NameTagModeChanged = NameTagModeChanged,
         UnloadRequested = UnloadRequested,
+        CloseScriptNow = closeScriptNow,
         SetOutlineEnabled = setOutlineEnabled,
 
         Notifications = Notifications,
@@ -1011,7 +1025,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         end,
     }
 
-    local function signalFontsReady(success)
+    signalFontsReady = function(success)
         if fontsReady then
             return
         end
