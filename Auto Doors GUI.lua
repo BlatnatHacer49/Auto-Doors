@@ -1024,65 +1024,144 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode)
         signalFontsReady(false)
     end)
 
+    local function getFontFamilyUri(fontFace)
+        local family = fontFace.Family
+        if type(family) == "string" and family ~= "" then
+            return family
+        end
+
+        local ok, sourceType, uri = pcall(function()
+            return family.SourceType, family.Uri
+        end)
+        if ok and sourceType == Enum.ContentSourceType.Uri
+            and type(uri) == "string" and uri ~= "" then
+            return uri
+        end
+
+        return nil
+    end
+
     local function collectFontAssets()
         local textObjects = {}
         local fontFamilies = {}
+        local requestedFaces = {}
+        local requestedFaceKeys = {}
 
         for _, object in ipairs(DOORSEntityDetector:GetDescendants()) do
             if object:IsA("TextLabel") or object:IsA("TextButton") or object:IsA("TextBox") then
                 textObjects[#textObjects + 1] = object
-                local family = object.FontFace.Family
-                if type(family) == "string" and family ~= "" then
-                    fontFamilies[family] = true
+
+                local fontFace = object.FontFace
+                local familyUri = getFontFamilyUri(fontFace)
+                if not familyUri then
+                    return nil, nil, nil
+                end
+
+                fontFamilies[familyUri] = true
+                local faceKey = familyUri .. "|" .. tostring(fontFace.Weight)
+                    .. "|" .. tostring(fontFace.Style)
+                if not requestedFaceKeys[faceKey] then
+                    requestedFaceKeys[faceKey] = true
+                    requestedFaces[#requestedFaces + 1] = {
+                        family = familyUri,
+                        font = fontFace,
+                    }
                 end
             end
         end
 
-        return textObjects, fontFamilies
+        return textObjects, fontFamilies, requestedFaces
     end
 
-    local function tryPreload(textObjects, fontFamilies)
-        for family in pairs(fontFamilies) do
+    local function tryPreload(textObjects, fontFamilies, requestedFaces)
+        local familyInfoByUri = {}
+        for familyUri in pairs(fontFamilies) do
             local familyLoaded, familyInfo = pcall(function()
-                return TextService:GetFamilyInfoAsync(family)
+                return TextService:GetFamilyInfoAsync(familyUri)
             end)
-            if not familyLoaded or type(familyInfo) ~= "table" then
+            if not familyLoaded or type(familyInfo) ~= "table"
+                or type(familyInfo.Faces) ~= "table" or next(familyInfo.Faces) == nil then
+                return false
+            end
+            familyInfoByUri[familyUri] = familyInfo
+        end
+
+        for _, requested in ipairs(requestedFaces) do
+            local familyInfo = familyInfoByUri[requested.family]
+            local matchingFace = false
+            for _, availableFace in pairs(familyInfo.Faces) do
+                if availableFace.Weight == requested.font.Weight
+                    and availableFace.Style == requested.font.Style then
+                    matchingFace = true
+                    break
+                end
+            end
+            if not matchingFace then
                 return false
             end
         end
 
+        local preloadItems = {}
+        for _, object in ipairs(textObjects) do
+            preloadItems[#preloadItems + 1] = object
+        end
+
         local failedAsset = false
         local callSucceeded = pcall(function()
-            ContentProvider:PreloadAsync(textObjects, function(_, status)
+            ContentProvider:PreloadAsync(preloadItems, function(_, status)
                 if status ~= Enum.AssetFetchStatus.Success then
                     failedAsset = true
                 end
             end)
         end)
+        if not callSucceeded or failedAsset then
+            return false
+        end
 
-        return callSucceeded and not failedAsset
+        for _, requested in ipairs(requestedFaces) do
+            local params = Instance.new("GetTextBoundsParams")
+            params.Text = "Auto Doors"
+            params.Font = requested.font
+            params.Size = 20
+            params.Width = 1000
+
+            local boundsOk, bounds = pcall(function()
+                return TextService:GetTextBoundsAsync(params)
+            end)
+            params:Destroy()
+
+            if not boundsOk or typeof(bounds) ~= "Vector2"
+                or bounds.X <= 0 or bounds.Y <= 0 then
+                return false
+            end
+        end
+
+        return true
     end
 
     local function preloadFonts()
-        local textObjects, fontFamilies = collectFontAssets()
+        local textObjects, fontFamilies, requestedFaces = collectFontAssets()
         local attempt = 0
 
         while DOORSEntityDetector.Parent do
             attempt += 1
-            if tryPreload(textObjects, fontFamilies) then
+            if textObjects and fontFamilies and requestedFaces
+                and tryPreload(textObjects, fontFamilies, requestedFaces) then
+                DOORSEntityDetector.Enabled = true
                 local renderSucceeded = pcall(function()
+                    RunService.RenderStepped:Wait()
                     RunService.RenderStepped:Wait()
                 end)
 
                 if renderSucceeded and DOORSEntityDetector.Parent then
-                    DOORSEntityDetector.Enabled = true
                     signalFontsReady(true)
                     return
                 end
+                DOORSEntityDetector.Enabled = false
             end
 
             if attempt == 1 or attempt % 5 == 0 then
-                warn("[Auto Doors] GUI fonts are not ready; retrying font preload (attempt " .. attempt .. ").")
+                warn("[Auto Doors] GUI font resources are not ready; retrying (attempt " .. attempt .. ").")
             end
 
             task.wait(math.min(0.5 * (2 ^ math.min(attempt - 1, 4)), 8))
