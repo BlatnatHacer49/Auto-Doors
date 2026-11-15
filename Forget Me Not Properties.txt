@@ -1,14 +1,25 @@
 # AUTO DOORS - FORGET ME NOT VISUAL PROPERTY LIST
-# Version: 1
+# Version: 2
 # Format: ClassName: Property1, Property2, Property3
 # Only properties in this file are compared during the visual-property phase.
 # Folder/object presence and class matching are checked separately.
+# Texture/image content and the settings that visibly affect its rendering are included.
 # Classes absent from this list receive structural checks only; no properties are read.
 
 Attachment: Visible
-MeshPart: Color, Material, MaterialVariant, Reflectance, Transparency, LocalTransparencyModifier, CastShadow, DoubleSided, RenderFidelity, Size, MeshContent, TextureContent, TopSurface, BottomSurface, FrontSurface, BackSurface, LeftSurface, RightSurface
+MeshPart: Color, Material, MaterialVariant, Reflectance, Transparency, LocalTransparencyModifier, CastShadow, DoubleSided, RenderFidelity, Size, MeshContent, TextureContent, TextureID, TopSurface, BottomSurface, FrontSurface, BackSurface, LeftSurface, RightSurface
 Part: Color, Material, MaterialVariant, Reflectance, Transparency, LocalTransparencyModifier, CastShadow, Size, Shape, TopSurface, BottomSurface, FrontSurface, BackSurface, LeftSurface, RightSurface
 PointLight: Brightness, Color, Enabled, Range, Shadows
 SurfaceLight: Angle, Brightness, Color, Enabled, Face, Range, Shadows
 ProximityPrompt: ActionText, ObjectText, AutoLocalize, ClickablePrompt, Enabled, Exclusivity, GamepadKeyCode, HoldDuration, KeyboardKeyCode, MaxActivationDistance, MaxIndicatorDistance, RequiresLineOfSight, Style, UIOffset
 Model: LevelOfDetail
+Decal: AutoLocalize, Color3, ColorMap, ColorMapContent, EmissiveMaskContent, EmissiveStrength, EmissiveTint, Face, LocalTransparencyModifier, MetalnessMap, MetalnessMapContent, NormalMap, NormalMapContent, Rotation, RoughnessMap, RoughnessMapContent, Texture, TextureContent, Transparency, UVOffset, UVScale, ZIndex
+Texture: AutoLocalize, Color3, ColorMap, ColorMapContent, EmissiveMaskContent, EmissiveStrength, EmissiveTint, Face, LocalTransparencyModifier, MetalnessMap, MetalnessMapContent, NormalMap, NormalMapContent, OffsetStudsU, OffsetStudsV, Rotation, RoughnessMap, RoughnessMapContent, StudsPerTileU, StudsPerTileV, Texture, TextureContent, Transparency, UVOffset, UVScale, ZIndex
+SurfaceAppearance: AlphaMode, Color, ColorMap, ColorMapContent, EmissiveMaskContent, EmissiveStrength, EmissiveTint, MetalnessMap, MetalnessMapContent, NormalMap, NormalMapContent, RoughnessMap, RoughnessMapContent
+MaterialVariant: AlphaMode, BaseMaterial, ColorMap, ColorMapContent, EmissiveMaskContent, EmissiveStrength, EmissiveTint, MaterialPattern, MetalnessMap, MetalnessMapContent, NormalMap, NormalMapContent, RoughnessMap, RoughnessMapContent, StudsPerTile
+SpecialMesh: TextureId
+ParticleEmitter: Texture, TextureContent
+Beam: Texture, TextureContent
+Trail: Texture, TextureContent
+ImageLabel: Image, ImageContent, ImageColor3, ImageTransparency, ImageRectOffset, ImageRectSize, ResampleMode, ScaleType, SliceCenter, SliceScale, TileSize
+ImageButton: Image, ImageContent, ImageColor3, ImageTransparency, ImageRectOffset, ImageRectSize, ResampleMode, ScaleType, SliceCenter, SliceScale, TileSize, HoverImage, HoverImageContent, PressedImage, PressedImageContent
