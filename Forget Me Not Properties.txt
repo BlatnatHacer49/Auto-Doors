@@ -1,6 +1,7 @@
 # AUTO DOORS - FORGET ME NOT VISUAL PROPERTY LIST
-# Version: 2
+# Version: 3
 # Format: ClassName: Property1, Property2, Property3
+# Supported nested selectors: Model.WorldPivot.RightVector, Model.WorldPivot.UpVector, Model.WorldPivot.LookVector
 # Only properties in this file are compared during the visual-property phase.
 # Folder/object presence and class matching are checked separately.
 # Texture/image content and the settings that visibly affect its rendering are included.
@@ -12,7 +13,7 @@ Part: Color, Material, MaterialVariant, Reflectance, Transparency, LocalTranspar
 PointLight: Brightness, Color, Enabled, Range, Shadows
 SurfaceLight: Angle, Brightness, Color, Enabled, Face, Range, Shadows
 ProximityPrompt: ActionText, ObjectText, AutoLocalize, ClickablePrompt, Enabled, Exclusivity, GamepadKeyCode, HoldDuration, KeyboardKeyCode, MaxActivationDistance, MaxIndicatorDistance, RequiresLineOfSight, Style, UIOffset
-Model: LevelOfDetail
+Model: LevelOfDetail, WorldPivot.RightVector, WorldPivot.UpVector, WorldPivot.LookVector
 Decal: AutoLocalize, Color3, ColorMap, ColorMapContent, EmissiveMaskContent, EmissiveStrength, EmissiveTint, Face, LocalTransparencyModifier, MetalnessMap, MetalnessMapContent, NormalMap, NormalMapContent, Rotation, RoughnessMap, RoughnessMapContent, Texture, TextureContent, Transparency, UVOffset, UVScale, ZIndex
 Texture: AutoLocalize, Color3, ColorMap, ColorMapContent, EmissiveMaskContent, EmissiveStrength, EmissiveTint, Face, LocalTransparencyModifier, MetalnessMap, MetalnessMapContent, NormalMap, NormalMapContent, OffsetStudsU, OffsetStudsV, Rotation, RoughnessMap, RoughnessMapContent, StudsPerTileU, StudsPerTileV, Texture, TextureContent, Transparency, UVOffset, UVScale, ZIndex
 SurfaceAppearance: AlphaMode, Color, ColorMap, ColorMapContent, EmissiveMaskContent, EmissiveStrength, EmissiveTint, MetalnessMap, MetalnessMapContent, NormalMap, NormalMapContent, RoughnessMap, RoughnessMapContent
