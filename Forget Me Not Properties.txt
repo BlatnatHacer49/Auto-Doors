@@ -1,0 +1,14 @@
+# AUTO DOORS - FORGET ME NOT VISUAL PROPERTY LIST
+# Version: 1
+# Format: ClassName: Property1, Property2, Property3
+# Only properties in this file are compared during the visual-property phase.
+# Folder/object presence and class matching are checked separately.
+# Classes absent from this list receive structural checks only; no properties are read.
+
+Attachment: Visible
+MeshPart: Color, Material, MaterialVariant, Reflectance, Transparency, LocalTransparencyModifier, CastShadow, DoubleSided, RenderFidelity, Size, MeshContent, TextureContent, TopSurface, BottomSurface, FrontSurface, BackSurface, LeftSurface, RightSurface
+Part: Color, Material, MaterialVariant, Reflectance, Transparency, LocalTransparencyModifier, CastShadow, Size, Shape, TopSurface, BottomSurface, FrontSurface, BackSurface, LeftSurface, RightSurface
+PointLight: Brightness, Color, Enabled, Range, Shadows
+SurfaceLight: Angle, Brightness, Color, Enabled, Face, Range, Shadows
+ProximityPrompt: ActionText, ObjectText, AutoLocalize, ClickablePrompt, Enabled, Exclusivity, GamepadKeyCode, HoldDuration, KeyboardKeyCode, MaxActivationDistance, MaxIndicatorDistance, RequiresLineOfSight, Style, UIOffset
+Model: LevelOfDetail
