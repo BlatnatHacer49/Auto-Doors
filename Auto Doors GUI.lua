@@ -1,6 +1,5 @@
--- Auto Doors GUI v43
 -- UI construction
-local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, initialFullbrightEnabled, itemDefinitions, enabledItems)
+local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, initialFullbrightEnabled, itemDefinitions, enabledItems, initialItemOutlinesEnabled, initialAntiAFKEnabled)
     local standaloneEntities = {
         {name = "Test1", display = "Test 1"}, {name = "Test2", display = "Test 2"},
         {name = "Test3", display = "Test 3"}, {name = "Test4", display = "Test 4"},
@@ -10,6 +9,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     }
     entityDefinitions = type(entityDefinitions) == "table" and entityDefinitions or standaloneEntities
     itemDefinitions = type(itemDefinitions) == "table" and itemDefinitions or {}
+    enabledItems = type(enabledItems) == "table" and enabledItems or {}
 
     local DOORSEntityDetector = Instance.new("ScreenGui")
     local MainWindow = Instance.new("Frame")
@@ -56,10 +56,22 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         ItemListModule = Instance.new("TextButton"),
         ItemArrow = Instance.new("TextLabel"),
         ItemDropdown = Instance.new("ScrollingFrame"),
-        FullbrightChanged = Instance.new("BindableEvent"),
+        ItemOutlinesModule = Instance.new("Frame"),
+        ItemOutlinesText = Instance.new("TextLabel"),
+        ItemOutlinesCheckbox = Instance.new("TextButton"),
+        ItemOutlineChanged = Instance.new("BindableEvent"),
+        ItemOutlinesEnabled = initialItemOutlinesEnabled ~= false,
+        ItemOutlinesHovering = false,
         ItemEnabledChanged = Instance.new("BindableEvent"),
+        FullbrightChanged = Instance.new("BindableEvent"),
         FullbrightEnabled = initialFullbrightEnabled == true,
         FullbrightHovering = false,
+        AntiAFKModule = Instance.new("Frame"),
+        AntiAFKText = Instance.new("TextLabel"),
+        AntiAFKCheckbox = Instance.new("TextButton"),
+        AntiAFKChanged = Instance.new("BindableEvent"),
+        AntiAFKEnabled = initialAntiAFKEnabled == true,
+        AntiAFKHovering = false,
     }
 
     local C = {
@@ -216,6 +228,8 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     EntitiesPage.Visible = false
     EntitiesPage.CanvasSize = UDim2.new(0, 0, 0, 440)
     EntitiesPage.ScrollBarThickness = 4
+    EntitiesPage.Active = true
+    EntitiesPage.ScrollingEnabled = true
 
     EntityOutlinesModule.Name = "EntityOutlinesModule"
     EntityOutlinesModule.Parent = EntitiesPage
@@ -415,6 +429,39 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.ItemDropdown.Visible = true
     addCorner(ExtraControls.ItemDropdown, 0, 0, 8, 8)
 
+    ExtraControls.ItemOutlinesModule.Name = "ItemOutlinesModule"
+    ExtraControls.ItemOutlinesModule.Parent = EntitiesPage
+    ExtraControls.ItemOutlinesModule.BackgroundColor3 = C.Panel
+    ExtraControls.ItemOutlinesModule.BorderSizePixel = 0
+    ExtraControls.ItemOutlinesModule.Position = UDim2.new(0, 1, 0, 280)
+    ExtraControls.ItemOutlinesModule.Size = UDim2.new(0, 398, 0, 50)
+
+    ExtraControls.ItemOutlinesText.Name = "ItemOutlinesText"
+    ExtraControls.ItemOutlinesText.Parent = ExtraControls.ItemOutlinesModule
+    ExtraControls.ItemOutlinesText.BackgroundTransparency = 1
+    ExtraControls.ItemOutlinesText.Position = UDim2.new(0, 12, 0, 0)
+    ExtraControls.ItemOutlinesText.Size = UDim2.new(1, -70, 1, 0)
+    ExtraControls.ItemOutlinesText.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
+    ExtraControls.ItemOutlinesText.Text = "Item Outlines"
+    ExtraControls.ItemOutlinesText.TextColor3 = C.White
+    ExtraControls.ItemOutlinesText.TextSize = 15
+    ExtraControls.ItemOutlinesText.TextXAlignment = Enum.TextXAlignment.Left
+
+    ExtraControls.ItemOutlinesCheckbox.Name = "ItemOutlinesCheckbox"
+    ExtraControls.ItemOutlinesCheckbox.Parent = ExtraControls.ItemOutlinesModule
+    ExtraControls.ItemOutlinesCheckbox.BackgroundColor3 = C.Red
+    ExtraControls.ItemOutlinesCheckbox.BorderSizePixel = 0
+    ExtraControls.ItemOutlinesCheckbox.Position = UDim2.new(1, -38, 0.5, -13)
+    ExtraControls.ItemOutlinesCheckbox.Size = UDim2.new(0, 26, 0, 26)
+    ExtraControls.ItemOutlinesCheckbox.AutoButtonColor = false
+    ExtraControls.ItemOutlinesCheckbox.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
+    ExtraControls.ItemOutlinesCheckbox.Text = "✓"
+    ExtraControls.ItemOutlinesCheckbox.TextColor3 = C.White
+    ExtraControls.ItemOutlinesCheckbox.TextSize = 15
+    addCorner(ExtraControls.ItemOutlinesCheckbox, 8, 8, 8, 8)
+    addCorner(ExtraControls.ItemOutlinesModule, 8, 8, 8, 8)
+    addStroke(ExtraControls.ItemOutlinesModule, C.UIStroke1, 1)
+
     AutomationPage.Name = "AutomationPage"
     AutomationPage.Parent = SelectedTab
     AutomationPage.BackgroundTransparency = 1
@@ -437,8 +484,10 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.MiscellaneousPage.BackgroundTransparency = 1
     ExtraControls.MiscellaneousPage.BorderSizePixel = 0
     ExtraControls.MiscellaneousPage.Size = UDim2.new(1, 0, 1, 0)
-    ExtraControls.MiscellaneousPage.CanvasSize = UDim2.new(0, 0, 0, 78)
+    ExtraControls.MiscellaneousPage.CanvasSize = UDim2.new(0, 0, 0, 142)
     ExtraControls.MiscellaneousPage.ScrollBarThickness = 4
+    ExtraControls.MiscellaneousPage.Active = true
+    ExtraControls.MiscellaneousPage.ScrollingEnabled = true
 
     ExtraControls.FullbrightModule.Name = "FullbrightModule"
     ExtraControls.FullbrightModule.Parent = ExtraControls.MiscellaneousPage
@@ -470,6 +519,37 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     addCorner(ExtraControls.FullbrightCheckbox, 8, 8, 8, 8)
     addCorner(ExtraControls.FullbrightModule, 8, 8, 8, 8)
     addStroke(ExtraControls.FullbrightModule, C.UIStroke1, 1)
+
+    ExtraControls.AntiAFKModule.Name = "AntiAFKModule"
+    ExtraControls.AntiAFKModule.Parent = ExtraControls.MiscellaneousPage
+    ExtraControls.AntiAFKModule.BackgroundColor3 = C.Panel
+    ExtraControls.AntiAFKModule.BorderSizePixel = 0
+    ExtraControls.AntiAFKModule.Position = UDim2.new(0, 1, 0, 76)
+    ExtraControls.AntiAFKModule.Size = UDim2.new(0, 398, 0, 50)
+    ExtraControls.AntiAFKText.Name = "AntiAFKText"
+    ExtraControls.AntiAFKText.Parent = ExtraControls.AntiAFKModule
+    ExtraControls.AntiAFKText.BackgroundTransparency = 1
+    ExtraControls.AntiAFKText.Position = UDim2.new(0, 12, 0, 0)
+    ExtraControls.AntiAFKText.Size = UDim2.new(1, -70, 1, 0)
+    ExtraControls.AntiAFKText.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
+    ExtraControls.AntiAFKText.Text = "Anti-AFK"
+    ExtraControls.AntiAFKText.TextColor3 = C.White
+    ExtraControls.AntiAFKText.TextSize = 15
+    ExtraControls.AntiAFKText.TextXAlignment = Enum.TextXAlignment.Left
+    ExtraControls.AntiAFKCheckbox.Name = "AntiAFKCheckbox"
+    ExtraControls.AntiAFKCheckbox.Parent = ExtraControls.AntiAFKModule
+    ExtraControls.AntiAFKCheckbox.BackgroundColor3 = C.Red
+    ExtraControls.AntiAFKCheckbox.BorderSizePixel = 0
+    ExtraControls.AntiAFKCheckbox.Position = UDim2.new(1, -38, 0.5, -13)
+    ExtraControls.AntiAFKCheckbox.Size = UDim2.new(0, 26, 0, 26)
+    ExtraControls.AntiAFKCheckbox.AutoButtonColor = false
+    ExtraControls.AntiAFKCheckbox.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
+    ExtraControls.AntiAFKCheckbox.Text = "✓"
+    ExtraControls.AntiAFKCheckbox.TextColor3 = C.White
+    ExtraControls.AntiAFKCheckbox.TextSize = 15
+    addCorner(ExtraControls.AntiAFKCheckbox, 8, 8, 8, 8)
+    addCorner(ExtraControls.AntiAFKModule, 8, 8, 8, 8)
+    addStroke(ExtraControls.AntiAFKModule, C.UIStroke1, 1)
 
     Tabs.Name = "Tabs"
     Tabs.Parent = MainWindow
@@ -625,6 +705,22 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
             or (ExtraControls.FullbrightHovering and C.SurfaceHover or C.Background)
     end
 
+    ExtraControls.SetItemOutlinesEnabled = function(enabled)
+        ExtraControls.ItemOutlinesEnabled = enabled == true
+        ExtraControls.ItemOutlinesCheckbox.Text = ExtraControls.ItemOutlinesEnabled and "✓" or ""
+        ExtraControls.ItemOutlinesCheckbox.BackgroundColor3 = ExtraControls.ItemOutlinesEnabled
+            and (ExtraControls.ItemOutlinesHovering and C.RedHover or C.Red)
+            or (ExtraControls.ItemOutlinesHovering and C.SurfaceHover or C.Background)
+    end
+
+    ExtraControls.SetAntiAFKEnabled = function(enabled)
+        ExtraControls.AntiAFKEnabled = enabled == true
+        ExtraControls.AntiAFKCheckbox.Text = ExtraControls.AntiAFKEnabled and "✓" or ""
+        ExtraControls.AntiAFKCheckbox.BackgroundColor3 = ExtraControls.AntiAFKEnabled
+            and (ExtraControls.AntiAFKHovering and C.RedHover or C.Red)
+            or (ExtraControls.AntiAFKHovering and C.SurfaceHover or C.Background)
+    end
+
     local fullSize = MainWindow.Size
     local smallSize = UDim2.new(fullSize.X.Scale, fullSize.X.Offset, 0, Header.Size.Y.Offset)
     local shrunk = false
@@ -701,6 +797,12 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
             elseif buttonObject == ExtraControls.FullbrightCheckbox then
                 ExtraControls.FullbrightHovering = true
                 ExtraControls.SetFullbrightEnabled(ExtraControls.FullbrightEnabled)
+            elseif buttonObject == ExtraControls.ItemOutlinesCheckbox then
+                ExtraControls.ItemOutlinesHovering = true
+                ExtraControls.SetItemOutlinesEnabled(ExtraControls.ItemOutlinesEnabled)
+            elseif buttonObject == ExtraControls.AntiAFKCheckbox then
+                ExtraControls.AntiAFKHovering = true
+                ExtraControls.SetAntiAFKEnabled(ExtraControls.AntiAFKEnabled)
             else
                 buttonObject.BackgroundColor3 = hover
             end
@@ -714,6 +816,12 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
             elseif buttonObject == ExtraControls.FullbrightCheckbox then
                 ExtraControls.FullbrightHovering = false
                 ExtraControls.SetFullbrightEnabled(ExtraControls.FullbrightEnabled)
+            elseif buttonObject == ExtraControls.ItemOutlinesCheckbox then
+                ExtraControls.ItemOutlinesHovering = false
+                ExtraControls.SetItemOutlinesEnabled(ExtraControls.ItemOutlinesEnabled)
+            elseif buttonObject == ExtraControls.AntiAFKCheckbox then
+                ExtraControls.AntiAFKHovering = false
+                ExtraControls.SetAntiAFKEnabled(ExtraControls.AntiAFKEnabled)
             else
                 buttonObject.BackgroundColor3 = base
             end
@@ -721,7 +829,8 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     end
 
     for _, object in ipairs(DOORSEntityDetector:GetDescendants()) do
-        if object:IsA("TextButton") and object ~= ModuleCheckbox and object ~= ExtraControls.FullbrightCheckbox then
+        if object:IsA("TextButton") and object ~= ModuleCheckbox and object ~= ExtraControls.FullbrightCheckbox
+            and object ~= ExtraControls.ItemOutlinesCheckbox and object ~= ExtraControls.AntiAFKCheckbox then
             if object == Close or object == CloseScript then
                 wireHover(object, object.BackgroundColor3, C.RedHover)
             else
@@ -731,9 +840,13 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     end
     wireHover(ModuleCheckbox)
     wireHover(ExtraControls.FullbrightCheckbox)
+    wireHover(ExtraControls.ItemOutlinesCheckbox)
+    wireHover(ExtraControls.AntiAFKCheckbox)
 
     setOutlineEnabled(true)
     ExtraControls.SetFullbrightEnabled(ExtraControls.FullbrightEnabled)
+    ExtraControls.SetItemOutlinesEnabled(ExtraControls.ItemOutlinesEnabled)
+    ExtraControls.SetAntiAFKEnabled(ExtraControls.AntiAFKEnabled)
     guiConnect(ModuleCheckbox.MouseButton1Click, function()
         setOutlineEnabled(not outlineEnabled)
         OutlineChanged:Fire(outlineEnabled)
@@ -741,6 +854,14 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     guiConnect(ExtraControls.FullbrightCheckbox.MouseButton1Click, function()
         ExtraControls.SetFullbrightEnabled(not ExtraControls.FullbrightEnabled)
         ExtraControls.FullbrightChanged:Fire(ExtraControls.FullbrightEnabled)
+    end)
+    guiConnect(ExtraControls.ItemOutlinesCheckbox.MouseButton1Click, function()
+        ExtraControls.SetItemOutlinesEnabled(not ExtraControls.ItemOutlinesEnabled)
+        ExtraControls.ItemOutlineChanged:Fire(ExtraControls.ItemOutlinesEnabled)
+    end)
+    guiConnect(ExtraControls.AntiAFKCheckbox.MouseButton1Click, function()
+        ExtraControls.SetAntiAFKEnabled(not ExtraControls.AntiAFKEnabled)
+        ExtraControls.AntiAFKChanged:Fire(ExtraControls.AntiAFKEnabled)
     end)
 
     -- Entity controls and dropdowns
@@ -752,10 +873,6 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         if entityEnabledState[entity.name] == nil then entityEnabledState[entity.name] = true end
     end
     if entityEnabledState.__Portrait == nil then entityEnabledState.__Portrait = true end
-    local itemEnabledState = enabledItems or {}
-    for _, item in ipairs(itemDefinitions) do
-        if itemEnabledState[item.name] == nil then itemEnabledState[item.name] = true end
-    end
     local nameTagMode = (initialNameTagMode == "All" or initialNameTagMode == "None")
         and initialNameTagMode or "Recommended"
 
@@ -842,23 +959,23 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         end
     end
 
-    -- Detection dropdown rows share one implementation so item and entity
-    -- options remain visually and behaviorally identical.
-    local function createDetectionRow(definition, order, parentDropdown, enabledState, changedEvent, rowType)
+    -- Entity and item rows share one renderer so their spacing, hover behavior,
+    -- checkbox sizing, and click targets remain identical.
+    local function createDetectionRow(definition, order, dropdownTarget, enabledState, changedEvent, rowPrefix)
         local row = Instance.new("Frame")
-        row.Name = rowType .. "Option_" .. tostring(definition.name)
+        row.Name = rowPrefix .. "Option_" .. tostring(definition.name)
         row.BackgroundTransparency = 1
         row.BorderSizePixel = 0
         row.Size = UDim2.new(1, -8, 0, 34)
         row.LayoutOrder = order
         row.ZIndex = 4
-        row.Parent = parentDropdown
+        row.Parent = dropdownTarget
         local rowCorner = Instance.new("UICorner")
         rowCorner.CornerRadius = UDim.new(0, 5)
         rowCorner.Parent = row
 
         local optionLabel = Instance.new("TextLabel")
-        optionLabel.Name = rowType .. "Name"
+        optionLabel.Name = rowPrefix .. "Name"
         optionLabel.BackgroundTransparency = 1
         optionLabel.Position = UDim2.new(0, 10, 0, 0)
         optionLabel.Size = UDim2.new(1, -52, 1, 0)
@@ -871,7 +988,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         optionLabel.Parent = row
 
         local checkbox = Instance.new("TextButton")
-        checkbox.Name = rowType .. "Checkbox"
+        checkbox.Name = rowPrefix .. "Checkbox"
         checkbox.BackgroundColor3 = C.Red
         checkbox.BorderSizePixel = 0
         checkbox.Position = UDim2.new(1, -36, 0.5, -13)
@@ -955,11 +1072,17 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     for order, entity in ipairs(entityDefinitions) do
         createDetectionRow(entity, order, Dropdown, entityEnabledState, EntityEnabledChanged, "Entity")
     end
+    for _, item in ipairs(itemDefinitions) do
+        if enabledItems[item.name] == nil then enabledItems[item.name] = true end
+    end
     nameTagChoices = configureDropdownContent(Dropdown_2)
     itemListLayout = configureDropdownContent(ExtraControls.ItemDropdown)
-    -- Preserve the main script's alphabetically sorted item definition table.
-    for order, item in ipairs(itemDefinitions) do
-        createDetectionRow(item, order, ExtraControls.ItemDropdown, itemEnabledState, ExtraControls.ItemEnabledChanged, "Item")
+    local itemRows = table.clone(itemDefinitions)
+    table.sort(itemRows, function(a, b)
+        return string.lower(a.display or a.name) < string.lower(b.display or b.name)
+    end)
+    for order, item in ipairs(itemRows) do
+        createDetectionRow(item, order, ExtraControls.ItemDropdown, enabledItems, ExtraControls.ItemEnabledChanged, "Item")
     end
 
     local dropdownControls = {
@@ -973,6 +1096,13 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         if not control then return end
         local isOpen = open == true
         dropdownOpen[name] = isOpen
+        if name == "Items" and isOpen then
+            -- Expand the page's scrollable canvas only while the item popup is open.
+            EntitiesPage.CanvasSize = UDim2.new(0, 0, 0, 560)
+        elseif name == "Items" or (isOpen and name ~= "Items") then
+            EntitiesPage.CanvasSize = UDim2.new(0, 0, 0, 440)
+            EntitiesPage.CanvasPosition = Vector2.new(0, 0)
+        end
         if isOpen then
             for otherName, other in pairs(dropdownControls) do
                 if otherName ~= name and dropdownOpen[otherName] then
@@ -984,6 +1114,23 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
                 end
             end
             setParentDropdownCorners(control.module, true)
+
+            -- Keep the entire item popup inside the detection page viewport.
+            -- The popup still uses the same clipping frame, tween, and max height
+            -- as the entity dropdown; the page simply scrolls to reveal it.
+            if name == "Items" then
+                local targetHeight = updateDropdownHeight(control.dropdown, control.layout)
+                local contentBottom = control.module.Position.Y.Offset + control.module.Size.Y.Offset + targetHeight
+                local viewportHeight = EntitiesPage.AbsoluteSize.Y
+                local desiredY = math.max(0, contentBottom - viewportHeight + 8)
+                local maxY = math.max(0, EntitiesPage.CanvasSize.Y.Offset - viewportHeight)
+                desiredY = math.min(desiredY, maxY)
+                if desiredY > EntitiesPage.CanvasPosition.Y then
+                    EntitiesPage.CanvasPosition = Vector2.new(0, desiredY)
+                end
+            else
+                EntitiesPage.CanvasPosition = Vector2.new(0, 0)
+            end
         end
         animateDropdown(control.dropdown, control.layout, control.clip, isOpen, function()
             setParentDropdownCorners(control.module, false)
@@ -1097,7 +1244,13 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         OutlineChanged = OutlineChanged,
         EntityEnabledChanged = EntityEnabledChanged,
         ItemEnabledChanged = ExtraControls.ItemEnabledChanged,
+        ItemOutlineChanged = ExtraControls.ItemOutlineChanged,
+        SetItemOutlinesEnabled = ExtraControls.SetItemOutlinesEnabled,
+        AntiAFKChanged = ExtraControls.AntiAFKChanged,
+        SetAntiAFKEnabled = ExtraControls.SetAntiAFKEnabled,
         NameTagModeChanged = NameTagModeChanged,
+        ItemOutlinesToggle = ExtraControls.ItemOutlinesCheckbox,
+        AntiAFKToggle = ExtraControls.AntiAFKCheckbox,
         FullbrightToggle = ExtraControls.FullbrightCheckbox,
         FullbrightChanged = ExtraControls.FullbrightChanged,
         SetFullbrightEnabled = ExtraControls.SetFullbrightEnabled,
@@ -1227,8 +1380,8 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     return guiReferences
 end
 
-local mainEntities, mainEnabledEntities, mainNameTagMode, mainFullbrightEnabled, mainItems, mainEnabledItems = ...
+local mainEntities, mainEnabledEntities, mainNameTagMode, mainFullbrightEnabled = ...
 if mainEntities ~= nil then
-    return buildGUI(mainEntities, mainEnabledEntities, mainNameTagMode, mainFullbrightEnabled, mainItems, mainEnabledItems)
+    return buildGUI(mainEntities, mainEnabledEntities, mainNameTagMode, mainFullbrightEnabled)
 end
 return buildGUI()
