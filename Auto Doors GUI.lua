@@ -1,5 +1,6 @@
+-- Auto Doors GUI v43
 -- UI construction
-local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, initialFullbrightEnabled)
+local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, initialFullbrightEnabled, itemDefinitions, enabledItems)
     local standaloneEntities = {
         {name = "Test1", display = "Test 1"}, {name = "Test2", display = "Test 2"},
         {name = "Test3", display = "Test 3"}, {name = "Test4", display = "Test 4"},
@@ -8,6 +9,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         {name = "Test9", display = "Test 9"}, {name = "Test10", display = "Test 10"},
     }
     entityDefinitions = type(entityDefinitions) == "table" and entityDefinitions or standaloneEntities
+    itemDefinitions = type(itemDefinitions) == "table" and itemDefinitions or {}
 
     local DOORSEntityDetector = Instance.new("ScreenGui")
     local MainWindow = Instance.new("Frame")
@@ -55,6 +57,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         ItemArrow = Instance.new("TextLabel"),
         ItemDropdown = Instance.new("ScrollingFrame"),
         FullbrightChanged = Instance.new("BindableEvent"),
+        ItemEnabledChanged = Instance.new("BindableEvent"),
         FullbrightEnabled = initialFullbrightEnabled == true,
         FullbrightHovering = false,
     }
@@ -749,6 +752,10 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         if entityEnabledState[entity.name] == nil then entityEnabledState[entity.name] = true end
     end
     if entityEnabledState.__Portrait == nil then entityEnabledState.__Portrait = true end
+    local itemEnabledState = enabledItems or {}
+    for _, item in ipairs(itemDefinitions) do
+        if itemEnabledState[item.name] == nil then itemEnabledState[item.name] = true end
+    end
     local nameTagMode = (initialNameTagMode == "All" or initialNameTagMode == "None")
         and initialNameTagMode or "Recommended"
 
@@ -835,27 +842,28 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         end
     end
 
-    -- Entity dropdown rows
-    local function createEntityRow(entity, order)
+    -- Detection dropdown rows share one implementation so item and entity
+    -- options remain visually and behaviorally identical.
+    local function createDetectionRow(definition, order, parentDropdown, enabledState, changedEvent, rowType)
         local row = Instance.new("Frame")
-        row.Name = "EntityOption_" .. tostring(entity.name)
+        row.Name = rowType .. "Option_" .. tostring(definition.name)
         row.BackgroundTransparency = 1
         row.BorderSizePixel = 0
         row.Size = UDim2.new(1, -8, 0, 34)
         row.LayoutOrder = order
         row.ZIndex = 4
-        row.Parent = Dropdown
+        row.Parent = parentDropdown
         local rowCorner = Instance.new("UICorner")
         rowCorner.CornerRadius = UDim.new(0, 5)
         rowCorner.Parent = row
 
         local optionLabel = Instance.new("TextLabel")
-        optionLabel.Name = "EntityName"
+        optionLabel.Name = rowType .. "Name"
         optionLabel.BackgroundTransparency = 1
         optionLabel.Position = UDim2.new(0, 10, 0, 0)
         optionLabel.Size = UDim2.new(1, -52, 1, 0)
         optionLabel.FontFace = Font.fromEnum(Enum.Font.GothamMedium)
-        optionLabel.Text = tostring(entity.display or entity.name)
+        optionLabel.Text = tostring(definition.display or definition.name)
         optionLabel.TextColor3 = C.White
         optionLabel.TextSize = 14
         optionLabel.TextXAlignment = Enum.TextXAlignment.Left
@@ -863,7 +871,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         optionLabel.Parent = row
 
         local checkbox = Instance.new("TextButton")
-        checkbox.Name = "EntityCheckbox"
+        checkbox.Name = rowType .. "Checkbox"
         checkbox.BackgroundColor3 = C.Red
         checkbox.BorderSizePixel = 0
         checkbox.Position = UDim2.new(1, -36, 0.5, -13)
@@ -881,8 +889,8 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
 
         local mainHovering = false
         local checkboxHovering = false
-        local function updateEntityRow()
-            local enabled = entityEnabledState[entity.name] ~= false
+        local function updateRow()
+            local enabled = enabledState[definition.name] ~= false
             local hovering = mainHovering or checkboxHovering
             optionLabel.TextColor3 = enabled and C.White or C.SecondaryText
             checkbox.Text = enabled and "✓" or ""
@@ -893,10 +901,11 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
                 or (enabled and C.Red or C.Background)
         end
         local function flip()
-            entityEnabledState[entity.name] = not (entityEnabledState[entity.name] ~= false)
-            updateEntityRow()
-            EntityEnabledChanged:Fire(entity.name, entityEnabledState[entity.name])
+            enabledState[definition.name] = not (enabledState[definition.name] ~= false)
+            updateRow()
+            changedEvent:Fire(definition.name, enabledState[definition.name])
         end
+
         local rowClickArea = Instance.new("TextButton")
         rowClickArea.Name = "RowClickArea"
         rowClickArea.BackgroundTransparency = 1
@@ -912,14 +921,14 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         local function bindHoverState(target, stateName)
             guiConnect(target.MouseEnter, function()
                 if stateName == "main" then mainHovering = true else checkboxHovering = true end
-                updateEntityRow()
+                updateRow()
             end)
             guiConnect(target.MouseLeave, function()
                 if stateName == "main" then mainHovering = false else checkboxHovering = false end
-                updateEntityRow()
+                updateRow()
             end)
         end
-        updateEntityRow()
+        updateRow()
         bindHoverState(rowClickArea, "main")
         bindHoverState(checkbox, "checkbox")
     end
@@ -943,10 +952,15 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     end
 
     entityListLayout = configureDropdownContent(Dropdown)
-    local entityRows = table.clone(entityDefinitions)
-    for order, entity in ipairs(entityRows) do createEntityRow(entity, order) end
+    for order, entity in ipairs(entityDefinitions) do
+        createDetectionRow(entity, order, Dropdown, entityEnabledState, EntityEnabledChanged, "Entity")
+    end
     nameTagChoices = configureDropdownContent(Dropdown_2)
     itemListLayout = configureDropdownContent(ExtraControls.ItemDropdown)
+    -- Preserve the main script's alphabetically sorted item definition table.
+    for order, item in ipairs(itemDefinitions) do
+        createDetectionRow(item, order, ExtraControls.ItemDropdown, itemEnabledState, ExtraControls.ItemEnabledChanged, "Item")
+    end
 
     local dropdownControls = {
         Entities = {module = EntityListModule, arrow = Arrow, dropdown = Dropdown, clip = DropdownClip, layout = entityListLayout},
@@ -1082,6 +1096,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         OutlineToggle = ModuleCheckbox,
         OutlineChanged = OutlineChanged,
         EntityEnabledChanged = EntityEnabledChanged,
+        ItemEnabledChanged = ExtraControls.ItemEnabledChanged,
         NameTagModeChanged = NameTagModeChanged,
         FullbrightToggle = ExtraControls.FullbrightCheckbox,
         FullbrightChanged = ExtraControls.FullbrightChanged,
@@ -1212,8 +1227,8 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     return guiReferences
 end
 
-local mainEntities, mainEnabledEntities, mainNameTagMode, mainFullbrightEnabled = ...
+local mainEntities, mainEnabledEntities, mainNameTagMode, mainFullbrightEnabled, mainItems, mainEnabledItems = ...
 if mainEntities ~= nil then
-    return buildGUI(mainEntities, mainEnabledEntities, mainNameTagMode, mainFullbrightEnabled)
+    return buildGUI(mainEntities, mainEnabledEntities, mainNameTagMode, mainFullbrightEnabled, mainItems, mainEnabledItems)
 end
 return buildGUI()
