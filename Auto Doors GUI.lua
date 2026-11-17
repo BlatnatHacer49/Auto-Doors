@@ -434,14 +434,14 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.MiscellaneousPage.BackgroundTransparency = 1
     ExtraControls.MiscellaneousPage.BorderSizePixel = 0
     ExtraControls.MiscellaneousPage.Size = UDim2.new(1, 0, 1, 0)
-    ExtraControls.MiscellaneousPage.CanvasSize = UDim2.new(0, 0, 0, 60)
+    ExtraControls.MiscellaneousPage.CanvasSize = UDim2.new(0, 0, 0, 78)
     ExtraControls.MiscellaneousPage.ScrollBarThickness = 4
 
     ExtraControls.FullbrightModule.Name = "FullbrightModule"
     ExtraControls.FullbrightModule.Parent = ExtraControls.MiscellaneousPage
     ExtraControls.FullbrightModule.BackgroundColor3 = C.Panel
     ExtraControls.FullbrightModule.BorderSizePixel = 0
-    ExtraControls.FullbrightModule.Position = UDim2.new(0, 1, 0, 0)
+    ExtraControls.FullbrightModule.Position = UDim2.new(0, 1, 0, 14)
     ExtraControls.FullbrightModule.Size = UDim2.new(0, 398, 0, 50)
     ExtraControls.FullbrightText.Name = "FullbrightText"
     ExtraControls.FullbrightText.Parent = ExtraControls.FullbrightModule
@@ -756,6 +756,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     local DROPDOWN_MAX_HEIGHT = 250
     local DROPDOWN_TWEEN_INFO = TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
     local dropdownTweens = {}
+    local dropdownTweenConnections = {}
     local originalParentCornerRadii = {}
     local parentCornerCache = {}
 
@@ -788,6 +789,14 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     end
 
     local function animateDropdown(dropdown, layout, clip, open, onClosed)
+        -- A closing tween has a Completed connection. Disconnect it before
+        -- cancelling/replacing the tween so rapid open/close clicks cannot leave
+        -- callbacks retained by abandoned Tween instances.
+        local previousConnection = dropdownTweenConnections[clip]
+        if previousConnection then
+            pcall(function() previousConnection:Disconnect() end)
+            dropdownTweenConnections[clip] = nil
+        end
         if dropdownTweens[clip] then
             pcall(function() dropdownTweens[clip]:Cancel() end)
             dropdownTweens[clip] = nil
@@ -806,14 +815,22 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
                 Size = UDim2.new(0, 400, 0, 0)
             })
             dropdownTweens[clip] = closingTween
-            local thisTween = closingTween
-            thisTween.Completed:Connect(function(playbackState)
-                if dropdownTweens[clip] == thisTween and playbackState == Enum.PlaybackState.Completed then
+            local completionConnection
+            completionConnection = closingTween.Completed:Connect(function(playbackState)
+                if dropdownTweenConnections[clip] == completionConnection then
+                    dropdownTweenConnections[clip] = nil
+                end
+                if dropdownTweens[clip] == closingTween
+                    and playbackState == Enum.PlaybackState.Completed then
                     clip.Visible = false
                     dropdownTweens[clip] = nil
                     if onClosed then onClosed() end
                 end
+                if completionConnection then
+                    completionConnection:Disconnect()
+                end
             end)
+            dropdownTweenConnections[clip] = completionConnection
             closingTween:Play()
         end
     end
@@ -1014,6 +1031,15 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
             pcall(function() connection:Disconnect() end)
         end
         table.clear(guiConnections)
+
+        for clip, connection in pairs(dropdownTweenConnections) do
+            pcall(function() connection:Disconnect() end)
+            dropdownTweenConnections[clip] = nil
+        end
+        for clip, tween in pairs(dropdownTweens) do
+            pcall(function() tween:Cancel() end)
+            dropdownTweens[clip] = nil
+        end
     end
 
     local signalFontsReady
