@@ -1380,8 +1380,18 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     return guiReferences
 end
 
-local mainEntities, mainEnabledEntities, mainNameTagMode, mainFullbrightEnabled = ...
+local mainEntities, mainEnabledEntities, mainNameTagMode, mainFullbrightEnabled,
+    mainItemDefinitions, mainEnabledItems, mainItemOutlinesEnabled, mainAntiAFKEnabled = ...
 if mainEntities ~= nil then
-    return buildGUI(mainEntities, mainEnabledEntities, mainNameTagMode, mainFullbrightEnabled)
+    return buildGUI(
+        mainEntities,
+        mainEnabledEntities,
+        mainNameTagMode,
+        mainFullbrightEnabled,
+        mainItemDefinitions,
+        mainEnabledItems,
+        mainItemOutlinesEnabled,
+        mainAntiAFKEnabled
+    )
 end
 return buildGUI()
