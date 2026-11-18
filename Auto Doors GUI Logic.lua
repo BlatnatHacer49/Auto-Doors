@@ -1,6 +1,6 @@
 return function(context)
     local C = context.C
-    local DOORSEntityDetector = context.DOORSEntityDetector
+    local AutoDoors = context.AutoDoors
     local MainWindow = context.MainWindow
     local Header = context.Header
     local Resize = context.Resize
@@ -134,7 +134,7 @@ return function(context)
 
     local selectedTab = "Detection"
     local tabControls = {
-        Detection = {button = Entities, page = EntitiesPage},
+        Detection = {button = Detection, page = DetectionPage},
         Automation = {button = Automation, page = AutomationPage},
         Miscellaneous = {button = ExtraControls.MiscellaneousTab, page = ExtraControls.MiscellaneousPage},
     }
@@ -146,7 +146,7 @@ return function(context)
             control.button.BackgroundColor3 = active and C.Red or C.Surface
         end
     end
-    guiConnect(Entities.MouseButton1Click, function() switchTab("Detection") end)
+    guiConnect(Detection.MouseButton1Click, function() switchTab("Detection") end)
     guiConnect(Automation.MouseButton1Click, function() switchTab("Automation") end)
     guiConnect(ExtraControls.MiscellaneousTab.MouseButton1Click, function() switchTab("Miscellaneous") end)
     switchTab("Detection")
@@ -155,7 +155,7 @@ return function(context)
         if not buttonObject or not buttonObject:IsA("TextButton") then return end
         local base = baseColor or buttonObject.BackgroundColor3
         local hover = hoverColor or C.SurfaceHover
-        local tabName = buttonObject == Entities and "Detection"
+        local tabName = buttonObject == Detection and "Detection"
             or buttonObject == Automation and "Automation"
             or buttonObject == ExtraControls.MiscellaneousTab and "Miscellaneous"
         guiConnect(buttonObject.MouseEnter, function()
@@ -198,7 +198,7 @@ return function(context)
         end)
     end
 
-    for _, object in ipairs(DOORSEntityDetector:GetDescendants()) do
+    for _, object in ipairs(AutoDoors:GetDescendants()) do
         if object:IsA("TextButton") and object ~= ModuleCheckbox and object ~= ExtraControls.FullbrightCheckbox
             and object ~= ExtraControls.ItemOutlinesCheckbox and object ~= ExtraControls.AntiAFKCheckbox then
             if object == Close or object == CloseScript then
@@ -461,10 +461,10 @@ return function(context)
         local isOpen = open == true
         dropdownOpen[name] = isOpen
         if name == "Items" and isOpen then
-            EntitiesPage.CanvasSize = UDim2.new(0, 0, 0, 560)
+            DetectionPage.CanvasSize = UDim2.new(0, 0, 0, 560)
         elseif name == "Items" or (isOpen and name ~= "Items") then
-            EntitiesPage.CanvasSize = UDim2.new(0, 0, 0, 440)
-            EntitiesPage.CanvasPosition = Vector2.new(0, 0)
+            DetectionPage.CanvasSize = UDim2.new(0, 0, 0, 440)
+            DetectionPage.CanvasPosition = Vector2.new(0, 0)
         end
         if isOpen then
             for otherName, other in pairs(dropdownControls) do
@@ -481,15 +481,15 @@ return function(context)
             if name == "Items" then
                 local targetHeight = updateDropdownHeight(control.dropdown, control.layout)
                 local contentBottom = control.module.Position.Y.Offset + control.module.Size.Y.Offset + targetHeight
-                local viewportHeight = EntitiesPage.AbsoluteSize.Y
+                local viewportHeight = DetectionPage.AbsoluteSize.Y
                 local desiredY = math.max(0, contentBottom - viewportHeight + 8)
-                local maxY = math.max(0, EntitiesPage.CanvasSize.Y.Offset - viewportHeight)
+                local maxY = math.max(0, DetectionPage.CanvasSize.Y.Offset - viewportHeight)
                 desiredY = math.min(desiredY, maxY)
-                if desiredY > EntitiesPage.CanvasPosition.Y then
-                    EntitiesPage.CanvasPosition = Vector2.new(0, desiredY)
+                if desiredY > DetectionPage.CanvasPosition.Y then
+                    DetectionPage.CanvasPosition = Vector2.new(0, desiredY)
                 end
             else
-                EntitiesPage.CanvasPosition = Vector2.new(0, 0)
+                DetectionPage.CanvasPosition = Vector2.new(0, 0)
             end
         end
         animateDropdown(control.dropdown, control.layout, control.clip, isOpen, function()
@@ -571,15 +571,15 @@ return function(context)
         if signalFontsReady then signalFontsReady(false) end
         disconnectGuiConnections()
         task.defer(function()
-            if DOORSEntityDetector and DOORSEntityDetector.Parent then
-                DOORSEntityDetector:Destroy()
+            if AutoDoors and AutoDoors.Parent then
+                AutoDoors:Destroy()
             end
         end)
     end
     guiConnect(CloseScript.MouseButton1Click, closeScriptNow)
 
     local guiReferences = {
-        ScreenGui = DOORSEntityDetector,
+        ScreenGui = AutoDoors,
         MainWindow = MainWindow,
         Resize = Resize,
         Minimize = Minimize,
@@ -627,7 +627,7 @@ return function(context)
         fontLoadSucceeded = success == true
         fontsReadyEvent:Fire(fontLoadSucceeded)
     end
-    guiConnect(DOORSEntityDetector.Destroying, function() signalFontsReady(false) end)
+    guiConnect(AutoDoors.Destroying, function() signalFontsReady(false) end)
 
     local function getFontFamilyUri(fontFace)
         local family = fontFace.Family
@@ -644,7 +644,7 @@ return function(context)
         local fontFamilies = {}
         local requestedFaces = {}
         local requestedFaceKeys = {}
-        for _, object in ipairs(DOORSEntityDetector:GetDescendants()) do
+        for _, object in ipairs(AutoDoors:GetDescendants()) do
             if object:IsA("TextLabel") or object:IsA("TextButton") or object:IsA("TextBox") then
                 textObjects[#textObjects + 1] = object
                 local fontFace = object.FontFace
@@ -711,19 +711,19 @@ return function(context)
     local function preloadFonts()
         local textObjects, fontFamilies, requestedFaces = collectFontAssets()
         local attempt = 0
-        while DOORSEntityDetector.Parent do
+        while AutoDoors.Parent do
             attempt += 1
             if textObjects and fontFamilies and requestedFaces and tryPreload(textObjects, fontFamilies, requestedFaces) then
-                DOORSEntityDetector.Enabled = true
+                AutoDoors.Enabled = true
                 local renderSucceeded = pcall(function()
                     RunService.RenderStepped:Wait()
                     RunService.RenderStepped:Wait()
                 end)
-                if renderSucceeded and DOORSEntityDetector.Parent then
+                if renderSucceeded and AutoDoors.Parent then
                     signalFontsReady(true)
                     return
                 end
-                DOORSEntityDetector.Enabled = false
+                AutoDoors.Enabled = false
             end
             if attempt == 1 or attempt % 5 == 0 then
                 warn("[Auto Doors] GUI font resources are not ready; retrying (attempt " .. attempt .. ").")
