@@ -614,7 +614,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Detection.BackgroundColor3 = C.Surface
     Detection.BorderColor3 = C.Surface
     Detection.BorderSizePixel = 0
-    Detection.Position = UDim2.new(0, 0, 0, 0)
+    Detection.Position = UDim2.new(0, 135, 0, 0)
     Detection.Size = UDim2.new(0, 130, 1, 0)
     Detection.ZIndex = 4
     Detection.AutoButtonColor = false
@@ -629,7 +629,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Automation.BackgroundColor3 = C.Surface
     Automation.BorderColor3 = C.Surface
     Automation.BorderSizePixel = 0
-    Automation.Position = UDim2.new(0, 135, 0, 0)
+    Automation.Position = UDim2.new(0, 0, 0, 0)
     Automation.Size = UDim2.new(0, 130, 1, 0)
     Automation.ZIndex = 4
     Automation.AutoButtonColor = false
