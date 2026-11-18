@@ -1,7 +1,3 @@
--- Auto Doors GUI Logic
--- Handles interaction, dropdowns, window controls, signals, and font readiness.
--- This file is loaded by Auto Doors GUI.lua.
-
 return function(context)
     local C = context.C
     local DOORSEntityDetector = context.DOORSEntityDetector
@@ -11,7 +7,7 @@ return function(context)
     local Minimize = context.Minimize
     local Close = context.Close
     local SelectedTab = context.SelectedTab
-    local EntitiesPage = context.EntitiesPage
+    local DetectionPage = context.DetectionPage
     local EntityOutlinesModule = context.EntityOutlinesModule
     local ModuleText = context.ModuleText
     local ModuleCheckbox = context.ModuleCheckbox
@@ -27,7 +23,7 @@ return function(context)
     local AutomationPage = context.AutomationPage
     local SectionAutomation = context.SectionAutomation
     local Tabs = context.Tabs
-    local Entities = context.Entities
+    local Detection = context.Detection
     local Automation = context.Automation
     local Notifications = context.Notifications
     local CloseConfirmation = context.CloseConfirmation
@@ -50,7 +46,6 @@ return function(context)
     local fontLoadSucceeded = context.fontLoadSucceeded
     local fontsReadyEvent = context.fontsReadyEvent
 
-    -- Window controls and navigation
     local UserInputService = game:GetService("UserInputService")
     local TweenService = game:GetService("TweenService")
     local guiConnections = {}
@@ -239,7 +234,6 @@ return function(context)
         ExtraControls.AntiAFKChanged:Fire(ExtraControls.AntiAFKEnabled)
     end)
 
-    -- Entity controls and dropdowns
     local EntityEnabledChanged = Instance.new("BindableEvent")
     local NameTagModeChanged = Instance.new("BindableEvent")
     local dropdownOpen = {Entities = false, NameTags = false, Items = false}
@@ -288,9 +282,6 @@ return function(context)
     end
 
     local function animateDropdown(dropdown, layout, clip, open, onClosed)
-        -- A closing tween has a Completed connection. Disconnect it before
-        -- cancelling/replacing the tween so rapid open/close clicks cannot leave
-        -- callbacks retained by abandoned Tween instances.
         local previousConnection = dropdownTweenConnections[clip]
         if previousConnection then
             pcall(function() previousConnection:Disconnect() end)
@@ -334,8 +325,6 @@ return function(context)
         end
     end
 
-    -- Entity and item rows share one renderer so their spacing, hover behavior,
-    -- checkbox sizing, and click targets remain identical.
     local function createDetectionRow(definition, order, dropdownTarget, enabledState, changedEvent, rowPrefix)
         local row = Instance.new("Frame")
         row.Name = rowPrefix .. "Option_" .. tostring(definition.name)
@@ -472,7 +461,6 @@ return function(context)
         local isOpen = open == true
         dropdownOpen[name] = isOpen
         if name == "Items" and isOpen then
-            -- Expand the page's scrollable canvas only while the item popup is open.
             EntitiesPage.CanvasSize = UDim2.new(0, 0, 0, 560)
         elseif name == "Items" or (isOpen and name ~= "Items") then
             EntitiesPage.CanvasSize = UDim2.new(0, 0, 0, 440)
@@ -490,9 +478,6 @@ return function(context)
             end
             setParentDropdownCorners(control.module, true)
 
-            -- Keep the entire item popup inside the detection page viewport.
-            -- The popup still uses the same clipping frame, tween, and max height
-            -- as the entity dropdown; the page simply scrolls to reveal it.
             if name == "Items" then
                 local targetHeight = updateDropdownHeight(control.dropdown, control.layout)
                 local contentBottom = control.module.Position.Y.Offset + control.module.Size.Y.Offset + targetHeight
@@ -561,7 +546,6 @@ return function(context)
     guiConnect(Close.MouseButton1Click, function() CloseConfirmation.Visible = true end)
     guiConnect(Cancel.MouseButton1Click, function() CloseConfirmation.Visible = false end)
 
-    -- Unload and exported interface
     local function disconnectGuiConnections()
         for _, connection in ipairs(guiConnections) do
             pcall(function() connection:Disconnect() end)
@@ -603,12 +587,10 @@ return function(context)
         CloseConfirmation = CloseConfirmation,
         CancelClose = Cancel,
         ConfirmClose = CloseScript,
-        DetectionTab = Entities,
-        EntitiesTab = Entities, -- Compatibility for older integrations.
+        DetectionTab = Detection,
         AutomationTab = Automation,
         MiscellaneousTab = ExtraControls.MiscellaneousTab,
-        DetectionPage = EntitiesPage,
-        EntitiesPage = EntitiesPage, -- Compatibility for older integrations.
+        DetectionPage = DetectionPage,
         AutomationPage = AutomationPage,
         MiscellaneousPage = ExtraControls.MiscellaneousPage,
         EntityListModule = EntityListModule,
