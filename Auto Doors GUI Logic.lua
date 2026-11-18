@@ -332,7 +332,7 @@ return function(context)
         row.BorderSizePixel = 0
         row.Size = UDim2.new(1, -8, 0, 34)
         row.LayoutOrder = order
-        row.ZIndex = 4
+        row.ZIndex = 8
         row.Parent = dropdownTarget
         local rowCorner = Instance.new("UICorner")
         rowCorner.CornerRadius = UDim.new(0, 5)
@@ -348,7 +348,7 @@ return function(context)
         optionLabel.TextColor3 = C.White
         optionLabel.TextSize = 14
         optionLabel.TextXAlignment = Enum.TextXAlignment.Left
-        optionLabel.ZIndex = 5
+        optionLabel.ZIndex = 9
         optionLabel.Parent = row
 
         local checkbox = Instance.new("TextButton")
@@ -362,7 +362,7 @@ return function(context)
         checkbox.Text = "✓"
         checkbox.TextColor3 = C.White
         checkbox.TextSize = 15
-        checkbox.ZIndex = 5
+        checkbox.ZIndex = 9
         checkbox.Parent = row
         local checkboxCorner = Instance.new("UICorner")
         checkboxCorner.CornerRadius = UDim.new(0, 6)
@@ -393,9 +393,9 @@ return function(context)
         rowClickArea.BorderSizePixel = 0
         rowClickArea.Text = ""
         rowClickArea.Size = UDim2.new(1, -42, 1, 0)
-        rowClickArea.ZIndex = 5
+        rowClickArea.ZIndex = 9
         rowClickArea.Parent = row
-        optionLabel.ZIndex = 6
+        optionLabel.ZIndex = 9
         guiConnect(rowClickArea.MouseButton1Click, flip)
         guiConnect(checkbox.MouseButton1Click, flip)
 
@@ -428,7 +428,7 @@ return function(context)
         dropdown.CanvasSize = UDim2.new(0, 0, 0, 0)
         dropdown.ScrollBarThickness = 4
         dropdown.ScrollBarImageColor3 = C.Red
-        dropdown.ZIndex = 3
+        dropdown.ZIndex = 8
         return layout
     end
 
@@ -517,7 +517,7 @@ return function(context)
         option.TextColor3 = C.White
         option.TextSize = 14
         option.TextXAlignment = Enum.TextXAlignment.Left
-        option.ZIndex = 4
+        option.ZIndex = 8
         option.Parent = Dropdown_2
         local optionCorner = Instance.new("UICorner")
         optionCorner.CornerRadius = UDim.new(0, 5)
