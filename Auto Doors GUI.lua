@@ -15,7 +15,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     itemDefinitions = type(itemDefinitions) == "table" and itemDefinitions or {}
     enabledItems = type(enabledItems) == "table" and enabledItems or {}
 
-    local DOORSEntityDetector = Instance.new("ScreenGui")
+    local AutoDoors = Instance.new("ScreenGui")
     local MainWindow = Instance.new("Frame")
     local Header = Instance.new("Frame")
     local TitleLine = Instance.new("Frame")
@@ -102,7 +102,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     local GUIParent = RunService:IsStudio() and PlayerGui or CoreGui
 
     for _, root in ipairs({CoreGui, PlayerGui}) do
-        local previousGui = root:FindFirstChild("DOORSEntityDetector")
+        local previousGui = root:FindFirstChild("AutoDoors")
         if previousGui then previousGui:Destroy() end
     end
 
@@ -127,15 +127,15 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         return stroke
     end
 
-    DOORSEntityDetector.Name = "DOORSEntityDetector"
-    DOORSEntityDetector.Enabled = false
-    DOORSEntityDetector.Parent = GUIParent
-    DOORSEntityDetector.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-    DOORSEntityDetector.DisplayOrder = 9999
-    DOORSEntityDetector.ResetOnSpawn = false
+    AutoDoors.Name = "AutoDoors"
+    AutoDoors.Enabled = false
+    AutoDoors.Parent = GUIParent
+    AutoDoors.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    AutoDoors.DisplayOrder = 9999
+    AutoDoors.ResetOnSpawn = false
 
     MainWindow.Name = "MainWindow"
-    MainWindow.Parent = DOORSEntityDetector
+    MainWindow.Parent = AutoDoors
     MainWindow.BackgroundColor3 = C.Background
     MainWindow.BorderSizePixel = 0
     MainWindow.ClipsDescendants = true
@@ -655,7 +655,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     addDefaultCorner(ExtraControls.MiscellaneousTab)
 
     Notifications.Name = "Notifications"
-    Notifications.Parent = DOORSEntityDetector
+    Notifications.Parent = AutoDoors
     Notifications.AnchorPoint = Vector2.new(1, 0)
     Notifications.BackgroundTransparency = 1
     Notifications.Position = UDim2.new(1, -22, 0, 22)
@@ -666,7 +666,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     UIListLayout.Padding = UDim.new(0, 9)
 
     CloseConfirmation.Name = "CloseConfirmation"
-    CloseConfirmation.Parent = DOORSEntityDetector
+    CloseConfirmation.Parent = AutoDoors
     CloseConfirmation.AnchorPoint = Vector2.new(0.5, 0.5)
     CloseConfirmation.BackgroundColor3 = C.Panel
     CloseConfirmation.BorderSizePixel = 0
@@ -738,7 +738,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
 
     return initializeGUIBehavior({
         C = C,
-        DOORSEntityDetector = DOORSEntityDetector,
+        AutoDoors = AutoDoors,
         MainWindow = MainWindow,
         Header = Header,
         Resize = Resize,
