@@ -150,7 +150,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Header.BackgroundColor3 = C.Panel
     Header.BorderSizePixel = 0
     Header.Size = UDim2.new(0, 430, 0, 60)
-    Header.ZIndex = 0
+    Header.ZIndex = 1
     addDefaultCorner(Header)
 
     TitleLine.Name = "TitleLine"
@@ -160,7 +160,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     TitleLine.BorderSizePixel = 0
     TitleLine.Position = UDim2.new(0, 0, 0, 8)
     TitleLine.Size = UDim2.new(0, 4, 0, 48)
-    TitleLine.ZIndex = 0
+    TitleLine.ZIndex = 2
     addCorner(TitleLine, 0)
 
     Title.Name = "Title"
@@ -168,7 +168,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Title.BackgroundTransparency = 1
     Title.Position = UDim2.new(0, 15, 0, 13)
     Title.Size = UDim2.new(0, 280, 0, 20)
-    Title.ZIndex = 0
+    Title.ZIndex = 2
     Title.Font = Enum.Font.GothamBold
     Title.Text = "AUTO DOORS"
     Title.TextColor3 = C.White
@@ -180,7 +180,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Description.BackgroundTransparency = 1
     Description.Position = UDim2.new(0, 15, 0, 37)
     Description.Size = UDim2.new(0, 280, 0, 10)
-    Description.ZIndex = 0
+    Description.ZIndex = 2
     Description.Font = Enum.Font.GothamMedium
     Description.Text = "DETECTION / AUTOMATION"
     Description.TextColor3 = C.SecondaryText
@@ -192,7 +192,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Resize.BackgroundColor3 = C.Surface
     Resize.BorderSizePixel = 0
     Resize.Position = UDim2.new(0, 355, 0, 15)
-    Resize.ZIndex = 0
+    Resize.ZIndex = 2
     Resize.Size = UDim2.new(0, 30, 0, 30)
     Resize.AutoButtonColor = false
     Resize.Font = Enum.Font.GothamBold
@@ -206,7 +206,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Minimize.BackgroundColor3 = C.Surface
     Minimize.BorderSizePixel = 0
     Minimize.Position = UDim2.new(0, 320, 0, 15)
-    Minimize.ZIndex = 0
+    Minimize.ZIndex = 2
     Minimize.Size = UDim2.new(0, 30, 0, 30)
     Minimize.AutoButtonColor = false
     Minimize.Font = Enum.Font.GothamMedium
@@ -220,7 +220,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Close.BackgroundColor3 = C.Red
     Close.BorderSizePixel = 0
     Close.Position = UDim2.new(0, 390, 0, 15)
-    Close.ZIndex = 0
+    Close.ZIndex = 2
     Close.Size = UDim2.new(0, 30, 0, 30)
     Close.AutoButtonColor = false
     Close.Font = Enum.Font.Gotham
@@ -234,7 +234,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     SelectedTab.BackgroundTransparency = 1
     SelectedTab.Position = UDim2.new(0, 15, 0, 120)
     SelectedTab.Size = UDim2.new(0, 400, 0, 465)
-    SelectedTab.ZIndex = 0
+    SelectedTab.ZIndex = 3
 
     DetectionPage.Name = "DetectionPage"
     DetectionPage.Parent = SelectedTab
@@ -243,7 +243,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     DetectionPage.Size = UDim2.new(1, 0, 1, 0)
     DetectionPage.Visible = false
     DetectionPage.CanvasSize = UDim2.new(0, 0, 0, 440)
-    DetectionPage.ZIndex = 0
+    DetectionPage.ZIndex = 4
     DetectionPage.ScrollBarThickness = 4
     DetectionPage.Active = true
     DetectionPage.ScrollingEnabled = true
@@ -253,14 +253,14 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     EntityOutlinesModule.BackgroundColor3 = C.Panel
     EntityOutlinesModule.BorderSizePixel = 0
     EntityOutlinesModule.Position = UDim2.new(0, 1, 0, 136)
-    EntityOutlinesModule.ZIndex = 0
+    EntityOutlinesModule.ZIndex = 5
     EntityOutlinesModule.Size = UDim2.new(0, 398, 0, 50)
 
     ModuleText.Name = "ModuleText"
     ModuleText.Parent = EntityOutlinesModule
     ModuleText.BackgroundTransparency = 1
     ModuleText.Position = UDim2.new(0, 12, 0, 0)
-    ModuleText.ZIndex = 0
+    ModuleText.ZIndex = 6
     ModuleText.Size = UDim2.new(1, -70, 1, 0)
     ModuleText.Font = Enum.Font.GothamMedium
     ModuleText.Text = "Entity Outlines"
@@ -273,7 +273,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ModuleCheckbox.BackgroundColor3 = C.Red
     ModuleCheckbox.BorderSizePixel = 0
     ModuleCheckbox.Position = UDim2.new(1, -38, 0.5, -13)
-    ModuleCheckbox.ZIndex = 0
+    ModuleCheckbox.ZIndex = 6
     ModuleCheckbox.Size = UDim2.new(0, 26, 0, 26)
     ModuleCheckbox.AutoButtonColor = false
     ModuleCheckbox.Font = Enum.Font.GothamMedium
@@ -288,7 +288,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     SectionEntityDetection.Parent = DetectionPage
     SectionEntityDetection.BackgroundTransparency = 1
     SectionEntityDetection.Size = UDim2.new(0, 400, 0, 15)
-    SectionEntityDetection.ZIndex = 0
+    SectionEntityDetection.ZIndex = 4
     SectionEntityDetection.Font = Enum.Font.GothamBold
     SectionEntityDetection.Text = "Entity Detection:"
     SectionEntityDetection.TextColor3 = C.RedHover
@@ -301,7 +301,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     EntityListModule.BorderSizePixel = 0
     EntityListModule.Position = UDim2.new(0, 0, 0, 25)
     EntityListModule.Size = UDim2.new(0, 400, 0, 45)
-    EntityListModule.ZIndex = 0
+    EntityListModule.ZIndex = 5
     EntityListModule.AutoButtonColor = false
     EntityListModule.Font = Enum.Font.GothamMedium
     EntityListModule.Text = "  Entities Detected:"
@@ -315,7 +315,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Arrow.AnchorPoint = Vector2.new(1, 0.5)
     Arrow.BackgroundTransparency = 1
     Arrow.Position = UDim2.new(1, -3, 0.75, 0)
-    Arrow.ZIndex = 0
+    Arrow.ZIndex = 6
     Arrow.Size = UDim2.new(0, 25, 0, 30)
     Arrow.Font = Enum.Font.GothamBold
     Arrow.Text = "ꜜ"
@@ -333,7 +333,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     DropdownClip.Position = UDim2.new(0, 0, 0, 45)
     DropdownClip.Size = UDim2.new(0, 400, 0, 0)
     DropdownClip.Visible = false
-    DropdownClip.ZIndex = 2
+    DropdownClip.ZIndex = 7
     Dropdown.Parent = DropdownClip
     Dropdown.Active = true
     Dropdown.BackgroundColor3 = C.Surface
@@ -341,7 +341,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Dropdown.BorderSizePixel = 0
     Dropdown.Position = UDim2.new(0, 0, 0, 0)
     Dropdown.Size = UDim2.new(0, 400, 0, 0)
-    Dropdown.ZIndex = 2
+    Dropdown.ZIndex = 7
     Dropdown.Visible = true
     addCorner(Dropdown, 0)
 
@@ -351,7 +351,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     NameTagModule.BorderSizePixel = 0
     NameTagModule.Position = UDim2.new(0, 0, 0, 80)
     NameTagModule.Size = UDim2.new(0, 400, 0, 45)
-    NameTagModule.ZIndex = 0
+    NameTagModule.ZIndex = 5
     NameTagModule.AutoButtonColor = false
     NameTagModule.Font = Enum.Font.GothamMedium
     NameTagModule.Text = "  Name Tags: Recommended"
@@ -365,7 +365,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Arrow_2.AnchorPoint = Vector2.new(1, 0.5)
     Arrow_2.BackgroundTransparency = 1
     Arrow_2.Position = UDim2.new(1, -3, 0.75, 0)
-    Arrow_2.ZIndex = 0
+    Arrow_2.ZIndex = 6
     Arrow_2.Size = UDim2.new(0, 25, 0, 30)
     Arrow_2.Font = Enum.Font.GothamBold
     Arrow_2.Text = "ꜜ"
@@ -398,7 +398,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.SectionItemDetection.BackgroundTransparency = 1
     ExtraControls.SectionItemDetection.Position = UDim2.new(0, 0, 0, 197)
     ExtraControls.SectionItemDetection.Size = UDim2.new(0, 400, 0, 15)
-    ExtraControls.SectionItemDetection.ZIndex = 0
+    ExtraControls.SectionItemDetection.ZIndex = 4
     ExtraControls.SectionItemDetection.Font = Enum.Font.GothamBold
     ExtraControls.SectionItemDetection.Text = "Item Detection:"
     ExtraControls.SectionItemDetection.TextColor3 = C.RedHover
@@ -411,7 +411,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.ItemListModule.BorderSizePixel = 0
     ExtraControls.ItemListModule.Position = UDim2.new(0, 0, 0, 222)
     ExtraControls.ItemListModule.Size = UDim2.new(0, 400, 0, 45)
-    ExtraControls.ItemListModule.ZIndex = 0
+    ExtraControls.ItemListModule.ZIndex = 5
     ExtraControls.ItemListModule.AutoButtonColor = false
     ExtraControls.ItemListModule.Font = Enum.Font.GothamMedium
     ExtraControls.ItemListModule.Text = "  Items Detected:"
@@ -425,7 +425,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.ItemArrow.AnchorPoint = Vector2.new(1, 0.5)
     ExtraControls.ItemArrow.BackgroundTransparency = 1
     ExtraControls.ItemArrow.Position = UDim2.new(1, -3, 0.75, 0)
-    ExtraControls.ItemArrow.ZIndex = 0
+    ExtraControls.ItemArrow.ZIndex = 6
     ExtraControls.ItemArrow.Size = UDim2.new(0, 25, 0, 30)
     ExtraControls.ItemArrow.Font = Enum.Font.GothamBold
     ExtraControls.ItemArrow.Text = "ꜜ"
@@ -443,7 +443,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.ItemDropdownClip.Position = UDim2.new(0, 0, 0, 45)
     ExtraControls.ItemDropdownClip.Size = UDim2.new(0, 400, 0, 0)
     ExtraControls.ItemDropdownClip.Visible = false
-    ExtraControls.ItemDropdownClip.ZIndex = 0
+    ExtraControls.ItemDropdownClip.ZIndex = 7
     ExtraControls.ItemDropdown.Parent = ExtraControls.ItemDropdownClip
     ExtraControls.ItemDropdown.Active = true
     ExtraControls.ItemDropdown.BackgroundColor3 = C.Surface
@@ -451,7 +451,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.ItemDropdown.BorderSizePixel = 0
     ExtraControls.ItemDropdown.Position = UDim2.new(0, 0, 0, 0)
     ExtraControls.ItemDropdown.Size = UDim2.new(0, 400, 0, 0)
-    ExtraControls.ItemDropdown.ZIndex = 0
+    ExtraControls.ItemDropdown.ZIndex = 7
     ExtraControls.ItemDropdown.Visible = true
     addCorner(ExtraControls.ItemDropdown, 0)
 
@@ -460,14 +460,14 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.ItemOutlinesModule.BackgroundColor3 = C.Panel
     ExtraControls.ItemOutlinesModule.BorderSizePixel = 0
     ExtraControls.ItemOutlinesModule.Position = UDim2.new(0, 1, 0, 278)
-    ExtraControls.ItemOutlinesModule.ZIndex = 0
+    ExtraControls.ItemOutlinesModule.ZIndex = 5
     ExtraControls.ItemOutlinesModule.Size = UDim2.new(0, 398, 0, 50)
 
     ExtraControls.ItemOutlinesText.Name = "ItemOutlinesText"
     ExtraControls.ItemOutlinesText.Parent = ExtraControls.ItemOutlinesModule
     ExtraControls.ItemOutlinesText.BackgroundTransparency = 1
     ExtraControls.ItemOutlinesText.Position = UDim2.new(0, 12, 0, 0)
-    ExtraControls.ItemOutlinesText.ZIndex = 0
+    ExtraControls.ItemOutlinesText.ZIndex = 6
     ExtraControls.ItemOutlinesText.Size = UDim2.new(1, -70, 1, 0)
     ExtraControls.ItemOutlinesText.Font = Enum.Font.GothamMedium
     ExtraControls.ItemOutlinesText.Text = "Item Outlines"
@@ -480,7 +480,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.ItemOutlinesCheckbox.BackgroundColor3 = C.Red
     ExtraControls.ItemOutlinesCheckbox.BorderSizePixel = 0
     ExtraControls.ItemOutlinesCheckbox.Position = UDim2.new(1, -38, 0.5, -13)
-    ExtraControls.ItemOutlinesCheckbox.ZIndex = 0
+    ExtraControls.ItemOutlinesCheckbox.ZIndex = 6
     ExtraControls.ItemOutlinesCheckbox.Size = UDim2.new(0, 26, 0, 26)
     ExtraControls.ItemOutlinesCheckbox.AutoButtonColor = false
     ExtraControls.ItemOutlinesCheckbox.Font = Enum.Font.GothamMedium
@@ -496,14 +496,15 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     AutomationPage.BackgroundTransparency = 1
     AutomationPage.BorderSizePixel = 0
     AutomationPage.Size = UDim2.new(1, 0, 1, 0)
-    AutomationPage.ZIndex = 2
+    AutomationPage.ZIndex = 4
     AutomationPage.CanvasSize = UDim2.new(0, 0, 0, 0)
     AutomationPage.ScrollBarThickness = 4
+
     SectionAutomation.Name = "SectionAutomation"
     SectionAutomation.Parent = AutomationPage
     SectionAutomation.BackgroundTransparency = 1
     SectionAutomation.Size = UDim2.new(0, 400, 0, 15)
-    SectionAutomation.ZIndex = 0
+    SectionAutomation.ZIndex = 4
     SectionAutomation.Font = Enum.Font.GothamBold
     SectionAutomation.Text = "Automation:"
     SectionAutomation.TextColor3 = C.RedHover
@@ -517,7 +518,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.MiscellaneousPage.Size = UDim2.new(1, 0, 1, 0)
     ExtraControls.MiscellaneousPage.CanvasSize = UDim2.new(0, 0, 0, 142)
     ExtraControls.MiscellaneousPage.Visible = false
-    ExtraControls.MiscellaneousPage.ZIndex = 0
+    ExtraControls.MiscellaneousPage.ZIndex = 4
     ExtraControls.MiscellaneousPage.ScrollBarThickness = 4
     ExtraControls.MiscellaneousPage.Active = true
     ExtraControls.MiscellaneousPage.ScrollingEnabled = true
@@ -527,13 +528,13 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.FullbrightModule.BackgroundColor3 = C.Panel
     ExtraControls.FullbrightModule.BorderSizePixel = 0
     ExtraControls.FullbrightModule.Position = UDim2.new(0, 1, 0, 88)
-    ExtraControls.FullbrightModule.ZIndex = 0
+    ExtraControls.FullbrightModule.ZIndex = 5
     ExtraControls.FullbrightModule.Size = UDim2.new(0, 398, 0, 50)
     ExtraControls.FullbrightText.Name = "FullbrightText"
     ExtraControls.FullbrightText.Parent = ExtraControls.FullbrightModule
     ExtraControls.FullbrightText.BackgroundTransparency = 1
     ExtraControls.FullbrightText.Position = UDim2.new(0, 12, 0, 0)
-    ExtraControls.FullbrightText.ZIndex = 0
+    ExtraControls.FullbrightText.ZIndex = 6
     ExtraControls.FullbrightText.Size = UDim2.new(1, -70, 1, 0)
     ExtraControls.FullbrightText.Font = Enum.Font.GothamMedium
     ExtraControls.FullbrightText.Text = "Fullbright"
@@ -545,7 +546,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.FullbrightCheckbox.BackgroundColor3 = C.Red
     ExtraControls.FullbrightCheckbox.BorderSizePixel = 0
     ExtraControls.FullbrightCheckbox.Position = UDim2.new(1, -38, 0.5, -13)
-    ExtraControls.FullbrightCheckbox.ZIndex = 0
+    ExtraControls.FullbrightCheckbox.ZIndex = 6
     ExtraControls.FullbrightCheckbox.Size = UDim2.new(0, 26, 0, 26)
     ExtraControls.FullbrightCheckbox.AutoButtonColor = false
     ExtraControls.FullbrightCheckbox.Font = Enum.Font.GothamMedium
@@ -561,13 +562,13 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.AntiAFKModule.BackgroundColor3 = C.Panel
     ExtraControls.AntiAFKModule.BorderSizePixel = 0
     ExtraControls.AntiAFKModule.Position = UDim2.new(0, 1, 0, 26)
-    ExtraControls.AntiAFKModule.ZIndex = 0
+    ExtraControls.AntiAFKModule.ZIndex = 5
     ExtraControls.AntiAFKModule.Size = UDim2.new(0, 398, 0, 50)
     ExtraControls.AntiAFKText.Name = "AntiAFKText"
     ExtraControls.AntiAFKText.Parent = ExtraControls.AntiAFKModule
     ExtraControls.AntiAFKText.BackgroundTransparency = 1
     ExtraControls.AntiAFKText.Position = UDim2.new(0, 12, 0, 0)
-    ExtraControls.AntiAFKText.ZIndex = 0
+    ExtraControls.AntiAFKText.ZIndex = 6
     ExtraControls.AntiAFKText.Size = UDim2.new(1, -70, 1, 0)
     ExtraControls.AntiAFKText.Font = Enum.Font.GothamMedium
     ExtraControls.AntiAFKText.Text = "Anti-AFK"
@@ -579,7 +580,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.AntiAFKCheckbox.BackgroundColor3 = C.Red
     ExtraControls.AntiAFKCheckbox.BorderSizePixel = 0
     ExtraControls.AntiAFKCheckbox.Position = UDim2.new(1, -38, 0.5, -13)
-    ExtraControls.AntiAFKCheckbox.ZIndex = 0
+    ExtraControls.AntiAFKCheckbox.ZIndex = 6
     ExtraControls.AntiAFKCheckbox.Size = UDim2.new(0, 26, 0, 26)
     ExtraControls.AntiAFKCheckbox.AutoButtonColor = false
     ExtraControls.AntiAFKCheckbox.Font = Enum.Font.GothamMedium
@@ -594,7 +595,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.SectionMiscellaneous.Parent = ExtraControls.MiscellaneousPage
     ExtraControls.SectionMiscellaneous.BackgroundTransparency = 1
     ExtraControls.SectionMiscellaneous.Size = UDim2.new(0, 400, 0, 15)
-    ExtraControls.SectionMiscellaneous.ZIndex = 0
+    ExtraControls.SectionMiscellaneous.ZIndex = 4
     ExtraControls.SectionMiscellaneous.Font = Enum.Font.GothamBold
     ExtraControls.SectionMiscellaneous.Text = "Miscellaneous:"
     ExtraControls.SectionMiscellaneous.TextColor3 = C.RedHover
@@ -606,7 +607,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Tabs.BackgroundTransparency = 1
     Tabs.Position = UDim2.new(0, 15, 0, 70)
     Tabs.Size = UDim2.new(0, 400, 0, 40)
-    Tabs.ZIndex = 0
+    Tabs.ZIndex = 3
 
     Detection.Name = "Detection"
     Detection.Parent = Tabs
@@ -615,7 +616,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Detection.BorderSizePixel = 0
     Detection.Position = UDim2.new(0, 0, 0, 0)
     Detection.Size = UDim2.new(0, 130, 1, 0)
-    Detection.ZIndex = 0
+    Detection.ZIndex = 4
     Detection.AutoButtonColor = false
     Detection.Font = Enum.Font.GothamMedium
     Detection.Text = "Detection"
@@ -630,7 +631,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Automation.BorderSizePixel = 0
     Automation.Position = UDim2.new(0, 135, 0, 0)
     Automation.Size = UDim2.new(0, 130, 1, 0)
-    Automation.ZIndex = 0
+    Automation.ZIndex = 4
     Automation.AutoButtonColor = false
     Automation.Font = Enum.Font.GothamMedium
     Automation.Text = "Automation"
@@ -646,7 +647,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.MiscellaneousTab.BorderSizePixel = 0
     ExtraControls.MiscellaneousTab.Position = UDim2.new(0, 270, 0, 0)
     ExtraControls.MiscellaneousTab.Size = UDim2.new(0, 130, 1, 0)
-    ExtraControls.MiscellaneousTab.ZIndex = 0
+    ExtraControls.MiscellaneousTab.ZIndex = 4
     ExtraControls.MiscellaneousTab.AutoButtonColor = false
     ExtraControls.MiscellaneousTab.Font = Enum.Font.GothamMedium
     ExtraControls.MiscellaneousTab.Text = "Miscellaneous"
