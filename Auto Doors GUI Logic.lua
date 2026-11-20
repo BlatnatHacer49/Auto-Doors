@@ -323,6 +323,17 @@ return function(context)
 
     local dropdownMaximumHeight = 250
     local dropdownAnimationSpeed = 2250
+
+    local pageScrollFrames = {
+        DetectionPage,
+        AutomationPage,
+        ExtraControls.MiscellaneousPage,
+    }
+    for _, scrollingFrame in ipairs(pageScrollFrames) do
+        scrollingFrame.ScrollBarThickness = 2
+        scrollingFrame.ScrollBarImageColor3 = C.Red
+    end
+
     local dropdownOpen = {
         EntityList = false,
         NameTags = false,
@@ -408,8 +419,6 @@ return function(context)
             end
         end
 
-        -- Include dropdowns themselves in the canvas calculation, including
-        -- when a dropdown is the last control on the page.
         for _, control in pairs(dropdownControls) do
             local moduleShift = getPageObjectShift(control.module)
             local dropdownBottom = basePositionY(control.basePosition)
@@ -421,20 +430,27 @@ return function(context)
 
         local canvasHeight = math.max(440, math.ceil(contentBottom + 8))
         DetectionPage.CanvasSize = UDim2.new(0, 0, 0, canvasHeight)
+
+        local dropdownTweenActive = false
+        for _, control in pairs(dropdownControls) do
+            if activeTweens[control.clip] then
+                dropdownTweenActive = true
+                break
+            end
+        end
+
+        if dropdownTweenActive then
+            local viewportHeight = DetectionPage.AbsoluteSize.Y
+            local maximumPosition = math.max(0, canvasHeight - viewportHeight)
+            DetectionPage.CanvasPosition = Vector2.new(
+                DetectionPage.CanvasPosition.X,
+                maximumPosition
+            )
+        end
+
         return contentBottom, canvasHeight
     end
 
-    local function scrollDetectionPageToBottom()
-        local contentBottom, canvasHeight = updateDetectionPageLayout()
-        local viewportHeight = DetectionPage.AbsoluteSize.Y
-        local desiredPosition = math.max(0, contentBottom - viewportHeight + 8)
-        local maximumPosition = math.max(0, canvasHeight - viewportHeight)
-        DetectionPage.CanvasPosition = Vector2.new(0, math.min(desiredPosition, maximumPosition))
-    end
-
-    -- Drive page reflow directly from the dropdown clips' animated heights.
-    -- This keeps the pushed controls perfectly synchronized with the opening
-    -- and closing tweens, including when one dropdown replaces another.
     for _, control in pairs(dropdownControls) do
         connect(control.clip:GetPropertyChangedSignal("Size"), updateDetectionPageLayout)
     end
@@ -537,7 +553,7 @@ return function(context)
     local function addDropdownLayout(control, layoutName)
         local layout = Instance.new("UIListLayout")
         layout.Name = layoutName .. "Layout"
-        layout.Padding = UDim.new(0, 2)
+        layout.Padding = UDim.new(0, 0)
         layout.SortOrder = Enum.SortOrder.LayoutOrder
         layout.Parent = control.dropdown
 
@@ -793,11 +809,7 @@ return function(context)
 
         if shouldOpen then
             setModuleCorner(control, true)
-            animateDropdown(control, true, nil, function()
-                if name == "Items" and dropdownOpen.Items then
-                    scrollDetectionPageToBottom()
-                end
-            end)
+            animateDropdown(control, true)
         else
             animateDropdown(control, false, function()
                 setModuleCorner(control, false)
