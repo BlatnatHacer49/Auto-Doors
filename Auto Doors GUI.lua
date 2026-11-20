@@ -12,7 +12,19 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         {name = "Test10", display = "Test 10"},
     }
     entityDefinitions = type(entityDefinitions) == "table" and entityDefinitions or standaloneEntities
-    itemDefinitions = type(itemDefinitions) == "table" and itemDefinitions or {}
+    local standaloneItems = {
+        {name = "Test1", display = "Test 1"},
+        {name = "Test2", display = "Test 2"},
+        {name = "Test3", display = "Test 3"},
+        {name = "Test4", display = "Test 4"},
+        {name = "Test5", display = "Test 5"},
+        {name = "Test6", display = "Test 6"},
+        {name = "Test7", display = "Test 7"},
+        {name = "Test8", display = "Test 8"},
+        {name = "Test9", display = "Test 9"},
+        {name = "Test10", display = "Test 10"},
+    }
+    itemDefinitions = type(itemDefinitions) == "table" and itemDefinitions or standaloneItems
     enabledItems = type(enabledItems) == "table" and enabledItems or {}
 
     local AutoDoors = Instance.new("ScreenGui")
