@@ -330,7 +330,8 @@ return function(context)
         ExtraControls.MiscellaneousPage,
     }
     for _, scrollingFrame in ipairs(pageScrollFrames) do
-        scrollingFrame.ScrollBarThickness = 2
+        scrollingFrame.ScrollBarThickness = 0
+        scrollingFrame.ScrollBarImageTransparency = 1
         scrollingFrame.ScrollBarImageColor3 = C.Red
     end
 
@@ -431,20 +432,34 @@ return function(context)
         local canvasHeight = math.max(440, math.ceil(contentBottom + 8))
         DetectionPage.CanvasSize = UDim2.new(0, 0, 0, canvasHeight)
 
+        local viewportHeight = DetectionPage.AbsoluteSize.Y
+        local requiredScroll = 0
         local dropdownTweenActive = false
+
         for _, control in pairs(dropdownControls) do
             if activeTweens[control.clip] then
                 dropdownTweenActive = true
-                break
+
+                local moduleShift = getPageObjectShift(control.module)
+                local moduleTop = basePositionY(control.basePosition) + moduleShift
+                local moduleHeight = control.module.AbsoluteSize.Y
+                local dropdownBottom = moduleTop
+                    + control.clip.Position.Y.Offset
+                    + control.clip.Position.Y.Scale * moduleHeight
+                    + control.clip.Size.Y.Offset
+                    + control.clip.Size.Y.Scale * moduleHeight
+
+                local scrollForDropdown = math.max(0, dropdownBottom - viewportHeight)
+                requiredScroll = math.max(requiredScroll, scrollForDropdown)
             end
         end
 
         if dropdownTweenActive then
-            local viewportHeight = DetectionPage.AbsoluteSize.Y
             local maximumPosition = math.max(0, canvasHeight - viewportHeight)
+            requiredScroll = math.min(requiredScroll, maximumPosition)
             DetectionPage.CanvasPosition = Vector2.new(
                 DetectionPage.CanvasPosition.X,
-                maximumPosition
+                requiredScroll
             )
         end
 
