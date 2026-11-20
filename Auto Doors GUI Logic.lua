@@ -322,7 +322,7 @@ return function(context)
     bindWindowDragging()
 
     local dropdownMaximumHeight = 250
-    local dropdownTweenInfo = TweenInfo.new(0.22, Enum.EasingStyle.Quart, Enum.EasingDirection.Out)
+    local dropdownAnimationSpeed = 1136
     local dropdownOpen = {
         EntityList = false,
         NameTags = false,
@@ -402,7 +402,21 @@ return function(context)
         if shouldOpen then
             control.clip.Visible = true
         end
-        local tween = TweenService:Create(control.clip, dropdownTweenInfo, {
+
+        local currentHeight = control.clip.Size.Y.Offset
+        local distance = math.abs(targetHeight - currentHeight)
+        if distance == 0 then
+            control.clip.Size = UDim2.new(0, control.clip.Size.X.Offset, 0, targetHeight)
+            control.clip.Visible = shouldOpen
+            if not shouldOpen and onClosed then
+                onClosed()
+            end
+            return
+        end
+
+        local tweenDuration = distance / dropdownAnimationSpeed
+        local tweenInfo = TweenInfo.new(tweenDuration, Enum.EasingStyle.Linear)
+        local tween = TweenService:Create(control.clip, tweenInfo, {
             Size = UDim2.new(0, control.clip.Size.X.Offset, 0, targetHeight),
         })
         activeTweens[control.clip] = tween
