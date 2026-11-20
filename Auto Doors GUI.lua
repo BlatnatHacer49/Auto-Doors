@@ -113,6 +113,16 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
         return corner
     end
 
+    local function addBottomCorner(parent, radius)
+        local corner = Instance.new("UICorner")
+        corner.TopLeftRadius = UDim.new(0, 0)
+        corner.TopRightRadius = UDim.new(0, 0)
+        corner.BottomLeftRadius = UDim.new(0, radius)
+        corner.BottomRightRadius = UDim.new(0, radius)
+        corner.Parent = parent
+        return corner
+    end
+
     local function addDefaultCorner(parent)
         local corner = Instance.new("UICorner")
         corner.Parent = parent
@@ -130,7 +140,7 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     AutoDoors.Name = "AutoDoors"
     AutoDoors.Enabled = false
     AutoDoors.Parent = GUIParent
-    AutoDoors.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    AutoDoors.ZIndexBehavior = Enum.ZIndexBehavior.Global
     AutoDoors.DisplayOrder = 9999
     AutoDoors.ResetOnSpawn = false
 
@@ -326,24 +336,26 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Dropdown.Name = "Dropdown"
     local DropdownClip = Instance.new("Frame")
     DropdownClip.Name = "DropdownClip"
-    DropdownClip.Parent = DetectionPage
-    DropdownClip.BackgroundTransparency = 1
+    DropdownClip.Parent = EntityListModule
+    DropdownClip.BackgroundColor3 = C.Surface
+    DropdownClip.BackgroundTransparency = 0
     DropdownClip.BorderSizePixel = 0
     DropdownClip.ClipsDescendants = true
-    DropdownClip.Position = UDim2.new(0, 0, 0, 70)
+    DropdownClip.Position = UDim2.new(0, 0, 0, 45)
     DropdownClip.Size = UDim2.new(0, 400, 0, 0)
     DropdownClip.Visible = false
     DropdownClip.ZIndex = 7
+    addBottomCorner(DropdownClip, 8)
     Dropdown.Parent = DropdownClip
     Dropdown.Active = true
     Dropdown.BackgroundColor3 = C.Surface
+    Dropdown.BackgroundTransparency = 1
     Dropdown.BorderColor3 = C.Black
     Dropdown.BorderSizePixel = 0
     Dropdown.Position = UDim2.new(0, 0, 0, 0)
     Dropdown.Size = UDim2.new(0, 400, 0, 0)
     Dropdown.ZIndex = 7
     Dropdown.Visible = true
-    addCorner(Dropdown, 0)
 
     NameTagModule.Name = "NameTagModule"
     NameTagModule.Parent = DetectionPage
@@ -376,23 +388,25 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     Dropdown_2.Name = "Dropdown"
     local DropdownClip_2 = Instance.new("Frame")
     DropdownClip_2.Name = "DropdownClip"
-    DropdownClip_2.Parent = DetectionPage
-    DropdownClip_2.BackgroundTransparency = 1
+    DropdownClip_2.Parent = NameTagModule
+    DropdownClip_2.BackgroundColor3 = C.Surface
+    DropdownClip_2.BackgroundTransparency = 0
     DropdownClip_2.BorderSizePixel = 0
     DropdownClip_2.ClipsDescendants = true
-    DropdownClip_2.Position = UDim2.new(0, 0, 0, 125)
+    DropdownClip_2.Position = UDim2.new(0, 0, 0, 45)
     DropdownClip_2.Size = UDim2.new(0, 400, 0, 0)
     DropdownClip_2.Visible = false
     DropdownClip_2.ZIndex = 7
+    addBottomCorner(DropdownClip_2, 8)
     Dropdown_2.Parent = DropdownClip_2
     Dropdown_2.Active = true
     Dropdown_2.BackgroundColor3 = C.Surface
+    Dropdown_2.BackgroundTransparency = 1
     Dropdown_2.BorderColor3 = C.Black
     Dropdown_2.BorderSizePixel = 0
     Dropdown_2.Position = UDim2.new(0, 0, 0, 0)
     Dropdown_2.Size = UDim2.new(0, 400, 0, 0)
     Dropdown_2.Visible = true
-    addCorner(Dropdown_2, 0)
 
     ExtraControls.SectionItemDetection.Name = "SectionItemDetection"
     ExtraControls.SectionItemDetection.Parent = DetectionPage
@@ -437,24 +451,26 @@ local function buildGUI(entityDefinitions, enabledEntities, initialNameTagMode, 
     ExtraControls.ItemDropdown.Name = "Dropdown"
     ExtraControls.ItemDropdownClip = Instance.new("Frame")
     ExtraControls.ItemDropdownClip.Name = "DropdownClip"
-    ExtraControls.ItemDropdownClip.Parent = DetectionPage
-    ExtraControls.ItemDropdownClip.BackgroundTransparency = 1
+    ExtraControls.ItemDropdownClip.Parent = ExtraControls.ItemListModule
+    ExtraControls.ItemDropdownClip.BackgroundColor3 = C.Surface
+    ExtraControls.ItemDropdownClip.BackgroundTransparency = 0
     ExtraControls.ItemDropdownClip.BorderSizePixel = 0
     ExtraControls.ItemDropdownClip.ClipsDescendants = true
-    ExtraControls.ItemDropdownClip.Position = UDim2.new(0, 0, 0, 267)
+    ExtraControls.ItemDropdownClip.Position = UDim2.new(0, 0, 0, 45)
     ExtraControls.ItemDropdownClip.Size = UDim2.new(0, 400, 0, 0)
     ExtraControls.ItemDropdownClip.Visible = false
     ExtraControls.ItemDropdownClip.ZIndex = 7
+    addBottomCorner(ExtraControls.ItemDropdownClip, 8)
     ExtraControls.ItemDropdown.Parent = ExtraControls.ItemDropdownClip
     ExtraControls.ItemDropdown.Active = true
     ExtraControls.ItemDropdown.BackgroundColor3 = C.Surface
+    ExtraControls.ItemDropdown.BackgroundTransparency = 1
     ExtraControls.ItemDropdown.BorderColor3 = C.Black
     ExtraControls.ItemDropdown.BorderSizePixel = 0
     ExtraControls.ItemDropdown.Position = UDim2.new(0, 0, 0, 0)
     ExtraControls.ItemDropdown.Size = UDim2.new(0, 400, 0, 0)
     ExtraControls.ItemDropdown.ZIndex = 7
     ExtraControls.ItemDropdown.Visible = true
-    addCorner(ExtraControls.ItemDropdown, 0)
 
     ExtraControls.ItemOutlinesModule.Name = "ItemOutlinesModule"
     ExtraControls.ItemOutlinesModule.Parent = DetectionPage
