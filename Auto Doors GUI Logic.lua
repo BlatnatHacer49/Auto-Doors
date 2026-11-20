@@ -322,7 +322,7 @@ return function(context)
     bindWindowDragging()
 
     local dropdownMaximumHeight = 250
-    local dropdownAnimationSpeed = 2250
+    local dropdownAnimationSpeed = 1750
     local dropdownOpen = {
         EntityList = false,
         NameTags = false,
