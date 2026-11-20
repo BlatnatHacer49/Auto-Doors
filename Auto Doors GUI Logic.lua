@@ -353,6 +353,93 @@ return function(context)
         },
     }
 
+    local pageLayoutObjects = {}
+    for _, child in ipairs(DetectionPage:GetChildren()) do
+        if child:IsA("GuiObject") then
+            pageLayoutObjects[child] = child.Position
+        end
+    end
+
+    for _, control in pairs(dropdownControls) do
+        control.basePosition = control.module.Position
+    end
+
+    local function basePositionY(position)
+        return position.Y.Offset + position.Y.Scale * DetectionPage.AbsoluteSize.Y
+    end
+
+    local function getPageObjectShift(guiObject)
+        local basePosition = pageLayoutObjects[guiObject]
+        if not basePosition then
+            return 0
+        end
+
+        local objectBaseY = basePositionY(basePosition)
+        local verticalShift = 0
+        for _, control in pairs(dropdownControls) do
+            local moduleBottom = basePositionY(control.basePosition)
+                + control.module.Size.Y.Offset
+                + control.module.Size.Y.Scale * DetectionPage.AbsoluteSize.Y
+            if objectBaseY >= moduleBottom then
+                verticalShift = verticalShift + control.clip.Size.Y.Offset
+            end
+        end
+        return verticalShift
+    end
+
+    local function updateDetectionPageLayout()
+        local contentBottom = 0
+
+        for guiObject, basePosition in pairs(pageLayoutObjects) do
+            if guiObject.Parent == DetectionPage then
+                local verticalShift = getPageObjectShift(guiObject)
+                guiObject.Position = UDim2.new(
+                    basePosition.X.Scale,
+                    basePosition.X.Offset,
+                    basePosition.Y.Scale,
+                    basePosition.Y.Offset + verticalShift
+                )
+
+                local objectBottom = basePositionY(basePosition)
+                    + verticalShift
+                    + guiObject.Size.Y.Offset
+                    + guiObject.Size.Y.Scale * DetectionPage.AbsoluteSize.Y
+                contentBottom = math.max(contentBottom, objectBottom)
+            end
+        end
+
+        -- Include dropdowns themselves in the canvas calculation, including
+        -- when a dropdown is the last control on the page.
+        for _, control in pairs(dropdownControls) do
+            local moduleShift = getPageObjectShift(control.module)
+            local dropdownBottom = basePositionY(control.basePosition)
+                + moduleShift
+                + control.module.Size.Y.Offset
+                + control.clip.Size.Y.Offset
+            contentBottom = math.max(contentBottom, dropdownBottom)
+        end
+
+        local canvasHeight = math.max(440, math.ceil(contentBottom + 8))
+        DetectionPage.CanvasSize = UDim2.new(0, 0, 0, canvasHeight)
+        return contentBottom, canvasHeight
+    end
+
+    local function scrollDetectionPageToBottom()
+        local contentBottom, canvasHeight = updateDetectionPageLayout()
+        local viewportHeight = DetectionPage.AbsoluteSize.Y
+        local desiredPosition = math.max(0, contentBottom - viewportHeight + 8)
+        local maximumPosition = math.max(0, canvasHeight - viewportHeight)
+        DetectionPage.CanvasPosition = Vector2.new(0, math.min(desiredPosition, maximumPosition))
+    end
+
+    -- Drive page reflow directly from the dropdown clips' animated heights.
+    -- This keeps the pushed controls perfectly synchronized with the opening
+    -- and closing tweens, including when one dropdown replaces another.
+    for _, control in pairs(dropdownControls) do
+        connect(control.clip:GetPropertyChangedSignal("Size"), updateDetectionPageLayout)
+    end
+    updateDetectionPageLayout()
+
     local function cancelDropdownTween(clip)
         disconnect(tweenCompletionConnections[clip])
         tweenCompletionConnections[clip] = nil
@@ -395,7 +482,7 @@ return function(context)
         return visibleHeight, totalHeight
     end
 
-    local function animateDropdown(control, shouldOpen, onClosed)
+    local function animateDropdown(control, shouldOpen, onClosed, onOpened)
         cancelDropdownTween(control.clip)
         local visibleHeight = updateDropdownSize(control)
         local targetHeight = shouldOpen and visibleHeight or 0
@@ -408,7 +495,9 @@ return function(context)
         if distance == 0 then
             control.clip.Size = UDim2.new(0, control.clip.Size.X.Offset, 0, targetHeight)
             control.clip.Visible = shouldOpen
-            if not shouldOpen and onClosed then
+            if shouldOpen and onOpened then
+                onOpened()
+            elseif not shouldOpen and onClosed then
                 onClosed()
             end
             return
@@ -428,6 +517,9 @@ return function(context)
                 if playbackState == Enum.PlaybackState.Completed then
                     if shouldOpen then
                         control.clip.Visible = true
+                        if onOpened then
+                            onOpened()
+                        end
                     else
                         control.clip.Visible = false
                         if onClosed then
@@ -674,28 +766,6 @@ return function(context)
         end
     end
 
-    local function updateDetectionPageCanvas(openItems, itemDropdownHeight)
-        if not openItems then
-            DetectionPage.CanvasSize = UDim2.new(0, 0, 0, 440)
-            DetectionPage.CanvasPosition = Vector2.new(0, 0)
-            return
-        end
-        local contentBottom = ExtraControls.ItemListModule.Position.Y.Offset
-            + ExtraControls.ItemListModule.Size.Y.Offset
-            + itemDropdownHeight
-        local canvasHeight = math.max(440, contentBottom + 8)
-        DetectionPage.CanvasSize = UDim2.new(0, 0, 0, canvasHeight)
-        task.defer(function()
-            if not AutoDoors.Parent or not dropdownOpen.Items then
-                return
-            end
-            local viewportHeight = DetectionPage.AbsoluteSize.Y
-            local desiredPosition = math.max(0, contentBottom - viewportHeight + 8)
-            local maximumPosition = math.max(0, canvasHeight - viewportHeight)
-            DetectionPage.CanvasPosition = Vector2.new(0, math.min(desiredPosition, maximumPosition))
-        end)
-    end
-
     local function setDropdownOpen(name, shouldOpen)
         local control = dropdownControls[name]
         if not control then
@@ -723,17 +793,12 @@ return function(context)
 
         if shouldOpen then
             setModuleCorner(control, true)
-            local visibleHeight = updateDropdownSize(control)
-            if name == "Items" then
-                updateDetectionPageCanvas(true, visibleHeight)
-            else
-                updateDetectionPageCanvas(false)
-            end
-            animateDropdown(control, true)
+            animateDropdown(control, true, nil, function()
+                if name == "Items" and dropdownOpen.Items then
+                    scrollDetectionPageToBottom()
+                end
+            end)
         else
-            if name == "Items" then
-                updateDetectionPageCanvas(false)
-            end
             animateDropdown(control, false, function()
                 setModuleCorner(control, false)
             end)
