@@ -414,8 +414,8 @@ return function(context)
             return
         end
 
-        local tweenDuration = distance / dropdownAnimationSpeed
-        local tweenInfo = TweenInfo.new(tweenDuration, Enum.EasingStyle.Linear)
+        local tweenDuration = (2 * distance) / dropdownAnimationSpeed
+        local tweenInfo = TweenInfo.new(tweenDuration, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
         local tween = TweenService:Create(control.clip, tweenInfo, {
             Size = UDim2.new(0, control.clip.Size.X.Offset, 0, targetHeight),
         })
