@@ -594,17 +594,7 @@ return function(context)
         createOptionRow("Entity", definition, order, dropdownControls.EntityList, entityEnabledState, EntityEnabledChanged)
     end
 
-    local sortedItems = {}
-    for _, definition in ipairs(itemDefinitions) do
-        sortedItems[#sortedItems + 1] = definition
-    end
-    table.sort(sortedItems, function(left, right)
-        local leftName = string.lower(tostring(left.display or left.name))
-        local rightName = string.lower(tostring(right.display or right.name))
-        return leftName < rightName
-    end)
-
-    for order, definition in ipairs(sortedItems) do
+    for order, definition in ipairs(itemDefinitions) do
         createOptionRow("Item", definition, order, dropdownControls.Items, itemEnabledState, ExtraControls.ItemEnabledChanged)
     end
 
