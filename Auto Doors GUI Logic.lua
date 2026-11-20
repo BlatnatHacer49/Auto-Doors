@@ -645,8 +645,9 @@ return function(context)
             if dropdownOpen.NameTags then
                 dropdownOpen.NameTags = false
                 dropdownControls.NameTags.arrow.Text = "ꜜ"
-                setModuleCorner(dropdownControls.NameTags, false)
-                animateDropdown(dropdownControls.NameTags, false)
+                animateDropdown(dropdownControls.NameTags, false, function()
+                    setModuleCorner(dropdownControls.NameTags, false)
+                end)
             end
         end)
     end
@@ -710,8 +711,9 @@ return function(context)
                 if otherName ~= name and dropdownOpen[otherName] then
                     dropdownOpen[otherName] = false
                     otherControl.arrow.Text = "ꜜ"
-                    setModuleCorner(otherControl, false)
-                    animateDropdown(otherControl, false)
+                    animateDropdown(otherControl, false, function()
+                        setModuleCorner(otherControl, false)
+                    end)
                 end
             end
         end
@@ -732,8 +734,9 @@ return function(context)
             if name == "Items" then
                 updateDetectionPageCanvas(false)
             end
-            setModuleCorner(control, false)
-            animateDropdown(control, false)
+            animateDropdown(control, false, function()
+                setModuleCorner(control, false)
+            end)
         end
     end
 
