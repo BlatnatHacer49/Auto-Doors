@@ -30,6 +30,8 @@ return function(context)
     local initialNameTagMode = context.initialNameTagMode
     local itemDefinitions = context.itemDefinitions
     local enabledItems = context.enabledItems
+    local objectiveDefinitions = context.objectiveDefinitions
+    local enabledObjectives = context.enabledObjectives
     local ContentProvider = context.ContentProvider
     local TextService = context.TextService
     local RunService = context.RunService
@@ -150,6 +152,14 @@ return function(context)
         "ItemOutlinesEnabled",
         "ItemOutlinesHovering"
     )
+    local setObjectiveOutlinesEnabled = bindToggle(
+        ExtraControls.ObjectiveOutlinesCheckbox,
+        ExtraControls.ObjectiveOutlinesEnabled,
+        ExtraControls.ObjectiveOutlineChanged,
+        ExtraControls,
+        "ObjectiveOutlinesEnabled",
+        "ObjectiveOutlinesHovering"
+    )
     local setAntiAFKEnabled = bindToggle(
         ExtraControls.AntiAFKCheckbox,
         ExtraControls.AntiAFKEnabled,
@@ -161,6 +171,7 @@ return function(context)
 
     ExtraControls.SetFullbrightEnabled = setFullbrightEnabled
     ExtraControls.SetItemOutlinesEnabled = setItemOutlinesEnabled
+    ExtraControls.SetObjectiveOutlinesEnabled = setObjectiveOutlinesEnabled
     ExtraControls.SetAntiAFKEnabled = setAntiAFKEnabled
 
     local function bindButtonHover(button, baseColor, hoverColor)
@@ -180,6 +191,7 @@ return function(context)
     bindButtonHover(EntityListModule)
     bindButtonHover(NameTagModule)
     bindButtonHover(ExtraControls.ItemListModule)
+    bindButtonHover(ExtraControls.ObjectiveListModule)
     bindButtonHover(Cancel)
     bindButtonHover(CloseScript, C.Red, C.RedHover)
 
@@ -339,6 +351,7 @@ return function(context)
         EntityList = false,
         NameTags = false,
         Items = false,
+        Objectives = false,
     }
 
     DropdownClip_2.ZIndex = DropdownClip.ZIndex
@@ -362,6 +375,13 @@ return function(context)
             arrow = ExtraControls.ItemArrow,
             dropdown = ExtraControls.ItemDropdown,
             clip = ExtraControls.ItemDropdownClip,
+        },
+        Objectives = {
+            module = ExtraControls.ObjectiveListModule,
+            arrow = ExtraControls.ObjectiveArrow,
+            dropdown = ExtraControls.ObjectiveDropdown,
+            clip = ExtraControls.ObjectiveDropdownClip,
+            hideScrollbar = true,
         },
     }
 
@@ -508,7 +528,7 @@ return function(context)
         local visibleHeight = math.min(totalHeight, dropdownMaximumHeight)
         local width = control.dropdown.Size.X.Offset
         control.dropdown.CanvasSize = UDim2.new(0, 0, 0, totalHeight)
-        control.dropdown.ScrollBarThickness = totalHeight > dropdownMaximumHeight and 4 or 0
+        control.dropdown.ScrollBarThickness = control.hideScrollbar and 0 or (totalHeight > dropdownMaximumHeight and 4 or 0)
         control.dropdown.Size = UDim2.new(0, width, 0, visibleHeight)
         return visibleHeight, totalHeight
     end
@@ -592,6 +612,7 @@ return function(context)
     addDropdownLayout(dropdownControls.EntityList, "EntityList")
     addDropdownLayout(dropdownControls.NameTags, "NameTag")
     addDropdownLayout(dropdownControls.Items, "ItemList")
+    addDropdownLayout(dropdownControls.Objectives, "ObjectiveList")
 
     local function createOptionRow(kind, definition, order, control, enabledState, changedEvent)
         local name = tostring(definition.name)
@@ -713,12 +734,24 @@ return function(context)
         end
     end
 
+    local objectiveEnabledState = type(enabledObjectives) == "table" and enabledObjectives or {}
+    for _, definition in ipairs(objectiveDefinitions) do
+        local name = tostring(definition.name)
+        if objectiveEnabledState[name] == nil then
+            objectiveEnabledState[name] = true
+        end
+    end
+
     for order, definition in ipairs(entityDefinitions) do
         createOptionRow("Entity", definition, order, dropdownControls.EntityList, entityEnabledState, EntityEnabledChanged)
     end
 
     for order, definition in ipairs(itemDefinitions) do
         createOptionRow("Item", definition, order, dropdownControls.Items, itemEnabledState, ExtraControls.ItemEnabledChanged)
+    end
+
+    for order, definition in ipairs(objectiveDefinitions) do
+        createOptionRow("Objective", definition, order, dropdownControls.Objectives, objectiveEnabledState, ExtraControls.ObjectiveEnabledChanged)
     end
 
     local validNameTagModes = {
@@ -841,6 +874,9 @@ return function(context)
     connect(ExtraControls.ItemListModule.MouseButton1Click, function()
         setDropdownOpen("Items", not dropdownOpen.Items)
     end)
+    connect(ExtraControls.ObjectiveListModule.MouseButton1Click, function()
+        setDropdownOpen("Objectives", not dropdownOpen.Objectives)
+    end)
 
     connect(Close.MouseButton1Click, function()
         CloseConfirmation.Visible = true
@@ -886,6 +922,8 @@ return function(context)
         EntityEnabledChanged = EntityEnabledChanged,
         ItemEnabledChanged = ExtraControls.ItemEnabledChanged,
         ItemOutlineChanged = ExtraControls.ItemOutlineChanged,
+        ObjectiveEnabledChanged = ExtraControls.ObjectiveEnabledChanged,
+        ObjectiveOutlineChanged = ExtraControls.ObjectiveOutlineChanged,
         NameTagModeChanged = NameTagModeChanged,
         FullbrightChanged = ExtraControls.FullbrightChanged,
         AntiAFKChanged = ExtraControls.AntiAFKChanged,
@@ -893,6 +931,7 @@ return function(context)
         SetOutlineEnabled = setOutlineEnabled,
         SetFullbrightEnabled = setFullbrightEnabled,
         SetItemOutlinesEnabled = setItemOutlinesEnabled,
+        SetObjectiveOutlinesEnabled = setObjectiveOutlinesEnabled,
         SetAntiAFKEnabled = setAntiAFKEnabled,
         CloseScriptNow = closeScriptNow,
         WaitForFonts = function()
